@@ -1,0 +1,141 @@
+.book-state-01 .book-list-detail {
+	line-height: 2rem;
+}
+
+.book-state-01 .book-list-detail {
+	display: block;
+}
+
+.book-state-02 .book-list-detail {
+	display: none;
+}
+
+.common-ct-inner {
+	
+}
+
+.date-icon-left {
+	display: table-cell;;
+	width: 5%;
+}
+
+.input-date-parent {
+	display: table;
+	width: 100%;
+	margin: 0.5rem 0;
+	height: 1rem;
+	line-height: 1rem;
+}
+
+.input-date {
+	display: table-cell;
+	width: 100%;
+	border: none;
+	font-size: 1.2rem;
+}
+
+.book-list-parent {
+	padding: 0.3rem 2%;
+	border-bottom: 0.1rem solid #cccccc;
+	font-size: 0;
+}
+
+.book-list-snapshot .btn {
+	width: 20%;
+	margin: 0.3rem 0%;
+}
+
+.place_schedule .book-list-snapshot {
+	display: block;
+}
+
+.place_schedule .book-list-detail {
+	display: none;
+}
+
+.book-state-03 {
+	background-color: #ff0000;
+	color: #ffffff;
+}
+
+.book-state-03 .btn-xs, .book-state-2 .btn-xs {
+	background-color: #ff0000;
+	border-color: #ffffff;
+}
+
+.book-state-2 {
+	background-color: #ff0000;
+	color: #ffffff;
+}
+
+.book-state-2 .book-list-snapshot {
+	display: none;
+}
+
+.book-state-2 .book-list-detail {
+	display: block;
+	color: #ffffff;
+}
+
+.date-icon-checked {
+	background: none;
+	color: #666666;
+}
+
+.date-icon-left, .date-icon-right {
+	background-repeat: no-repeat;
+	background-size: 70%;
+}
+
+.last-modify {
+	color: #cb2b29;
+}
+
+.date-picker-week-one{
+	width: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+	color:#ffffff;
+	background-color: #CACACC;
+	border-radius: 50%
+}
+
+.date-picker-ct{
+	text-align:right;	
+}
+
+.date-picker-ct-line{
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.75rem;
+	border-bottom:0.1rem solid #cccccc;
+}
+
+.date-picker-ct-one{
+	flex: 1;
+	padding:0.3rem 0.1rem;
+	border-right:0.1rem solid #cccccc;
+}
+
+.date-picker-ct-line:last-child{
+	border-bottom:none;
+}
+.date-picker-ct-one:last-child{
+	border-right:none;
+}
+.date-picker-ct-day{
+	color:#969696;
+}
+
+.date-picker-ct-money{
+	color:#66baef;
+}
+
+.place_year_month{
+	font-weight:bold;
+}
+
+.place_date_month{
+	color:#cccccc;margin-left:0.5rem;
+}
+

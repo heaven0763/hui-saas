@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="hui">
+    <output-path>$PROJECT_DIR$/out/artifacts/hui</output-path>
+    <root id="archive" name="hui.war" />
+  </artifact>
+</component>

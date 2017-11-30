@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 一级缓存是默认有的，不可以取消。而通过该配置文件可以配置二级缓存。 -->
+<ehcache>
+
+	<diskStore path="java.io.tmpdir/hibernate/yzsdzzwpt" />
+
+	<!-- DefaultCache setting. -->
+	<defaultCache maxElementsInMemory="10000" memoryStoreEvictionPolicy="LRU" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="false" diskPersistent="false" />
+	
+	<!-- Special objects setting. -->
+	<cache name="com.chuangbang.js.entity.account.User" maxElementsInMemory="1000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.framework.entity.dictionary.Dictionary" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.js.entity.account.Permission" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.js.entity.account.Logininfo" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.js.entity.account.Group" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.framework.entity.system.SystemParameter" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+	<cache name="com.chuangbang.js.entity.account.Menu" maxElementsInMemory="10000" eternal="true"
+		overflowToDisk="true" />
+</ehcache>

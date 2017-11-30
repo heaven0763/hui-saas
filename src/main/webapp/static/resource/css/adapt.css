@@ -1,0 +1,26 @@
+@media only screen and (min-width: 1408px) {
+	html,body {
+		font-size: 16px;
+	}
+}
+@media only screen and (min-width: 1208px) {
+	html,body {
+		font-size: 16px;
+	}
+}
+@media only screen and (min-width: 1108px) {
+	html,body {
+		font-size: 16px;
+	}
+}
+html,body {
+		background-color: #ffffff;
+	}
+.content{margin: 0;padding: 0;}
+.btn{border: 1px solid;}
+.btn-default{color: #555555;}
+.form-group {padding: 0;}
+.form-control{padding: 6px 12px;margin: 0; color:#555;}
+.pms-list-parent .btn:nth-child(odd){margin-right:0;}
+.fa{-webkit-transform: scale(0.85); width: auto;}
+.div-tips-dialog{z-index: 99997;}

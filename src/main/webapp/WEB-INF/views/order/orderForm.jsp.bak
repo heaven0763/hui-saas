@@ -1,0 +1,411 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/include.inc.jsp"%>
+<script type="text/javascript">
+<!--
+$().ready(function() {
+    var e = "<i class='fa fa-times-circle'></i> ";
+	$("#orderSubForm").validate({
+        rules: {
+        	orderNo: "required",
+        	orderSource: "required",
+        	area: "required",
+        	hotelId: "required",
+        	hotelName: "required",
+        	ownedGroup: "required",
+        	commissionRights: "required",
+        	hotelSaleId: "required",
+        	hotelSaleName: "required",
+        	hotelSaleMobile: "required",
+        	hotelPoints: "required",
+        	amount: "required",
+        	prepaid: "required",
+        	finalPayment: "required",
+        	clientId: "required",
+        	organizer: "required",
+        	linkman: "required",
+        	contactNumber: "required",
+        	clientPoints: "required",
+        	companySaleId: "required",
+        	companySaleMobile: "required",
+        	companySaleName: "required",
+        	state: "required",
+        	settlementStatus: "required",
+        	settlementDate: "required",
+        	settlementUid: "required",
+        	commissionStatus: "required",
+        	commissionDate: "required",
+        	commissionRate: "required",
+        	commissionAmount: "required",
+        	signDate: "required",
+        	signUid: "required",
+        	signUname: "required",
+        	isupload: "required",
+        	remindDate: "required",
+        	remindTimes: "required",
+        	isinvoice: "required",
+        	invoiceUname: "required",
+        	invoiceNo: "required",
+        	invoiceDate: "required",
+        	receiveDate: "required",
+        	companySaleId: "required",
+        	companySaleName: "required",
+        	companySaleMobile: "required",
+        	createDate: "required",
+        	memo: "required",
+        },
+        messages: {
+        	orderNo: e + "请输入订单流水号",
+        	orderSource: e + "请输入订单来源",
+        	area: e + "请输入所属区域",
+        	hotelId: e + "请输入酒店编号",
+        	hotelName: e + "请输入酒店名称",
+        	ownedGroup: e + "请输入酒店所属集团",
+        	commissionRights: e + "请输入返佣权限归属",
+        	hotelSaleId: e + "请输入酒店跟进销售编号",
+        	hotelSaleName: e + "请输入酒店跟进销售姓名",
+        	hotelSaleMobile: e + "请输入酒店跟进销售电话",
+        	hotelPoints: e + "请输入酒店获取积分",
+        	amount: e + "请输入金额",
+        	prepaid: e + "请输入预付金额",
+        	finalPayment: e + "请输入尾款",
+        	clientId: e + "请输入客户编号",
+        	organizer: e + "请输入活动主办单位",
+        	linkman: e + "请输入联系人",
+        	contactNumber: e + "请输入联系电话",
+        	clientPoints: e + "请输入客户获取积分",
+        	companySaleId: e + "请输入公司跟进销售编号",
+        	companySaleMobile: e + "请输入公司跟进销售电话",
+        	companySaleName: e + "请输入公司跟进销售姓名",
+        	state: e + "请输入订单状态",
+        	settlementStatus: e + "请输入结算状态",
+        	settlementDate: e + "请输入结算时间",
+        	settlementUid: e + "请输入结算人员",
+        	commissionStatus: e + "请输入返佣状态",
+        	commissionDate: e + "请输入返佣时间",
+        	commissionRate: e + "请输入提佣比例",
+        	commissionAmount: e + "请输入提佣金额",
+        	signDate: e + "请输入签约时间",
+        	signUid: e + "请输入签约业务员编号",
+        	signUname: e + "请输入订单状态",
+        	isupload: e + "请输入是否上传水单",
+        	remindDate: e + "请输入开始提醒客户时间",
+        	remindTimes: e + "请输入已提醒次数",
+        	isinvoice: e + "请输入是否已开票	",
+        	invoiceUname: e + "请输入开票人",
+        	invoiceNo: e + "请输入开具发票号码",
+        	invoiceDate: e + "请输入开具日期",
+        	receiveDate: e + "请输入领取日期",
+        	companySaleId: e + "请输入公司经办销售编号	",
+        	companySaleName: e + "请输入公司经办销售姓名",
+        	companySaleMobile: e + "请输入公司经办销售电话	",
+        	createDate: e + "请输入创建时间",
+        	memo: e + "请输入备注",
+        	
+        },
+        submitHandler: function(form) {
+            var url = $(form).attr("action");
+            var data = $(form).serialize();
+            parent.show();
+       　		$.post(url, data, function (res, status) { 
+       　			if(status=="success"&&res.statusCode=="200"){
+       　				$('#close_btn').click();
+       　				swal(res.message, "success");
+       　				order_search();
+       　			}else{
+       　				swal(res.message, "error");
+       　			}
+       　			parent.hide();
+       　		}, 'json'); 
+         }  
+    });
+	
+});
+//-->
+</script>
+<div class="modal-body"> 
+  
+<form id="orderSubForm" method="post" action="${ctx}/order/order/save"  class="form-horizontal m-t" ><!--   -->
+  <input type="hidden" name="id" id="id" value="${order.id}" />
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">订单流水号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="orderNo" data-options="required:true" value="${order.orderNo}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">订单来源</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="orderSource" data-options="required:true" value="${order.orderSource}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">所属区域</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="area" data-options="required:true" value="${order.area}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店编号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelId" data-options="required:true" value="${order.hotelId}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店名称</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelName" data-options="required:true" value="${order.hotelName}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店所属集团</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="ownedGroup" data-options="required:true" value="${order.ownedGroup}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">返佣权限归属</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="commissionRights" data-options="required:true" value="${order.commissionRights}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店跟进销售编号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelSaleId" data-options="required:true" value="${order.hotelSaleId}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店跟进销售姓名</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelSaleName" data-options="required:true" value="${order.hotelSaleName}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店跟进销售电话</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelSaleMobile" data-options="required:true" value="${order.hotelSaleMobile}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">酒店获取积分</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="hotelPoints" data-options="required:true" value="${order.hotelPoints}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">金额</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="amount" data-options="required:true" value="${order.amount}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">预付金额</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="prepaid" data-options="required:true" value="${order.prepaid}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">尾款</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="finalPayment" data-options="required:true" value="${order.finalPayment}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">客户编号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="clientId" data-options="required:true" value="${order.clientId}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">活动主办单位</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="organizer" data-options="required:true" value="${order.organizer}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">联系人</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="linkman" data-options="required:true" value="${order.linkman}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">联系电话</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="contactNumber" data-options="required:true" value="${order.contactNumber}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">客户获取积分</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="clientPoints" data-options="required:true" value="${order.clientPoints}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司跟进销售编号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleId" data-options="required:true" value="${order.companySaleId}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司跟进销售电话</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleMobile" data-options="required:true" value="${order.companySaleMobile}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司跟进销售姓名</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleName" data-options="required:true" value="${order.companySaleName}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">订单状态</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="state" data-options="required:true" value="${order.state}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">结算状态</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="settlementStatus" data-options="required:true" value="${order.settlementStatus}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">结算时间</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="settlementDate" data-options="required:true" value="${order.settlementDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">结算人员</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="settlementUid" data-options="required:true" value="${order.settlementUid}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">返佣状态</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="commissionStatus" data-options="required:true" value="${order.commissionStatus}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">返佣时间</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="commissionDate" data-options="required:true" value="${order.commissionDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">提佣比例</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="commissionRate" data-options="required:true" value="${order.commissionRate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">提佣金额</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="commissionAmount" data-options="required:true" value="${order.commissionAmount}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">签约时间</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="signDate" data-options="required:true" value="${order.signDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">签约业务员编号</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="signUid" data-options="required:true" value="${order.signUid}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">订单状态</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="signUname" data-options="required:true" value="${order.signUname}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">是否上传水单</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="isupload" data-options="required:true" value="${order.isupload}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">开始提醒客户时间</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="remindDate" data-options="required:true" value="${order.remindDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">已提醒次数</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="remindTimes" data-options="required:true" value="${order.remindTimes}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">是否已开票	</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="isinvoice" data-options="required:true" value="${order.isinvoice}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">开票人</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="invoiceUname" data-options="required:true" value="${order.invoiceUname}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">开具发票号码</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="invoiceNo" data-options="required:true" value="${order.invoiceNo}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">开具日期</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="invoiceDate" data-options="required:true" value="${order.invoiceDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">领取日期</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="receiveDate" data-options="required:true" value="${order.receiveDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司经办销售编号	</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleId" data-options="required:true" value="${order.companySaleId}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司经办销售姓名</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleName" data-options="required:true" value="${order.companySaleName}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">公司经办销售电话	</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="companySaleMobile" data-options="required:true" value="${order.companySaleMobile}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">创建时间</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="createDate" data-options="required:true" value="${order.createDate}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+	  <div class="form-group form-inline">
+	    <label for="groupId" class="col-sm-3 control-label">备注</label>
+	     <div class="col-sm-9">
+	     	<input type="text" class="form-control" name="memo" data-options="required:true" value="${order.memo}" aria-required="true" aria-invalid="false" class="valid" />
+	    </div>
+	  </div>
+  <div class="modal-footer">
+	<button type="button" class="btn btn-default" id="close_btn" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span> 关闭</button>
+	<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> 保存</button>
+</div>
+</form>
+</div>
+

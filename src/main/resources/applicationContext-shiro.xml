@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro Configuration</description>
+
+	<!-- Shiro's main business-tier object for web-enabled applications -->
+	<!-- 在Spring应用中配置应用级SecurityManager单例： -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager"
+		depends-on="userDao,groupDao,logininfoDao">
+		<property name="realm" ref="shiroDbRealm" />
+		<property name="cacheManager" ref="cacheManager" />
+	</bean>
+
+	<!-- 自定义的Realm -->
+	<bean id="shiroDbRealm" class="com.chuangbang.js.service.account.ShiroDbRealm">
+	</bean>
+	
+	<!-- Shiro Filter -->
+	<!-- 2.定义SecurityManager和与web.xml中过滤器同名的"shiroFilter" bean -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		 <!-- shiro的核心安全接口 -->
+		<property name="securityManager" ref="securityManager" />
+		 <!-- 要求登录时的链接 -->
+		<property name="loginUrl" value="/login" />
+		 <!-- 登陆成功后要跳转的连接 -->
+		<property name="successUrl" value="/main" />
+		<!-- shiro连接约束配置 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/confirm/verification/** = anon
+				/anon/** = anon
+				/code = anon
+				/ueditor/** = anon
+				/zgui/login = anon
+				/static/** = anon
+				/hotel/** = anon
+				/public/** = anon
+				/api/** = anon
+				/app/error/** = anon
+				/base/order/pdf/** = anon
+				/favicon.ico = anon
+				/login = authc
+				/logout = logout
+				/** = user
+			</value>
+		</property>
+	</bean>
+
+	<!-- 用户授权信息Cache -->
+	<!-- MemoryConstrainedCacheManager管理多个MapCache实例，一个命名的缓存即为一个MapCache实例。 -->
+	<!-- MemoryConstrainedCacheManager是一个基于单JVM的CacheManager实现，
+	它不支持分布式或集群 如果你的应用部署在多JVM上(比如，web应用部署在多台服务器上)，且想在JVM间进行缓存的访问，你需要使用分布式缓存实现。 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- AOP式方法级权限检查 -->
+	<!-- 可以使用Shiro的注解在单应用或web应用中进行安全检查(@RequiresRoles, @RequiresPermissions等)， 
+		这需要集成Spring AOP。 需要配置下面两个bean -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	<!-- 会话ID生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+     <!-- 会话Cookie模板 -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+	<!-- 会话DAO -->
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO">
+       <!--  <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/> -->
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+    </bean>
+    <!-- 会话管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+    </bean>
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+</beans>

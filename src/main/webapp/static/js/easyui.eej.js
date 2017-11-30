@@ -1,0 +1,387 @@
+var EEJ = {
+	newPanel :'', //临时存储新打开panel对象
+	parentPanel : '', //临时存储打开dialog所在的panel,为listObj对象
+	keyCode: {
+		ENTER: 13, ESC: 27, END: 35, HOME: 36,SHIFT: 16, TAB: 9,
+		LEFT: 37, RIGHT: 39, UP: 38, DOWN: 40,DELETE: 46, BACKSPACE:8
+	},
+	statusCode: {ok:200, error:300, timeout:301},
+	maskDiv :$('<div class="window-mask" style="z-index:9986;display:none;"></div>'),
+	//ex : EEJ.namespace('Account.Dict.List'); 则一下子定义了三个对象，不用一个个地定义
+	namespace : function(){//类似extjs的namespace
+		var a=arguments, o=null, i, j, d, rt;
+		for (i=0; i<a.length; ++i) {
+			d=a[i].split(".");
+			rt = d[0];
+			eval('if (typeof ' + rt + ' == "undefined"){' + rt + ' = {};} o = ' + rt + ';');
+			for (j=1; j<d.length; ++j) {
+			o[d[j]]=o[d[j]] || {};
+			o=o[d[j]];
+			}
+		}
+	},
+	log : function(msg,forced){
+		if(typeof console != 'undefined'){
+			console.log(msg);
+		}else if(forced){
+			alert(msg);
+		}
+	},
+	parseJson:function(data) {	//string to json
+		try{
+			if ($.type(data) == 'string')
+				return eval('(' + data + ')');
+			else return data;
+		} catch (e){
+			return {};
+		}
+	},
+	ajaxError:function(xhr, ajaxOptions, thrownError){
+		var errMsg = '<div>Http status: ' + xhr.status + ' ' + xhr.statusText + '</div>'
+		+ '<div>ajaxOptions: '+ajaxOptions + '</div>'
+		+ '<div>thrownError: '+thrownError + '</div>'
+		+ '<div>'+xhr.responseText+'</div>';
+		if($.messager){
+			$.messager.alert('系统内部错误',errMsg);
+		}else{  alert('系统内部错误\n'+errMsg);}
+	},
+	ajaxDone:function(json){
+		if(json.statusCode == EEJ.statusCode.error) {
+			$.messager.alert('错误', json.message, 'error');
+		} else {
+			$.messager.alert('提示', json.message, 'info');	//操作的成功的提示
+			if(json.callbackFn){	//回调函数
+				try{
+					eval('(' + json.callbackFn + ')');
+				}catch(err){}
+			}
+		} 
+	},
+	ajax: function(op){ //用法同$.ajax一样
+		$.ajax({
+			type: op.type || 'post',url: op.url,data: op.data,cache: false,
+			success: function(response){
+				var json = EEJ.parseJson(response);
+				if(json.statusCode){
+					EEJ.ajaxDone(json);
+					op.success(json);
+				}//调用回调函数
+				else if ($.isFunction(op.success)) op.success(response);
+			},
+			error: EEJ.ajaxError
+		});
+	},
+	panelIndex : 0,
+	getPanelIndex : function(){
+		EEJ.panelIndex++;
+		return 'eej-genid-'+EEJ.panelIndex;
+	},
+	search : function(listObj){
+		var $searchForm = listObj.searchForm;
+		var $dg = listObj.datagrid;
+		var $dgDiv = $dg.parent();
+		if($dgDiv.is(':hidden')){
+			$dgDiv.show();
+			$dg.datagrid({queryParams:util.serializeObject($searchForm)});
+		}else{
+			$dg.datagrid('load',util.serializeObject($searchForm));
+		}
+	},
+	targetDialog : function(event,panelObj){
+		event.preventDefault();
+		var $link = $(event.target).closest('a[target="dialog"]');
+		var _url = $link.attr('href');
+		var $dg =  panelObj.datagrid;
+		if($dg && !panelObj.dgDiv.is(':hidden')){
+			var _selected = $dg.datagrid('getSelected');
+			_url = $link.attr('href').replace(new RegExp("#\\w+#","g"),function(str){
+				return _selected[str.substring(1,str.length -1)];
+			}) ;
+		}
+		var data = $link.attr('data');
+		if(data){data = EEJ.parseJson(data);}
+		return EEJ.openDialog({url:_url,title : $link.attr('title'),width : $link.attr('width'),
+					height : $link.attr('height'),modal:$link.attr('modal') || true});
+	},
+	ajaxTodo : function(event,listObj){
+		event.preventDefault();
+		var $link = $(event.target).closest('a[target="ajaxTodo"]');
+		var _link = $link.attr('href');
+		var _newUrl = _link;
+		if(_link.indexOf('#id#') != -1){
+			var _selected =  listObj.datagrid.datagrid('getSelected');
+			if(!_selected){
+				$.messager.alert('提示',$link.attr('warn') || '请选择信息！' , 'info');
+				return;
+			}
+			_newUrl  = _link.replace(new RegExp("#\\w+#","g"),function(str){
+				return _selected[str.substring(1,str.length -1)];
+			}) ;
+			
+		}
+		var data = $link.attr('data');
+		if(data){data = EEJ.parseJson(data);}
+		var title = $link.attr('title');
+		if(title != undefined&&title!=""&&title!=null){
+			$.messager.confirm('确认', $link.attr('title'), function(ok) {
+				if (ok) {
+					EEJ.ajax({type:'POST',url:_newUrl,dataType:"json",data :data,cache:false,
+					success:listObj.ajaxTodoCb
+					});
+				}
+			});
+		}else{
+			EEJ.ajax({type:'POST',url:_newUrl,dataType:"json",data :data,cache:false,
+				success:listObj.ajaxTodoCb
+				});
+		}
+		
+	},
+	bindSearchEvent : function(listObj){
+		listObj.jqdiv.delegate('#searchBtn','click',listObj.search);	
+	},
+	bindTargetEvent : function(panelObj){
+		var $panel = panelObj.jqdiv;
+		$panel.delegate('a[target="dialog"]','click',function(event){
+			EEJ.newPanel = EEJ.targetDialog(event,panelObj);	//临时存储dialog对象
+			EEJ.parentPanel = panelObj;	//临时存储打开dialog的panel对象
+		});	
+		$panel.delegate('a[target="ajaxTodo"]','click',function(event){
+			EEJ.ajaxTodo(event,panelObj);
+		});	
+	},
+	bindFormEvent : function(formObj){
+		formObj.jqdiv.delegate('#subForm','submit',function(event){	
+			//会先调用 EEJ.ajaxDone再调用 submitSuccessCb
+			return EEJ.iframeCallback(this,formObj.submitSuccessCb);
+		});	
+		formObj.jqdiv.delegate('#close','click',formObj.close);	
+	}
+};
+
+EEJ.tabs = function(tabsId){	//新建一个tab对象，并返回该对象
+	var _self = this;
+	_self.tabobj = $('#'+tabsId);
+	_self.tabMenu = $('#tabMenus');
+	_self.tabMap = new Map();
+	_self.getTab = function(){
+		return this.tabobj.tabs('getSelected');
+	};
+	_self.find = function(selector){  //等于在当前tab使用jquery的find方法
+		return this.getTab().find(selector);
+	};
+	_self.bindRightClick = function(){	//绑定右键弹出关闭等选项卡
+		_self.tabobj.tabs({
+			onContextMenu : function(e, title,index){
+				e.preventDefault();
+				_self.tabobj.tabs('select',index);
+				_self.tabMenu.menu({
+					onClick: function (item) {
+			        	tabMenuItemClickAction(_self,item.id.substring(4));
+			        }
+				});
+				_self.tabMenu.menu('show', {
+			        left: e.pageX,
+			        top: e.pageY
+			    });
+			}
+		});
+	};
+	_self.open = function(tabOption){	//打开一个新的tab,根据title,如果存在则只刷新
+		tabOption.id = tabOption.id? tabOption.id : EEJ.getPanelIndex();
+		var thisTab = _self.tabobj;
+		_self.tabMap.put(tabOption.title,tabOption.url);
+		EEJ.ajax({
+			type : 'get',
+			url : tabOption.url,
+			success : function(response){
+				tabOption.url = '';
+				tabOption.content = response;
+				if(!thisTab.tabs('exists',tabOption.title)){	//新增
+					thisTab.tabs('add',tabOption);
+		        }else{	//刷新
+		        	thisTab.tabs('select',tabOption.title);
+					var tab = thisTab.tabs('getSelected');
+					if(tab != null){
+						thisTab.tabs('update',{tab:tab,options:tabOption});
+					}
+		        }
+				EEJ.newPanel = $('#'+tabOption.id);
+			}
+		});
+		return tabOption.id;
+	};
+	return _self;
+};
+
+EEJ.openDialog = function(op){	//打开一个dialog，并返回该dialog的jquery对象
+	var $dialogDiv;
+	if(!op.id){
+		op.id = EEJ.getPanelIndex();
+		$dialogDiv = $('<div id="' +op.id + '"></div>');
+		//$dialogDiv.appendTo('body');
+	}else{
+		$dialogDiv = $('#'+op.id);
+	}
+	EEJ.ajax({
+		type : 'get',
+		url : op.url,
+		success : function(response){
+			if(!response.statusCode){
+				op.href = '';
+				op.content = response;
+				op.onClose = function(){	//默认的close只是隐藏div，所以彻底关闭
+					$dialogDiv.panel('destroy');
+				};
+				$dialogDiv.dialog(op);
+			}
+		}
+	});
+	return $dialogDiv;
+};
+
+EEJ.iframeCallback = function(form, callback){
+	var $form = $(form), $iframe = $("#callbackframe");
+	if(!$form.form('validate')) {return false;}
+	//$('div.window-mask').css('z-index',$form.parents('div.window:eq(0)').css('z-index')+1);
+	/*if ($iframe.size() == 0) {
+	}*/
+	$form.find('#submit').linkbutton('disable');
+	if(!form.ajax) {
+		$form.append('<input type="hidden" name="ajax" value="1" />');
+	}
+	form.target = "callbackframe";
+	EEJ._iframeResponse($iframe[0],$form,callback);
+};
+/**
+ * 供EEJ.iframeCallback调用
+ * @param iframe
+ * @param callback
+ */
+EEJ._iframeResponse = function(iframe, $form,callback){
+	var $iframe = $(iframe), $document = $(document);
+	$document.trigger("ajaxStart");
+	$iframe.bind("load", function(event){
+		$form.find('#submit').linkbutton('enable');
+		$iframe.unbind("load");
+		//$('div.window-mask').css('z-index',$form.parents('div.window:eq(0)').css('z-index')-1);
+		$document.trigger("ajaxStop");
+		if (iframe.src == "javascript:'%3Chtml%3E%3C/html%3E';" || // For Safari
+			iframe.src == "javascript:'<html></html>';") { // For FF, IE
+			return;
+		}
+		var doc = iframe.contentDocument || iframe.document;
+		// fixing Opera 9.26,10.00
+		if (doc.readyState && doc.readyState != 'complete') return; 
+		// fixing Opera 9.64
+		if (doc.body && doc.body.innerHTML == "false") return;
+		var response;
+		if (doc.XMLDocument) {
+			// response is a xml document Internet Explorer property
+			response = doc.XMLDocument;
+		} else if (doc.body){
+			try{
+				response = $iframe.contents().find("body").text();
+				response = jQuery.parseJSON(response);
+			} catch (e){ // response is html document or plain text
+				response = doc.body.innerHTML;
+			}
+		} else {
+			// response is a xml document
+			response = doc;
+		}
+		EEJ.ajaxDone(response);
+		callback(response);
+	});
+};
+
+EEJ.DWZ = {};
+
+EEJ.DWZ.ListPanel = function(){
+	var _self = this;
+	_self.jqdiv = EEJ.newPanel;
+	_self.parent = EEJ.parentPanel;
+	_self.parent.child = _self;
+	_self.datagrid = _self.jqdiv.find('#dg');
+	_self.dgDiv = _self.jqdiv.find('#dgDiv');
+	_self.searchForm = _self.jqdiv.find('#searchForm');
+	_self.dgDiv.css('height',_self.jqdiv.height() - _self.jqdiv.find('#toolbar').height() - 12);
+	_self.ajaxTodoCb = function(json){
+		if(json.statusCode == EEJ.statusCode.ok){
+	 		if(_self.reloadDatagrid){
+	 			_self.reloadDatagrid();
+	 		}
+	 	}
+	};
+	_self.reloadDatagrid = function(){
+		if(_self.dgDiv.is(':hidden')){
+			_self.search();
+		}else{
+			_self.datagrid.datagrid('reload');
+	    }
+	};
+	_self.search = function(){
+		EEJ.search(_self);
+	};
+	_self.bindDWZEvent = function(){
+		_self.jqdiv.undelegate();
+		EEJ.bindSearchEvent(_self);
+		EEJ.bindTargetEvent(_self);
+	};
+	return _self;
+};
+
+EEJ.DWZ.Dialog  = function(){
+	var _self = this;
+	_self.jqdiv = EEJ.newPanel;
+	_self.parent = EEJ.parentPanel;
+	_self.parent.child = _self;
+	_self.subForm = _self.jqdiv.find('#subForm');
+	_self.submitSuccessCb = function(json){
+		if(json.refreshDatagrid){//刷新datagrid
+			if(_self.parent.reloadDatagrid){
+				_self.parent.reloadDatagrid();
+			}
+		}
+		if (json.closeCurrent) {
+			_self.close();
+		}
+	};
+	_self.close = function(){
+		//_self.jqdiv.closest('div.window').find('a.panel-tool-close').click();
+		_self.jqdiv.panel('destroy');
+		//_self.jqdiv.closest('div.window').remove();
+	};
+	_self.bindDWZEvent = function(){
+		_self.jqdiv.undelegate();
+		EEJ.bindFormEvent(_self);
+	};
+	return _self;
+}; 
+
+$(function(){
+	$(document).delegate('#searchForm','submit',function(event){event.preventDefault();});
+	$(document).delegate('#searchForm','keyup',function(event){	
+		if(event.keyCode == EEJ.keyCode.ENTER){  $(this).find('#searchBtn').click(); }
+	});
+	$(document).delegate('#subForm','keyup',function(event){	
+		if(event.keyCode == EEJ.keyCode.ENTER){  $(this).trigger('submit');}
+	});	
+	$(document).delegate('#submit','click',function(event){	
+		 $(this).closest('#subForm').trigger('submit');
+	});
+	var $progressBar = $('<div id="progressBar" class="progressBar" style="display: none;font-size:13px;">数据加载中，请稍等...</div>').appendTo('body');
+
+	$(document).ajaxStart(function(){
+		EEJ.maskDiv.show();
+		$progressBar.show();
+	});
+	$(document).ajaxStop(function(){
+		EEJ.maskDiv.hide();
+		$progressBar.hide();
+	});
+	
+	EEJ.maskDiv.appendTo('body');
+	$("<iframe id='callbackframe' name='callbackframe' src='about:blank' style='display:none'></iframe>").appendTo("body");
+
+});

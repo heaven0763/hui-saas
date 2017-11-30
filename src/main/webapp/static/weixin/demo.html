@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<title>档期查询</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<link href="css/common.css" rel="stylesheet" />
+	<link href="css/font-awesome.min.css" rel="stylesheet" />
+	
+	
+    </head>
+    <body style="">
+    		<div style="position:fixed;top:0;left:0;width:100%;background-color:#ffffff;
+    			font-size:0.9rem;display:table;height:3rem;border-bottom:0.1rem solid #cccccc;text-align:center;color:#333333;">
+    			<div style="display:table-cell;width:25%;vertical-align:middle;border:1px solid #ffffff;position:relative;">
+    				<span style="border:1px solid #ffffff;">地区</span><i class="fa fa-angle-down" style="position:absolute;font-size:1.2rem;top:0.9rem;right:10%;">&nbsp;</i>
+   				</div>
+    			<div style="display:table-cell;width:25%;vertical-align:middle;border:1px solid #ffffff;position:relative;">
+    				<span style="border:1px solid #ffffff;">酒店</span><i class="fa fa-angle-down" style="position:absolute;font-size:1.2rem;top:0.9rem;right:10%;">&nbsp;</i>
+   				</div>
+    			<div style="display:table-cell;width:25%;vertical-align:middle;border:1px solid #ffffff;position:relative;">
+    				<span style="border:1px solid #ffffff;">日期</span><i class="fa fa-angle-down" style="position:absolute;font-size:1.2rem;top:0.9rem;right:10%;">&nbsp;</i>
+   				</div>
+    			<div style="display:table-cell;width:25%;vertical-align:middle;border:1px solid #ffffff;position:relative;">
+    				<span style="border:1px solid #ffffff;">类别</span><i class="fa fa-angle-down" style="position:absolute;font-size:1.2rem;top:0.9rem;right:10%;">&nbsp;</i>
+   				</div>
+    		</div>
+    		
+    		
+    		
+    		
+    		<div style="padding:0 2%;width:96%;padding-top:3rem;">
+    			
+    			
+    			<div>
+    				<label><input type="radio"  class="rdo_input" name="test"   /><span class="rdo_text">点我</span></label>
+		    		<label><input type="radio"  class="rdo_input"   name="test"  /><span class="rdo_text">点我</span></label>
+		    		<label><input type="radio"  class="rdo_input"  name="test"   /><span class="rdo_text">点我</span></label>
+    			</div>
+    			
+    			
+    			
+    			<div style="font-size:0;margin:0.5rem auto;">
+    				<div class="btn btn-md bg-type-01" style="width:32%;padding-left:0;padding-right:0;border:0;">会掌柜客户</div>
+    				<div class="btn btn-md bg-type-02" style="width:32%;padding-left:0;padding-right:0;border:0;margin:0 2%;">酒店自有客户</div>
+    				<div class="btn btn-md bg-type-03" style="width:32%;padding-left:0;padding-right:0;border:0;">拓源公关</div>
+    			</div>
+    			<div style="font-size:0;margin:0.5rem auto;">
+    				<div class="btn btn-md bg-type-01" style="width:32%;padding-left:0;padding-right:0;border:0;">会掌柜客户</div>
+    				<div class="btn btn-md bg-type-02" style="width:32%;padding-left:0;padding-right:0;border:0;margin:0 2%;">酒店自有客户</div>
+    				<div class="btn btn-md bg-type-03" style="width:32%;padding-left:0;padding-right:0;border:0;">拓源公关</div>
+    			</div>
+    			
+    			
+    			
+    			<div style="width:100%;font-size:0;margin:0.5rem 0;">
+    				<div class="btn btn-xs bg-type-00" style="width:6.02rem;margin-right:0.5rem;">已付定金</div>
+    				<div class="btn btn-xs bg-type-01" style="width:6.02rem;margin-right:0.5rem;">已结算</div>
+    				<div class="btn btn-xs bg-type-02 btn-disable" style="width:6.02rem;margin-top:0.5rem;">其他档期</div>
+    			</div>
+    			
+    			
+    			
+    			<div class="btn btn-lg bg-type-01" style="width:6.02rem;margin:0 0.3rem;">已付定金</div>
+    			
+    			
+    			<div>
+	    			<label><input type="checkbox" checked="checked" class="chekbox" /><i>好的</i></label>
+	    			<label><input type="checkbox" class="chekbox" />不好的</label>
+    			</div>
+    			
+    			<div>
+	    			<label><input type="radio" name="type" checked="checked" class="chekbox"/>好的</label>
+	    			<label><input type="radio" name="type" class="chekbox" />不好的</label>
+    			</div>
+    			
+    			
+    			
+    			
+    			
+    			<div>
+    			
+
+					<i class="fa fa-check-square-o"></i>
+					<i class="fa fa-square-o"></i>
+
+    			</div>
+    			
+    			<div style="font-size:0;margin:0.5rem auto;">
+	    			<div class="btn btn-xs bg-type-00" style="width:48%;padding-left:0;padding-right:0;float:left;">调整、审核下属人员权限</div>
+	    			<div class="btn btn-xs bg-type-01 btn-disable" style="width:48%;padding-left:0;padding-right:0;float:right;">审核销售录入线下活动</div>
+	    			<div style="clear:both;"></div>
+	    		</div>
+    			
+    			<div style="font-size:0;margin:0.5rem auto;">
+	    			<div class="btn btn-xs bg-type-00 icon-tr-02" style="width:48%;padding-left:0;padding-right:0;float:left;">调整、审核下属人员权限</div>
+	    			<div class="btn btn-xs bg-type-01 btn-disable icon-tr-01" style="width:48%;padding-left:0;padding-right:0;float:right;">审核销售录入线下活动</div>
+	    			<div style="clear:both;"></div>
+	    		</div>
+    			
+    			
+    			<div>
+    				<label><input type="checkbox"  class="chk_input"    /><span class="chk_text">点我</span></label>
+		    		<label><input type="checkbox"  class="chk_input"    /><span class="chk_text">点我</span></label>
+		    		<label><input type="checkbox"  class="chk_input"    /><span class="chk_text">点我</span></label>
+    			</div>
+    			<div>
+    				<label><input type="radio"  class="chk_input"  name="kkkk"  /><span class="chk_text">点我12445</span></label>
+		    		<label><input type="radio"  class="chk_input"  name="kkkk"   /><span class="chk_text">点我23</span></label>
+		    		<label><input type="radio"  class="chk_input"   name="kkkk"  /><span class="chk_text">点我</span></label>
+    			</div>
+    			
+    			
+    			<div class="icon-start-01">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			<div class="icon-start-02">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			
+    			0分
+    			<div class="icon-start-02 icon-start-size-0">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			1分
+    			<div class="icon-start-02 icon-start-size-1">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			<div class="icon-start-02 icon-start-size-2">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			<div class="icon-start-02 icon-start-size-3">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			<div class="icon-start-02 icon-start-size-4">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			<div class="icon-start-02 icon-start-size-5">
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    				<i class="fa fa-star"></i>
+    			</div>
+    			
+    			
+    			
+    			
+    			
+    			<div>
+    				<label><input type="radio"  class="chk_input"  name="kkkk"  /><span class="chk_text">点我</span></label>
+		    		<label><input type="radio"  class="chk_input"  name="kkkk"   /><span class="chk_text">点我</span></label>
+		    		<label><input type="radio"  class="chk_input"   name="kkkk"  /><span class="chk_text">点我</span></label>
+    			</div>
+    			
+    			
+    			
+    			
+    			<div>
+	    			<input type="month" id="date_year_month" year="" month=""  /> 
+	    		</div>
+	    		
+	    		
+	    		<div style="width:100%;text-align:center;font-size:0.85rem;">
+	    			<div style="display:table;width:100%;color:#999999;">
+		    			<div style="display:table-cell;width:5%;">&nbsp;</div>
+		    			<div style="display:table-cell;width:12.85%;">日</div>
+		    			<div style="display:table-cell;width:12.85%;">一</div>
+		    			<div style="display:table-cell;width:12.85%;">二</div>
+		    			<div style="display:table-cell;width:12.85%;">三</div>
+		    			<div style="display:table-cell;width:12.85%;">四</div>
+		    			<div style="display:table-cell;width:12.85%;">五</div>
+		    			<div style="display:table-cell;width:12.85%;">六</div>
+		    			<div style="display:table-cell;width:5%;">&nbsp;</div>
+		    		</div>
+	    			
+		    		<div id="date_switch_tab" style="display:table;width:100%;color:#666666;">
+		    			<div class="date-icon-left" style="display:table-cell;width:5%;">&nbsp;</div>
+		    			<div class="date-day-num" day="6" style="display:table-cell;width:12.85%;">6</div>
+		    			<div class="date-day-num" day="7" style="display:table-cell;width:12.85%;">7</div>
+		    			<div class="date-day-num date-icon-checked" day="8" style="display:table-cell;width:12.85%;">8</div>
+		    			<div class="date-day-num" day="9" style="display:table-cell;width:12.85%;">9</div>
+		    			<div class="date-day-num" day="10" style="display:table-cell;width:12.85%;">10</div>
+		    			<div class="date-day-num" day="11" style="display:table-cell;width:12.85%;">11</div>
+		    			<div class="date-day-num" day="12" style="display:table-cell;width:12.85%;">12</div>
+		    			<div class="date-icon-right" style="display:table-cell;width:5%">&nbsp;</div>
+		    		</div>
+	    		</div>
+	    		
+    			
+    			
+    			
+    			
+    			
+    			
+    			
+    		</div>
+    		
+    		
+		    <div style="position:fixed;bottom:5%;right:5%;height:6rem;width:6rem;border-radius:50%;background-color:#274082;
+		    	font-size:1.6rem;text-align:center;color:#ffffff;line-height:1.8rem;">
+		    	<div style="margin-top:1.2rem;">导出</div>
+		    	<div>结果</div>
+		    </div>
+    
+    </body>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="common.format.js"></script>
+    <script>
+    	$(function(){
+    	
+    		var $date_year_month = $('#date_year_month');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		
+    		initDateSwitchTab($date_year_month,$date_switch_tab);
+    		
+    		//var st = getWeekStartDate(new Date(2017,0,28));
+    		//alert(common.formatDate(st));
+    		
+    	});
+    	
+    	function initDateSwitchTab($date_year_month,$date_switch_tab){
+    		var $date_switch_prev = $date_switch_tab.find('>.date-icon-left');
+    		var $date_switch_next = $date_switch_tab.find('>.date-icon-right');
+    		
+    		
+    		var $date_day_nums = $date_switch_tab.find('.date-day-num');
+    		$date_day_nums.click(function(){
+    			$date_day_nums.removeClass('date-icon-checked');
+    			var $this = $(this);
+    			$this.addClass('date-icon-checked');
+    			
+    			var dateStr = $date_year_month.val() + '-'+ $this.attr('day');
+    			
+    			
+    			console.log('check>>>dateStr>>>'+dateStr);
+    		});
+    		
+			var date = new Date();
+    		
+    		setCommonWeek(date);
+			
+    		$date_year_month.change(function(){
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var date = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1,1);
+    			setCommonWeek(date);
+    		});
+    		
+    		$date_switch_prev.click(function(){
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var nowFirstDay = Number($date_switch_tab.find('.date-day-num:first').attr('day'));
+    			var nowLastDay = Number($date_switch_tab.find('.date-day-num:last').attr('day'));
+    			
+    			if($date_switch_tab.attr('prevMonth') != '1'){
+    				
+    				var preDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1]-1 ,nowFirstDay - 1);
+    				setCommonWeek(preDate);
+        			
+    			}else{
+    				setPrevMonthWeek();
+    			}
+        		
+    		});
+    	
+    		//向左结束，向右开始
+    		
+    		$date_switch_next.click(function(){	//向右
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var nowFirstDay = Number($date_switch_tab.find('.date-day-num:first').attr('day'));
+    			var nowLastDay = Number($date_switch_tab.find('.date-day-num:last').attr('day'));
+    			
+        		if($date_switch_tab.attr('nextMonth') != '1'){
+        			var nextDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 ,Number(nowLastDay) + 1);
+    				setCommonWeek(nextDate);
+    			}else{
+    				setNextMonthWeek();
+    			}
+        		
+    		});
+    	}
+    	
+    	function setCommonWeek(date){
+    		console.log('setCommonWeek>>>' + common.formatDate(date));
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month')
+    		
+    		var month = date.getMonth() + 1  ;
+			$date_year_month.val(date.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+			var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1]-1 ,date.getDate()));
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			var diffmonth = false; 
+			
+			var maxDayOfMonth = new Date(new Date(date.getFullYear(),date.getMonth() + 1 ,0)).getDate();//获得该月的最大天数
+			
+			for(var i = 0; i< weekDayArray.length ;i ++){
+				if(weekDayArray[i]  == 1 || weekDayArray[i]  == maxDayOfMonth) {
+					diffmonth = true;
+				}
+				/* if(i < weekDayArray.length -1 ){
+					//console.log(weekDayArray[i]);
+					//console.log(weekDayArray[i + 1]);
+					if(weekDayArray[i] > weekDayArray[i+1]){
+						diffmonth = true;
+					}
+				} */
+			}
+			if(diffmonth ){
+				if(date.getDate() > 20){
+					$date_switch_tab.attr('prevMonth','0');
+					$date_switch_tab.attr('nextMonth','1');
+				}else{
+					$date_switch_tab.attr('prevMonth','1');
+					$date_switch_tab.attr('nextMonth','0');
+				}
+			} else{
+				$date_switch_tab.attr('prevMonth','0');
+				$date_switch_tab.attr('nextMonth','0');
+			}
+			
+			
+			$date_switch_tab.find('.date-day-num').each(function(i){
+				$(this).attr('day',weekDayArray[i]);
+
+				if($date_switch_tab.attr('prevMonth') == '1' ){
+					weekDayArray[i] = weekDayArray[i] > 20? '':weekDayArray[i]; 
+				}else if($date_switch_tab.attr('nextMonth') == '1'){
+					weekDayArray[i] = weekDayArray[i] < 20? '':weekDayArray[i];
+				}
+				$(this).text(weekDayArray[i]);
+				
+			});
+			
+			dateCheckDay(date.getDate());
+    	}
+    	
+    	function dateCheckDay(day){
+    		var $date_switch_tab = $('#date_switch_tab');
+			$date_switch_tab.find('[day='+day+']').click();
+    	}
+    	
+    	function setPrevMonthWeek(){
+    		console.log('setPrevMonthWeek');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month');
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+    		
+    		var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 , 0));
+			
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			
+			
+			$date_switch_tab.find('.date-day-num').each(function(i){
+				$(this).attr('day',weekDayArray[i]);
+				if(weekDayArray[i] < 20){
+					weekDayArray[i] = '';
+				}
+				$(this).text(weekDayArray[i]);
+			});
+			
+			var month = startDate.getMonth() + 1  ;
+			$date_year_month.val(startDate.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		$date_switch_tab.attr('prevMonth','0');
+    		$date_switch_tab.attr('nextMonth','1');
+    		
+    		var maxDayOfMonth = new Date(new Date(startDate.getFullYear(),startDate.getMonth() + 1 ,0)).getDate();//获得该月的最大天数
+    		dateCheckDay(maxDayOfMonth);
+    	}
+    	
+    	function setNextMonthWeek(){
+    		console.log('setNextMonthWeek');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month');
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+    		
+    		//var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 , 0));
+    		var nextMonthDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] , 1);
+    		var startDate = getWeekStartDate(nextMonthDate);
+    		
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			
+			
+			var stDay  = startDate.getDay();
+			var index = 0;
+			for(var i = 0; i < 7 ; i ++ ){
+				var $target = $date_switch_tab.find('.date-day-num:eq('+i+')');
+				$target.attr('day',weekDayArray[i]);
+				if(weekDayArray[i] > 20){
+					weekDayArray[i] = '';
+				}
+				$target.text(weekDayArray[i]);
+			}
+			
+			var month = nextMonthDate.getMonth() + 1  ;
+			$date_year_month.val(startDate.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		$date_switch_tab.attr('prevMonth','1');
+    		$date_switch_tab.attr('nextMonth','0');
+    		
+    		dateCheckDay(1);
+    	}
+    	
+    	function getWeekStartDate(date){
+    		return new Date(date.getFullYear(),date.getMonth() , date.getDate() + (0 - date.getDay()) );
+    	}
+    	
+    	function getWeekDayArray(year,month,day,direction){
+    		var date = new Date(year,month ,day);
+    		var weekDayarray = [];
+    		
+    		switch(direction){
+    			case 'start' :
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day ).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 1).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 2).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 3).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 4).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 5).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 6).getDate());
+    				break;
+    		}
+    		return weekDayarray;
+    		
+    	}
+    </script>
+</html>

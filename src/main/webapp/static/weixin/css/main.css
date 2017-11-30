@@ -1,0 +1,234 @@
+body{
+	max-height:100%;
+	overflow-x:hidden;
+}
+
+html,body {
+	background-color: #274082;
+}
+
+.per-div-main {
+	width: 100%;
+	height: 16.6%;
+	color: #EEF0F5;
+}
+
+.bg-body-main-size-6{
+	overflow-y:hidden;
+}
+
+.bg-body-main-size-2 .per-div-main{
+	height: 28.6%;
+}
+.bg-body-main-size-3 .per-div-main{
+	height: 25.6%;
+}
+.bg-body-main-size-4 .per-div-main{
+	height: 22.6%;
+}
+.bg-body-main-size-5 .per-div-main{
+	height: 19.6%;
+}
+.bg-body-main-size-6 .per-div-main{
+	height: 16.6%;
+}
+
+.per-div-md-lf{
+	font-size: 1rem;
+	width: 20%;
+	height: 100%;
+	display: table-cell;
+	background-size: 55%;
+	background-repeat: no-repeat;
+	background-position: 60% 10%;
+}
+
+.per-div-md-ct{
+	width: 66%;
+	display: table-cell;
+	font-size: 1.4rem;
+}
+
+.per-div-md-en{
+	font-size:0.8rem
+}
+
+.per-div-md-rt {
+	font-size: 1rem;
+	display: table-cell;
+	width: 14%;
+	height: 100%;
+	right: 0%;
+	background-image: url(icon/common/arrow-right.png);
+	background-size: 70%;
+	background-repeat: no-repeat;
+	background-position: 30% 30%;
+}
+
+.per-main-left {
+	width: 20%;
+	-webkit-box-flex: 1;
+	background: url('css/icon/main/jyxx.png') no-repeat 50% 40%;
+	height: 3rem;
+	background-size: 50%;
+}
+
+.per-main-left-img {
+	width: 55%;
+	margin-left: 20%;
+}
+
+
+.per-div-right {
+	width: 14%;
+}
+
+.per-div-right-img {
+	width: 1.8rem;
+	height: 1.8rem;
+}
+
+.per-active {
+	background-color: #213875;
+}
+
+
+@media screen and (min-height: 1024px) and (max-height: 1199px) {
+	.per-div-md-lf{
+		background-size: 50%;
+		background-position: 60% 50%;
+	}
+}
+@media screen and (min-height: 1200px)  {
+	.per-div-md-lf{
+		background-size: 45%;
+		background-position: 60% 50%;
+	}
+	
+}
+
+/** ��ҳ�˵�ͼƬ���� **/
+.main-icon-bjsh{
+	background-image: url(icon/main/bjsh.png);
+}
+.main-icon-cddq-jgbj{
+	background-image: url(icon/main/cddq-jgbj.png);
+}
+.main-icon-cdhzxxcx{
+	background-image: url(icon/main/cdhzxxcx.png);
+}
+.main-icon-cdxx{
+	background-image: url(icon/main/cdxx.png);
+}
+.main-icon-dqcy{
+	background-image: url(icon/main/dqcy.png);
+}
+.main-icon-dycy{
+	background-image: url(icon/main/dycy.png);
+}
+
+.main-icon-fydz{
+	background-image: url(icon/main/fydz.png);
+}
+
+.main-icon-grkhjfcx{
+	background-image: url(icon/main/grkhjfcx.png);
+}
+
+.main-icon-jdbjtzsh{
+	background-image: url(icon/main/jdbjtzsh.png);
+}
+.main-icon-jdjfcx{
+	background-image: url(icon/main/jdjfcx.png);
+}
+.main-icon-jfcx{
+	background-image: url(icon/main/jfcx.png);
+}
+.main-icon-jyxx{
+	background-image: url(icon/main/jyxx.png);
+}
+.main-icon-jyxxcx{
+	background-image: url(icon/main/jyxxcx.png);
+}
+.main-icon-plcx{
+	background-image: url(icon/main/plcx.png);
+}
+.main-icon-qxtz{
+	background-image: url(icon/main/qxtz.png);
+}
+.main-icon-qxyj{
+	background-image: url(icon/main/qxyj.png);
+}
+.main-icon-rygl{
+	background-image: url(icon/main/rygl.png);
+}
+.main-icon-ryxxcx{
+	background-image: url(icon/main/ryxxcx.png);
+}
+.main-icon-tcbltzsh{
+	background-image: url(icon/main/tcbltzsh.png);
+}
+.main-icon-xstxsh{
+	background-image: url(icon/main/xstxsh.png);
+}
+.main-icon-xxhdsh{
+	background-image: url(icon/main/xxhdsh.png);
+}
+.main-icon-xxhdxxlr{
+	background-image: url(icon/main/xxhdxxlr.png);
+}
+.main-icon-ywtctj{
+	background-image: url(icon/main/ywtctj.png);
+}
+.main-icon-zbjdxx{
+	background-image: url(icon/main/zbjdxx.png);
+}
+.main-icon-zbjtxx{
+	background-image: url(icon/main/zbjtxx.png);
+}
+
+.main-icon-ryyq{
+	background-image: url(icon/main/ryyq.png);
+}
+.main-icon-pldrxsry{
+	background-image: url(icon/main/pldrxsry.png);
+}
+
+.main-icon-jfsc{
+	background-image: url(icon/main/jfsc.png);
+}
+
+.main-icon-jfscdz{
+	background-image: url(icon/main/jfscdz.png);
+}
+.main-icon-hrsq{
+	background-image: url(icon/main/hrsq.png);
+}
+.main-icon-fyzz{
+	background-image: url(icon/main/fyzz.png);
+}
+
+.main-icon-ywtc{
+	background-image: url(icon/main/ywtc.png);
+}
+
+.main-icon-cshhrcx{
+	background-image: url(icon/main/cshhrcx.png);
+}
+.main-icon-cdzttz{
+	background-image: url(icon/main/cdzttz.png);
+}
+
+.main-icon-jgtzlr{
+	background-image: url(icon/main/jgtzlr.png);
+}
+
+.main-icon-sqgl{
+	background-image: url(icon/main/sqgl.png);
+}
+.main-icon-cdfybltz{
+	background-image: url(icon/main/cdfybltz.png);
+}
+.main-icon-tctj{
+	background-image: url(icon/main/tctj.png);
+}

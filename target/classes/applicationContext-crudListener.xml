@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
+	default-lazy-init="true">
+	<description>crudListener</description>
+	<!-- 操作日志监听 -->
+    <!--   
+    	操作日志配置策略：  
+    1.可用的关键字有：insertAllow,insertDeny,updateAllow,updateDeny,deleteAllow,deleteDeny  
+    2.没有配置对象的策略，所有字段不记录
+    3.allow和deny都配置的按allow验证，并忽略deny  
+    4.allow和deny都允许指定all关键字  
+    5.多个字段用英文逗号隔开  
+     -->  
+    <bean id="crudListener" class="com.chuangbang.log.hibernate.listener.CrudListener" >  
+		<property name="auditableEntitys">  
+            <map>
+               <entry key="User">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               <entry key="Order">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateDeny">  
+                            <value>memo,meetingRemark,houseRemark,dinnerRemark,iscommissionupdate</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               
+               <entry key="ScheduleBooking">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               
+               <entry key="PointsAccount">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               <entry key="ComissionRecord">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               <entry key="PriceTrial">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               <entry key="PriceAdjust">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+               <entry key="PlacePrice">  
+                    <map>  
+                        <entry key="insertAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="updateAllow">  
+                            <value>all</value>  
+                        </entry>  
+                        <entry key="deleteAllow">  
+                            <value>all</value>  
+                        </entry>  
+                    </map>  
+               </entry>
+            </map>  
+        </property>  
+	</bean>
+</beans>

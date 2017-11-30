@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<title>档期查询</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<link href="css/common.css" rel="stylesheet" />
+	<link href="css/font-awesome.min.css" rel="stylesheet" />
+	
+	<style type="text/css">
+		
+		.book-state-01 .book-list-detail{
+			height:2rem;
+			line-height:2rem;
+		}
+		
+		.book-state-03{
+			background-color:#ff0000;color:#ffffff;
+		}
+		
+		.book-state-03 .btn-xs{
+			background-color:#ff0000;border-color:#ffffff;
+		}
+		
+		.book-state-01 .book-list-detail{
+			display:block;
+		}
+		
+		.book-state-02 .book-list-detail{
+			display:none;
+		}
+	</style>
+	
+    </head>
+    <body style="">
+    		
+    		<div style="">
+    			
+    			<div class="common-ct-inner" style="border-bottom:0.15rem solid #cccccc;">
+    				<div style="display:table;width:100%;margin:0.5rem 0;height:1rem;line-height:1rem;">
+	    				<div class="date-icon-left" style="display:table-cell;;width:5%;">&nbsp;</div>
+		    			<input type="month" id="date_year_month"  style="display:table-cell;width:100%;border:none; font-size: 1.2rem;"  /> 
+		    			<div class="date-icon-right" style="display:table-cell;width:13%;background-image:url(css/icon/common/icon-search.png);background-size:50%;background-position:left center;">&nbsp;</div>
+		    		</div>
+		    		
+		    		<div style="font-size:0;margin:0.5rem auto;padding:0 2%;width:96%;">
+	    				<div class="btn btn-md bg-type-01 btn-plain" style="width:32%;">会掌柜客户</div>
+	    				<div class="btn btn-md bg-type-02 btn-plain" style="width:32%;margin:0 2%;">酒店自有客户</div>
+	    				<div class="btn btn-md bg-type-03 btn-plain" style="width:32%;">拓源公关</div>
+	    			</div>
+		    			
+		    		<div style="width:100%;text-align:center;font-size:0.75rem;">
+		    			<div style="display:table;width:100%;color:#999999;height:1.8rem;line-height:1.8rem;">
+			    			<div style="display:table-cell;width:5%;">&nbsp;</div>
+			    			<div style="display:table-cell;width:12.85%;">日</div>
+			    			<div style="display:table-cell;width:12.85%;">一</div>
+			    			<div style="display:table-cell;width:12.85%;">二</div>
+			    			<div style="display:table-cell;width:12.85%;">三</div>
+			    			<div style="display:table-cell;width:12.85%;">四</div>
+			    			<div style="display:table-cell;width:12.85%;">五</div>
+			    			<div style="display:table-cell;width:12.85%;">六</div>
+			    			<div style="display:table-cell;width:5%;">&nbsp;</div>
+			    		</div>
+		    			
+			    		<div id="date_switch_tab" style="display:table;width:100%;color:#666666;height:1.8rem;line-height:1.8rem;">
+			    			<div class="date-icon-left" style="display:table-cell;width:5%;">&nbsp;</div>
+			    			<div class="date-day-num" day="6" style="display:table-cell;width:12.85%;">6</div>
+			    			<div class="date-day-num" day="7" style="display:table-cell;width:12.85%;">7</div>
+			    			<div class="date-day-num date-icon-checked" day="8" style="display:table-cell;width:12.85%;">8</div>
+			    			<div class="date-day-num" day="9" style="display:table-cell;width:12.85%;">9</div>
+			    			<div class="date-day-num" day="10" style="display:table-cell;width:12.85%;">10</div>
+			    			<div class="date-day-num" day="11" style="display:table-cell;width:12.85%;">11</div>
+			    			<div class="date-day-num" day="12" style="display:table-cell;width:12.85%;">12</div>
+			    			<div class="date-icon-right" style="display:table-cell;width:5%">&nbsp;</div>
+			    		</div>
+	    			</div>
+	    			
+	    			
+	    			<div style="width:100%;text-align:center;font-size:0.8rem;margin:1rem 0 0.5rem 0;font-weight:bold;">
+    					<div style="display:inline-block;">广州喜来登酒店</div>
+    					<div style="display:inline-block;margin-left:0.5rem;">国际宴会厅</div>
+	    			</div>
+	    			
+    			</div>
+	    		
+    			
+    			<div class="common-ct-inner book-list-parent book-state-02" style="padding:0.3rem 2%;border-bottom:0.1rem solid #cccccc;font-size:0;">
+    				<div style="display:inline-block;width:15%;font-size:0.9rem;vertical-align: top;height:2rem;line-height:2rem;">早上</div>
+    				<div class="font-gray-01" style="display:inline-block;width:85%;font-size:0;">
+    					<div class="book-list-snapshot">
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+   							<div class="btn btn-xs bg-type-02 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-03 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    				
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-02 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-03 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+    					</div>
+    					
+    					
+    				
+    					<div class="book-list-detail">
+    						<div style="">
+    							<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">销售：李玉兰</div>
+	    							<div class="font-size-min" style="display:inline-block;margin-left:1rem;">13250114365</div>
+	    							<div class="font-size-min" style="display:inline-block;position:absolute;right:0;">酒店自有客户</div>
+	    						</div>
+	    						<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">客户：K&B工作室</div>
+	    							<div class="btn btn-xs bg-type-02" style="display:inline-block;position:absolute;right:0;width:25%;">预定</div>
+	    						</div>
+    						</div>
+    						
+    						<div style="">
+    							<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">销售：李玉兰</div>
+	    							<div class="font-size-min" style="display:inline-block;margin-left:1rem;">13250114365</div>
+	    							<div class="font-size-min" style="display:inline-block;position:absolute;right:0;">酒店自有客户</div>
+	    						</div>
+	    						<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">客户：K&B工作室</div>
+	    							<div class="btn btn-xs bg-type-02" style="display:inline-block;position:absolute;right:0;width:25%;">预定</div>
+	    						</div>
+    						</div>
+    						
+    						
+    					</div>
+    					
+    				</div>
+    			
+    			</div>
+    			
+    			<div class="common-ct-inner book-list-parent book-state-02" style="padding:0.3rem 2%;border-bottom:0.1rem solid #cccccc;font-size:0;">
+    				<div style="display:inline-block;width:15%;font-size:0.9rem;vertical-align: top;height:2rem;line-height:2rem;">中午</div>
+    				<div class="font-gray-01" style="display:inline-block;width:85%;">
+    				
+    					<div class="book-list-snapshot">
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+   							<div class="btn btn-xs bg-type-02 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-03 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    				
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-02 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-03 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+	    					<div class="btn btn-xs bg-type-01 btn-plain" style="width:20%;margin:0.3rem 2.5%;">李玉兰</div>
+    					</div>
+    				
+    					<div class="book-list-detail" >
+    						<div style="height: 3rem;">
+    							<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">销售：李玉兰</div>
+	    							<div class="font-size-min" style="display:inline-block;margin-left:1rem;">13250114365</div>
+	    							<div class="font-size-min" style="display:inline-block;position:absolute;right:0;">酒店自有客户</div>
+	    						</div>
+	    						<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">客户：K&B工作室</div>
+	    							<div class="btn btn-xs bg-type-02" style="display:inline-block;position:absolute;right:0;width:25%;">预定</div>
+	    						</div>
+    						</div>
+    						
+    						<div style="height: 3rem;">
+    							<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">销售：李玉兰</div>
+	    							<div class="font-size-min" style="display:inline-block;margin-left:1rem;">13250114365</div>
+	    							<div class="font-size-min" style="display:inline-block;position:absolute;right:0;">酒店自有客户</div>
+	    						</div>
+	    						<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">客户：K&B工作室</div>
+	    							<div class="btn btn-xs bg-type-02" style="display:inline-block;position:absolute;right:0;width:25%;">预定</div>
+	    						</div>
+    						</div>
+    						
+    						
+    					</div>
+    					
+    				</div>
+    			
+    			</div>
+    			
+    			
+    			<div class="common-ct-inner book-list-parent book-state-03" style="padding:0.3rem 2%;border-bottom:0.1rem solid #cccccc;font-size:0;">
+    				<div style="display:inline-block;width:15%;font-size:0.9rem;vertical-align: top;height:2rem;line-height:2rem;">下午</div>
+    				<div class="font-gray-01" style="display:inline-block;width:85%;color:#ffffff;">
+    					<div class="book-list-detail" >
+    						<div style="height: 3rem;">
+    							<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">销售：李玉兰</div>
+	    							<div class="font-size-min" style="display:inline-block;margin-left:1rem;">13250114365</div>
+	    							<div class="font-size-min" style="display:inline-block;position:absolute;right:0;">会掌柜客户</div>
+	    						</div>
+	    						<div style="font-size:0;position:relative;margin:0.5rem 0;">
+	    							<div class="font-size-min" style="display:inline-block;">客户：K&B工作室</div>
+	    							<div class="btn btn-xs bg-type-02" style="display:inline-block;position:absolute;right:0;width:25%;">已支付预定</div>
+	    						</div>
+    						</div>
+    						
+    					</div>
+    				</div>
+    			
+    			</div>
+    			
+    			
+    			<div class="common-ct-inner book-list-parent  book-state-01" style="padding:0.3rem 2%;border-bottom:0.1rem solid #cccccc;font-size:0;">
+    				<div style="display:inline-block;width:15%;font-size:0.9rem;vertical-align: top;height:2rem;line-height:2rem;">晚上</div>
+    				<div class="font-gray-01 font-size-min" style="display:inline-block;width:85%;">
+    					<div class="book-list-detail" style="" >
+    							暂无状态
+    					</div>
+    				</div>
+    			
+    			</div>
+    			
+    			
+    			
+    			
+    			
+    			
+    			
+    		</div>
+    
+    
+    
+    	<div style="position:fixed;left:0;bottom:0;background-color:#000000;width:100%;height:2rem;display:table;text-align:center;color:#ffffff;font-size:0.8rem;">
+    		<div style="display:table-cell;width:50%;vertical-align: middle;">
+    			<div style="display:inline-block;background-image:url(css/icon/common/icon-sun.png);background-repeat:no-repeat;background-size:100%;width:1rem;margin:0 0.3rem;">&nbsp;</div>
+    			今日
+    			</div>
+    		<div style="display:table-cell;width:50%;vertical-align: middle;">
+    			<div style="display:inline-block;background-image:url(css/icon/common/icon-calendar.png);background-repeat:no-repeat;background-size:100%;width:1rem;margin:0 0.3rem;">&nbsp;</div>日历
+    		</div>
+    	</div>
+    </body>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="common.format.js"></script>
+    <script>
+    	$(function(){
+
+    		$('.book-list-parent').click(function(){
+    			var $this = $(this);
+    			if(!$this.hasClass('book-state-02')){	//不处于预定状态下
+    				return;
+    			}
+    			
+    			var $snapshot = $(this).find('.book-list-snapshot');
+    			var $detail = $(this).find('.book-list-detail');
+    			$snapshot.toggle();
+    			$detail.toggle();
+    			
+    			//book-list-snapshot
+    			//book-list-detail
+    		});
+    		
+    		var $date_year_month = $('#date_year_month');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		
+    		initDateSwitchTab($date_year_month,$date_switch_tab);
+    		
+    		//var st = getWeekStartDate(new Date(2017,0,28));
+    		//alert(common.formatDate(st));
+    		
+    	});
+    	
+    	function initDateSwitchTab($date_year_month,$date_switch_tab){
+    		var $date_switch_prev = $date_switch_tab.find('>.date-icon-left');
+    		var $date_switch_next = $date_switch_tab.find('>.date-icon-right');
+    		
+    		
+    		var $date_day_nums = $date_switch_tab.find('.date-day-num');
+    		$date_day_nums.click(function(){
+    			$date_day_nums.removeClass('date-icon-checked');
+    			var $this = $(this);
+    			$this.addClass('date-icon-checked');
+    			
+    			var dateStr = $date_year_month.val() + '-'+ $this.attr('day');
+    			
+    			
+    			console.log('check>>>dateStr>>>'+dateStr);
+    		});
+    		
+			var date = new Date();
+    		
+    		setCommonWeek(date);
+			
+    		$date_year_month.change(function(){
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var date = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1,1);
+    			setCommonWeek(date);
+    		});
+    		
+    		$date_switch_prev.click(function(){
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var nowFirstDay = Number($date_switch_tab.find('.date-day-num:first').attr('day'));
+    			var nowLastDay = Number($date_switch_tab.find('.date-day-num:last').attr('day'));
+    			
+    			if($date_switch_tab.attr('prevMonth') != '1'){
+    				
+    				var preDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1]-1 ,nowFirstDay - 1);
+    				setCommonWeek(preDate);
+        			
+    			}else{
+    				setPrevMonthWeek();
+    			}
+        		
+    		});
+    	
+    		//向左结束，向右开始
+    		
+    		$date_switch_next.click(function(){	//向右
+    			var inpuYearMonthArray = $date_year_month.val().split('-');
+    			var nowFirstDay = Number($date_switch_tab.find('.date-day-num:first').attr('day'));
+    			var nowLastDay = Number($date_switch_tab.find('.date-day-num:last').attr('day'));
+    			
+        		if($date_switch_tab.attr('nextMonth') != '1'){
+        			var nextDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 ,Number(nowLastDay) + 1);
+    				setCommonWeek(nextDate);
+    			}else{
+    				setNextMonthWeek();
+    			}
+        		
+    		});
+    	}
+    	
+    	function setCommonWeek(date){
+    		console.log('setCommonWeek>>>' + common.formatDate(date));
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month')
+    		
+    		var month = date.getMonth() + 1  ;
+			$date_year_month.val(date.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+			var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1]-1 ,date.getDate()));
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			var diffmonth = false; 
+			
+			var maxDayOfMonth = new Date(new Date(date.getFullYear(),date.getMonth() + 1 ,0)).getDate();//获得该月的最大天数
+			
+			for(var i = 0; i< weekDayArray.length ;i ++){
+				if(weekDayArray[i]  == 1 || weekDayArray[i]  == maxDayOfMonth) {
+					diffmonth = true;
+				}
+				/* if(i < weekDayArray.length -1 ){
+					//console.log(weekDayArray[i]);
+					//console.log(weekDayArray[i + 1]);
+					if(weekDayArray[i] > weekDayArray[i+1]){
+						diffmonth = true;
+					}
+				} */
+			}
+			if(diffmonth ){
+				if(date.getDate() > 20){
+					$date_switch_tab.attr('prevMonth','0');
+					$date_switch_tab.attr('nextMonth','1');
+				}else{
+					$date_switch_tab.attr('prevMonth','1');
+					$date_switch_tab.attr('nextMonth','0');
+				}
+			} else{
+				$date_switch_tab.attr('prevMonth','0');
+				$date_switch_tab.attr('nextMonth','0');
+			}
+			
+			
+			$date_switch_tab.find('.date-day-num').each(function(i){
+				$(this).attr('day',weekDayArray[i]);
+
+				if($date_switch_tab.attr('prevMonth') == '1' ){
+					weekDayArray[i] = weekDayArray[i] > 20? '':weekDayArray[i]; 
+				}else if($date_switch_tab.attr('nextMonth') == '1'){
+					weekDayArray[i] = weekDayArray[i] < 20? '':weekDayArray[i];
+				}
+				$(this).text(weekDayArray[i]);
+				
+			});
+			
+			dateCheckDay(date.getDate());
+    	}
+    	
+    	function dateCheckDay(day){
+    		var $date_switch_tab = $('#date_switch_tab');
+			$date_switch_tab.find('[day='+day+']').click();
+    	}
+    	
+    	function setPrevMonthWeek(){
+    		console.log('setPrevMonthWeek');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month');
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+    		
+    		var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 , 0));
+			
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			
+			
+			$date_switch_tab.find('.date-day-num').each(function(i){
+				$(this).attr('day',weekDayArray[i]);
+				if(weekDayArray[i] < 20){
+					weekDayArray[i] = '';
+				}
+				$(this).text(weekDayArray[i]);
+			});
+			
+			var month = startDate.getMonth() + 1  ;
+			$date_year_month.val(startDate.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		$date_switch_tab.attr('prevMonth','0');
+    		$date_switch_tab.attr('nextMonth','1');
+    		
+    		var maxDayOfMonth = new Date(new Date(startDate.getFullYear(),startDate.getMonth() + 1 ,0)).getDate();//获得该月的最大天数
+    		dateCheckDay(maxDayOfMonth);
+    	}
+    	
+    	function setNextMonthWeek(){
+    		console.log('setNextMonthWeek');
+    		var $date_switch_tab = $('#date_switch_tab');
+    		var $date_year_month = $('#date_year_month');
+    		var inpuYearMonthArray = $date_year_month.val().split('-');
+    		
+    		//var startDate = getWeekStartDate(new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] -1 , 0));
+    		var nextMonthDate = new Date(inpuYearMonthArray[0],inpuYearMonthArray[1] , 1);
+    		var startDate = getWeekStartDate(nextMonthDate);
+    		
+			var weekDayArray = getWeekDayArray(startDate.getFullYear(),startDate.getMonth() , startDate.getDate(),'start');
+			
+			
+			var stDay  = startDate.getDay();
+			var index = 0;
+			for(var i = 0; i < 7 ; i ++ ){
+				var $target = $date_switch_tab.find('.date-day-num:eq('+i+')');
+				$target.attr('day',weekDayArray[i]);
+				if(weekDayArray[i] > 20){
+					weekDayArray[i] = '';
+				}
+				$target.text(weekDayArray[i]);
+			}
+			
+			var month = nextMonthDate.getMonth() + 1  ;
+			$date_year_month.val(startDate.getFullYear() + '-' + (month < 10 ? '0'+month : month ));
+    		$date_switch_tab.attr('prevMonth','1');
+    		$date_switch_tab.attr('nextMonth','0');
+    		
+    		dateCheckDay(1);
+    	}
+    	
+    	function getWeekStartDate(date){
+    		return new Date(date.getFullYear(),date.getMonth() , date.getDate() + (0 - date.getDay()) );
+    	}
+    	
+    	function getWeekDayArray(year,month,day,direction){
+    		var date = new Date(year,month ,day);
+    		var weekDayarray = [];
+    		
+    		switch(direction){
+    			case 'start' :
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day ).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 1).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 2).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 3).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 4).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 5).getDate());
+    				weekDayarray.push(new Date(date.getFullYear(),date.getMonth() ,day + 6).getDate());
+    				break;
+    		}
+    		return weekDayarray;
+    		
+    	}
+    </script>
+</html>

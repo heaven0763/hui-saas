@@ -1,0 +1,2523 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@include file="/WEB-INF/include.inc.jsp"%>
+ <div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-sm-12" style="position: relative;">
+				<a href="javascript:;" class="btn btn-warning backto" style="position: absolute;right: 10px;margin-top: 5px;top: 7px;"><span class="glyphicon glyphicon-arrow-left"> </span> 返回</a>
+				<h3>订单信息</h3>
+				<hr>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12" style="">
+			
+     <link href="${ctx}/static/weixin/css/common.css" rel="stylesheet" />
+    <link href="${ctx}/static/weixin/css/tools.css" rel="stylesheet" />
+    <link href="${ctx}/static/weixin/css/transaction.css" rel="stylesheet" />
+	<link href="${ctx}/static/resource/css/adapt.css" rel="stylesheet" />
+	<style>
+		.display-flex {
+			display: flex;
+			justify-content: space-between;
+		}
+		
+		.state-item {
+			padding: 0.5rem 0;
+			border-bottom: 1px solid #f5f5f5;
+			text-align: center;
+			color: #999999;
+		}
+		.state-item-check {color: #019FEA;}
+		.hall-schedule {color: #999999;width: 180px;text-align: center;}
+		.hall-time {color: #999999;width: 150px;}
+		.price {width: 100px;display: inline;}
+		
+		.room-schedule {color: #999999;width: 180px;text-align: center;}
+		.meal-schedule {color: #999999;width: 180px;text-align: center;}
+		.room-breakfast {color: #999999;width: 120px;}
+		.meal-type {color: #999999;	width: 120px;}
+		.meal-cgt {color: #999999;width: 120px;}
+		
+		.font-size-min {font-size: 0.8rem;}
+		.item-checked {
+			background-color: #666666;
+			color: #ffffff;
+			padding: 0.2rem 0.8rem;
+			font-size: 0.85rem;
+			min-width: 4.2rem;
+			text-align: center;
+		}
+		
+		.item-un-checked {
+			background-color: #019FEA;
+			color: #ffffff;
+			padding: 0.2rem 0.8rem;
+			font-size: 0.85rem;
+			min-width: 4.2rem;
+			text-align: center;
+		}
+		
+		
+		.num {
+			width: 26px;
+			height: 26px;
+			border: 1px solid #999999;
+			background-color: #f5f5f5;
+			font-style: normal;
+			line-height: 26px;
+			text-align: center;
+		}
+		
+		.room-num {
+			text-align: center;
+			width: 50px;
+			min-width: 50px;
+			line-height: 26px;
+		}
+		
+		.hall-item{border-bottom: 1px solid #f5f5f5;}
+		.arr-down{background-image: url('${ctx}/static/weixin/css/icon/common/arrow-down.png');background-position: 90% 50%;background-repeat: no-repeat;background-size:20px; }
+		.amount-item{text-align: right;margin: 8px 2%;}
+		.position-a{position:absolute;width: 50px;height: 50px;line-height:50px; border-radius:50%;text-align: center;top:-5px;left: 0;}
+		.hui{background-color: #048dd3;color: #ffffff;}
+		.hotel{background-color: #f0ad4e;color: #ffffff;}
+	</style>
+	<div id="data">
+	<form id="orderForm" action="${ctx}/weixin/order/modify">
+	<input type="hidden"  name="orderNo" value="${order.orderNo}">
+	<input type="hidden"  name="id" value="${order.id}">
+	<div class="detail_content" style="width:96%;margin:0 auto;">
+		<div class="font-size-min" style="display:-webkit-flex;-webkit-align-items:center;-webkit-justify-content:space-between;height:3rem;position: relative;">
+			<div class="position-a ${order.sourceAppId eq '1'?'hui':'hotel'}" style="font-size: 20px;">
+				${order.sourceAppId eq '1'?'会':'內'}
+			</div>
+			<span  style="font-size: 1rem;margin-left: 55px;">订单号：${order.orderNo}</span> 
+			<div class="display-flex" >
+			<c:if test="${groupMap.ishotelsales and order.state gt '02' and order.state < '10'  and order.state !='03' and !(order.state eq '06' and order.settlementStatus eq '04')}">
+				<div id="order_state_div" class="display-flex" >
+					<button type="button"  qx="order:update" id="btn_order_state" class="btn btn-primary" >订单状态更改</button>
+				</div>
+			</c:if>
+			<c:if test="${groupMap.iscompanysales and guserId eq order.companySaleId and order.orderType eq 'OFFLINE' and (order.state=='021' or order.state=='04')}">
+				<div id="order_state_div" class="display-flex" >
+					<button type="button"  qx="order:update" id="btn_order_state" class="btn btn-primary" >订单状态更改</button>
+				</div>
+			</c:if>
+			<c:if test="${iscomission }">
+				<div id="commission_div" class="display-flex" >
+					<button type="button" qx="order:commissiom" id="btn_commission"  class="btn btn-primary" >确认返佣</button>
+				</div>
+			</c:if>
+				<c:if test="${((groupMap.ishotelsales  and order.hotelSaleId eq guserId) or groupMap.ishotelsalesdirector) and order.state eq '-1'}"> <!--( || order.state eq '04')  -->
+					<a qx="order:update" href="javascript:confirmQuotation(${order.id})" class="btn btn-primary" 
+					style=""><span class="glyphicon glyphicon-pencil"> 确认报价</span></a>
+					<script type="text/javascript">
+					 function confirmQuotation(id){
+						 cfm_swal("您确定确认该笔订单报价？","","warning","确认", "确认报价完成。","您取消了该操作！"
+									,'${ctx}/weixin/order/confirm/quotation',{id:id},function(){
+										loadContent(this,'${ctx}/base/order/detail/'+id,'');
+							});
+					 }
+					</script>
+				</c:if>
+			</div>
+			
+		</div>
+		
+		<div style="border-top:1px solid #cccccc;position: relative;">
+			<div style="margin:1.2rem 0;color:#019FEA;font-weight: bold;">活动场地名称：${order.hotelName}</div>
+			<div class="btn btn-xs bg-none-00" style="margin:0.5rem 0;">基本信息</div>
+			<div style="text-align: right;position:absolute;top: 0;right: 0;">
+				<span style="color: #019FEA;border: 1px solid #019FEA;width: 80px;height: 80px;line-height:80px; border-radius:50%;display: inline-block;text-align: center;margin-top: 5px;">${dSv.trsltDict('05',order.state)}</span>
+				&nbsp;&nbsp;
+				<span style="color: #019FEA;border: 1px solid #019FEA;width: 80px;height: 80px;line-height:80px; border-radius:50%;display: inline-block;text-align: center;margin-top: 5px;">${dSv.trsltDict('07',order.settlementStatus)}</span>
+				<c:if test="${order.commissionStatus ne '00' and  order.sourceAppId ne '0'}">
+				&nbsp;&nbsp;
+				<span style="color: #019FEA;border: 1px solid #019FEA;width: 80px;height: 80px;line-height:80px; border-radius:50%;display: inline-block;text-align: center;margin-top: 5px;">${mOu.getCommissionStatus(aUs.getCurrentUserType(),order.commissionStatus)}</span>
+				</c:if>
+			</div>
+		</div>
+		
+		<div class="font-size-min" style="border-top:1px solid #cccccc;">
+			<div style="margin:0.5rem 0;">
+				<div style="font-weight:bold;font-size: 1rem;">活动名称：<input class="form-control" type="text" name="activityTitle" value="${order.activityTitle}" style="width: 200px;display: inline-block;">&nbsp;&nbsp; ${order.area}</div>
+			</div>
+			<div style="margin:0.5rem 0;">
+				<div>活动时间：<input class="form-control" type="date" name="activityDate" value="${order.activityDate}" style="width: 200px;display: inline-block;"></div>
+			</div>
+			<div style="margin:0.5rem 0;">
+				<div>活动主办单位：<input class="form-control" type="text" name="organizer" value="${order.organizer}" style="width: 200px;display: inline-block;"></div>
+			</div>
+			
+			<div style="margin:0.5rem 0;">
+				<div style="float:left;width: 100%;">联系方式：<input class="form-control" type="text" name="linkman" value="${order.linkman}" style="width: 200px;display: inline-block;" placeholder="联系人">
+				&nbsp;&nbsp;<input class="form-control" type="text" name="contactNumber" value="${order.contactNumber}" style="width: 200px;display: inline-block;" placeholder="联系手机">
+				&nbsp;&nbsp;<input class="form-control" type="text" name="email" value="${order.email}" style="width: 200px;display: inline-block;" placeholder="联系邮箱"></div>
+				<div style="clear:both;"></div>
+			</div>
+			
+			<div style="margin:0.5rem 0;">
+				<div style="float:left;width: 60%;">跟进销售：${order.hotelSaleName}&nbsp;&nbsp;${order.hotelSaleMobile}</div>
+				<c:if test="${order.hotelPoints > 0 }">
+					<div style="float:right;width: 40%;text-align: right;">积分：${order.hotelPoints}</div>
+				</c:if>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		
+		<div style="margin:0.5rem 0;border-bottom:1px solid #cccccc; padding: 0.5rem 0;">
+			<div class="btn btn-xs bg-none-00" style="padding-left: 10px;padding-right : 10px;">活动场地选择</div>
+		</div>
+		<div class="font-size-min hall" style="width: 60%;">
+			<c:if test="${not empty main_hotelplace}">
+			<c:set var="hallIds" value="#${main_hotelplace.placeId}"></c:set>
+			<div class="hall-item">
+				<input type="hidden"  name="orderDetailId" value="${main_hotelplace.id}" >
+				<div class="display-flex"   style="color:#019FEA;margin:0.5rem 0;">
+					<div id="halltitle_show_${main_hotelplace.placeId}" style="font-size: 1rem;">主会厅: ${main_hotelplace.placeName} </div>
+					<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+					or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+					or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+					<div id="halltitle_edit_${main_hotelplace.placeId}" class="display-flex" style="font-size: 1rem;display: none; ">
+						主会厅: ${main_hotelplace.placeName} 
+						<input type="hidden" name="ismain" value="${main_hotelplace.placeId }"  >
+					</div>
+					<div class="display-flex" >
+						<div  class="hall_detail_edit"  hallId="${main_hotelplace.placeId }">
+							<img qx="order:update" id="hall_detail_edit_to_${main_hotelplace.placeId}" src="${ctx}/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+							<img qx="order:update" id="hall_detail_edit_cancel_${main_hotelplace.placeId}" src="${ctx}/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height:16px;display: none;cursor: pointer;">
+						</div>
+						&nbsp;
+						&nbsp;
+						<div id="hall-del" class="hall-del"  hallId="${main_hotelplace.placeId }">
+							<img  qx="order:update" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+						</div>
+					</div>
+					</c:if>
+				</div>
+				<div class="display-flex" style="margin:0.5rem 0;color: #999999;">
+					<span>面积${main_hotelplace.hallArea}m²</span>
+					<span>容纳人数${main_hotelplace.peopleNum}人</span>
+					<span>层高${main_hotelplace.height}m</span>
+					<span>楼层${main_hotelplace.floor}F</span>
+					<span>立柱${main_hotelplace.pillar}</span>
+				</div>
+				<div id="hallscheduleDetail${main_hotelplace.placeId }">
+				<c:forEach items="${main_hotelplace.bookingRecordModels}"  var="bookingRecordModel" >
+					<div style="margin:0.5rem 0;">预定档期：${bookingRecordModel.placeDate}&nbsp;&nbsp;${bookingRecordModel.placeScheduleTxt}<span style="float: right;"><fmt:formatNumber type="currency" value="${bookingRecordModel.price }" /></span></div>
+				</c:forEach>
+				</div>
+				
+				<div id="hallscheduleUpForm${main_hotelplace.placeId }" style="display: none;">
+					<c:forEach items="${main_hotelplace.bookingRecordModels}"  var="bookingRecordModel" varStatus="st" >
+						<div class="display-flex" id="schedule_item_${main_hotelplace.placeId}" style="">
+							<input type="hidden"  name="bookingRecordId" value="${bookingRecordModel.id}" >
+							 <div style="padding:0.7rem 0;">预定档期：</div>
+							 <div style="padding:0.4rem 0;"  >
+								 <div class="hschedule display-flex" >
+								 	<input type="hidden" id="" name="hallScheduleId_${main_hotelplace.placeId }" value="${bookingRecordModel.placeScheduleId}" >
+								 	<div>
+										<input type="date" class="hall-schedule date form-control"  name="scheduleDate_${main_hotelplace.placeId }" hallId="${main_hotelplace.placeId }"
+										value="${bookingRecordModel.placeDate}"  style="float: left;" onchange="hallScheduleDate(this);">
+									</div>
+									<div style="margin-left: 10px;">
+										<div class="timesolt" style="width: 180px;position: relative;" tabindex="1" hallid="${main_hotelplace.placeId }">
+											<input type="hidden" id="" name="scheduleTime_${main_hotelplace.placeId }" value="${ fn:replace(bookingRecordModel.placeScheduleIds, ',', '#')}">   
+											<input type="hidden" id="" name="scheduleTimeTxt_${main_hotelplace.placeId }" value="${bookingRecordModel.placeScheduleTxt }">   
+											<div style="width: 100%;height:35px; border: 1px solid #ccc; border-radius: 4px;line-height: 35px;" class="arr-down"  >
+												<span  class="timesolt-text" style="height:35px;line-height: 35px;padding: 0 5px;">  ${bookingRecordModel.placeScheduleTxt}</span>
+												<!-- <i class="" style="    font-size: 3em;"></i> -->
+											</div>
+											<div  class="timesolt-item" style="position: absolute;left: 0;top: 35px;background-color: #ffffff;width:100%;display: none;z-index: 20000;">
+												<c:forEach items="${ctimes}" var="ctme">
+													<div style="width: 100%;height:30px; border: 1px solid #999999;">
+														<label for="timesolt_${ctme.id}_${bookingRecordModel.id}" style="width:100%;line-height:30px;vertical-align:middle;">
+															<input class="timesolt-select-item" id="timesolt_${ctme.id}_${bookingRecordModel.id}" type="checkbox" name="timesolt" value="${ctme.id}"  style="margin:9px;" data="${ctme.name}" ${fn:contains(bookingRecordModel.placeScheduleIds, ctme.id)?'checked="checked"':''}>
+															${ctme.name}
+														</label>
+													</div>
+												</c:forEach>
+												<div style="width:100%;height:30px;border:1px solid #999999;">
+													<label for="timesolt_all_${bookingRecordModel.id}" style="width:100%;line-height:30px;vertical-align:middle;">
+														<input class="timesolt-select-item timesolt_all" id="timesolt_all_${bookingRecordModel.id}" type="checkbox" name="timesolt" value="ALL" style="margin:9px;" data="全天" >
+														全天
+													</label>
+												</div>
+												<div style="width:100%;height:40px;border:1px solid #999999;text-align: center;padding: 5px;">
+													<button type="button"  class="btn btn-primary btn-sm timesolt-select"  style="width: 40%;" hallId="${main_hotelplace.placeId }" >确定</button>
+													<button type="button"  class="btn btn-default btn-sm timesolt-cancel"  style="width: 40%;" hallId="${main_hotelplace.placeId }" >取消</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								 </div>
+							 </div>
+							 <div style="padding:0.4rem 0;">
+									 ￥<input type="number" class="price form-control" value="${bookingRecordModel.price }" name="placePrice_${main_hotelplace.placeId }" id="" onkeyup="calculateHallSchedulePrice()">
+									 <img class="order-del" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+							  </div>
+						</div>
+					</c:forEach>
+					<div  style="">
+						 <div style="float: left;width: 20%;">&nbsp;</div>
+						 <div style="float: left;width: 80%;">
+							 <div style="width: 100%;padding:0.4rem 0;">
+								 <span  qx="order:update" class="btn add hall-add-schedule" style="" hallId="${main_hotelplace.placeId}">添加档期</span>
+							 </div>
+						 </div>
+						  <div style="clear:both;"></div>
+					</div>
+				</div>
+			
+			</div>
+			</c:if>
+			
+			<c:forEach items="${otherHalls}" var="otherHall">
+				<input type="hidden"  name="orderDetailId" value="${otherHall.id}" >
+				<c:set var="hallIds" value="${hallIds}#${otherHall.placeId}"></c:set>
+				<div>
+				<div class="display-flex"   style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+					<div style="font-size: 1rem;">分会厅:${otherHall.placeName} </div>
+					<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+					or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+					or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+					<div class="display-flex" >
+						<div class="hall_detail_edit"  hallId="${otherHall.placeId }">
+							<img qx="order:update" id="hall_detail_edit_to_${otherHall.placeId}" src="${ctx}/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+							<img qx="order:update" id="hall_detail_edit_cancel_${otherHall.placeId}" src="${ctx}/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height:16px;display: none;cursor: pointer;">
+						</div>
+						&nbsp;
+						&nbsp;
+						<div class="hall-del" hallId="${otherHall.placeId }">
+							<img qx="order:update" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+						</div>
+					</div>
+					</c:if>
+				</div>
+				<div class="display-flex" style="margin:0.5rem 0;color: #999999;">
+					<span>面积${otherHall.hallArea}m²</span>
+					<span>容纳人数${otherHall.peopleNum}人</span>
+					<span>层高${otherHall.height}m</span>
+					<span>楼层${otherHall.floor}F</span>
+					<span>立柱${otherHall.pillar}</span>
+				</div>
+				<div id="hallscheduleDetail${otherHall.placeId }">
+				<c:forEach items="${otherHall.bookingRecordModels}"  var="bookingRecordModel" >
+					<div style="margin:0.5rem 0;">预定档期：${bookingRecordModel.placeDate}&nbsp;&nbsp;${bookingRecordModel.placeScheduleTxt}<span style="float: right;"><fmt:formatNumber type="currency" value="${bookingRecordModel.price }" /></span></div>
+				</c:forEach>
+				</div>
+				
+				<div id="hallscheduleUpForm${otherHall.placeId }" style="display: none;">
+					<c:forEach items="${otherHall.bookingRecordModels}"  var="bookingRecordModel" varStatus="st" >
+						<div class="display-flex" id="schedule_item_${otherHall.placeId}" style="">
+							<input type="hidden"  name="bookingRecordId" value="${bookingRecordModel.id}" >
+							 <div style="padding:0.7rem 0;">预定档期：</div>
+							 <div style="padding:0.4rem 0;"  >
+								 <div class="hschedule display-flex" >
+								 	<input type="hidden" id="" name="hallScheduleId_${otherHall.placeId}" value="${bookingRecordModel.placeScheduleId}" >
+								 	<div>
+										<input type="date" class="hall-schedule date form-control"  name="scheduleDate_${otherHall.placeId }" hallId="${otherHall.placeId }"
+										value="${bookingRecordModel.placeDate}"  style="float: left;" onchange="hallScheduleDate(this);">
+									</div>
+									<div style="margin-left: 10px;">
+										<div class="timesolt" style="width: 180px;position: relative;" tabindex="1" hallid="${otherHall.placeId }">
+											<input type="hidden" id="" name="scheduleTime_${otherHall.placeId }" value="${ fn:replace(bookingRecordModel.placeScheduleIds, ',', '#')}">   
+											<input type="hidden" id="" name="scheduleTimeTxt_${otherHall.placeId }" value="${bookingRecordModel.placeScheduleTxt}">   
+											<div style="width: 100%;height:35px; border: 1px solid #ccc; border-radius: 4px;line-height: 35px;" class="arr-down"  >
+												<span  class="timesolt-text" style="height:35px;line-height: 35px;padding: 0 5px;">  ${bookingRecordModel.placeScheduleTxt}</span>
+												<!-- <i class="" style="    font-size: 3em;"></i> -->
+											</div>
+											<div  class="timesolt-item" style="position: absolute;left: 0;top: 35px;background-color: #ffffff;width:100%;display: none;z-index: 20000;">
+												<c:forEach items="${ctimes}" var="ctme">
+													<div style="width: 100%;height:30px; border: 1px solid #999999;">
+														<label for="timesolt_${ctme.id}_${bookingRecordModel.id}" style="width:100%;line-height:30px;vertical-align:middle;">
+															<input class="timesolt-select-item" id="timesolt_${ctme.id}_${bookingRecordModel.id}" type="checkbox" name="timesolt" value="${ctme.id}"  style="margin:9px;" data="${ctme.name}" ${fn:contains(bookingRecordModel.placeScheduleIds, ctme.id)?'checked="checked"':''}>
+															${ctme.name}
+														</label>
+													</div>
+												</c:forEach>
+												<div style="width:100%;height:30px;border:1px solid #999999;">
+													<label for="timesolt_all_${bookingRecordModel.id}" style="width:100%;line-height:30px;vertical-align:middle;">
+														<input class="timesolt-select-item timesolt_all" id="timesolt_all_${bookingRecordModel.id}" type="checkbox" name="timesolt" value="ALL" style="margin:9px;" data="全天" >
+														全天
+													</label>
+												</div>
+												<div style="width:100%;height:40px;border:1px solid #999999;text-align: center;padding: 5px;">
+													<button type="button"  class="btn btn-primary btn-sm timesolt-select"  style="width: 40%;" hallId="${otherHall.placeId }" >确定</button>
+													<button type="button"  class="btn btn-default btn-sm timesolt-cancel"  style="width: 40%;" hallId="${otherHall.placeId }" >取消</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								 </div>
+							 </div>
+							 <div style="padding:0.4rem 0;">
+									 ￥<input type="number" class="price form-control" value="${bookingRecordModel.price }" name="placePrice_${otherHall.placeId }" id="" onkeyup="calculateHallSchedulePrice()">
+									 <img class="order-del" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+							  </div>
+						</div>
+					</c:forEach>
+					<div style="">
+						 <div style="float: left;width: 20%;">&nbsp;</div>
+						 <div style="float: left;width: 80%;">
+							 <div style="width: 100%;padding:0.4rem 0;">
+								 <span qx="order:update" class="btn add hall-add-schedule" style="" hallId="${otherHall.placeId}">添加档期</span>
+							 </div>
+						 </div>
+						  <div style="clear:both;"></div>
+					</div>
+				</div>
+			</div>
+			</c:forEach>
+			<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+			or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+			or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+				<div style="padding: 0.2rem 0;">
+					 <div style="width: 100%;padding:0.2rem 0;">
+						 <span qx="order:update" class="btn add hall-add" style="">添加场地</span>
+					 </div>
+				</div>
+			</c:if>
+			<div style="font-weight:bold;padding-top: 0.5rem;padding-bottom: 0.5rem;width: 100%;text-align: right;">
+				<input type="hidden" id="hallAmount" name="hallAmount" value="${bookPriceCount }">
+				<input type="hidden" id="hallAllAmount" name="hallAllAmount" value="${bookPriceCount * (1 + bookServicePercent/100)}">
+				<div>
+					<div id="commissionFeeRate_dtl">
+						场地加收服务费:<span><fmt:formatNumber type="number" value="${bookServicePercent }"  maxFractionDigits="0"/></span>%
+					</div>
+					<div id="commissionFeeRate_edit" style="display: none;">
+						场地加收服务费:<input type="number" id="commissionFeeRate" name="commissionFeeRate" min="0" max="100" class="form-control" style="width: 80px;display: inline;"  value="${bookServicePercent }" onkeyup="calculateHallSchedulePrice()">%
+					</div>
+				</div>
+				<div style="margin:0.5rem 0;">
+					<div style="line-height: 34px;">场地预定价格：<span id="hallAmnout_dv"><fmt:formatNumber type="currency" value="${bookPriceCount }" /></span></div>
+					<div style="line-height: 34px;">场地服务费：<span id="serviceFee"><fmt:formatNumber type="currency" value="${bookPriceCount*bookServicePercent/100 }" /></span></div>
+				</div>
+				<div style="margin:0.5rem 0;">小计：<span id="hallAllAmnout_dv" style="color:#cb2b29;"><fmt:formatNumber type="currency" value="${bookPriceCount * (1 + bookServicePercent/100)}" /></span></div>
+			</div>
+			
+			<div style="border-top:1px solid #cccccc;">
+				<div style="margin:0.8rem 0;">
+					<div style="font-weight:bold;font-size: 0.85rem;">
+						场地预定备注：
+						<img qx="order:update" onclick="meetingremarkShow('order_meetingremark')" title="修改场地预定备注" id="order_meetingremark" src="${ctx}/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+						<img qx="order:update" onclick="meetingremarkCancel('order_meetingremark_cancel')" title="取消修改场地预定备注" id="order_meetingremark_cancel" 
+							src="/hui/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height: 16px; cursor: pointer;display: none;">
+					</div>
+				</div>
+				<div id="meetingRemarkEdit" style="margin:0.8rem 0;display: none;">
+					<div id="meetingRemark"  name="meetingRemark" class="edui-default" ></div>
+				</div>
+				<div id="meetingRemarkDetail" style="margin:1rem 0;padding:0 1rem;">
+					${empty order.meetingRemark?hotel.meetingRemark:order.meetingRemark}
+				</div>
+				<script type="text/javascript">
+					function meetingremarkShow(id){
+						$("#"+id).hide();
+						$("#order_meetingremark_cancel").show();
+						$("#meetingRemarkEdit").show();
+						$("#meetingRemarkDetail").hide();
+					}
+					function meetingremarkCancel(id){
+						$("#"+id).hide();
+						$("#order_meetingremark").show();
+						$("#meetingRemarkDetail").show();
+						$("#meetingRemarkEdit").hide();
+					}
+					var meeting_editor = new UE.ui.Editor({
+			            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+			            toolbars:[['bold', 'italic', 'underline', 'fontborder', 'strikethrough',  'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',  
+			                       'rowspacingtop', 'rowspacingbottom', 'lineheight']],
+			            //focus时自动清空初始化时的内容
+			            autoClearinitialContent:true,
+			            //关闭字数统计
+			            wordCount:false,
+			            //关闭elementPath
+			            elementPathEnabled:false,
+			            //默认的编辑区域高度
+			            initialFrameHeight:150
+			        });
+					meeting_editor.render("meetingRemark");
+					meeting_editor.ready(function() {//编辑器初始化完成再赋值  
+						meeting_editor.setContent('${empty order.meetingRemark?hotel.meetingRemark:order.meetingRemark}');  //赋值给UEditor  
+			        });
+			    </script>
+			</div>
+			
+			<input type="hidden" id="hallIds" name="hallIds" value="${hallIds}">
+			
+		</div>
+		
+		<div style="margin:0.5rem 0;border-bottom:1px solid #cccccc;padding: 0.5rem 0;">
+			<div class="btn btn-xs bg-none-00">住房场地</div>
+		</div>
+		<c:set var="roomIds" value=""></c:set>
+		<div class="font-size-min room" style="width: 60%;">
+			<c:forEach items="${rooms}" var="room">
+				<div>
+					<input type="hidden"  name="orderDetailId" value="${room.id}" >
+					<c:set var="roomIds" value="${roomIds}#${room.placeId}"></c:set>
+					<div class="display-flex" style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+						<div style="font-size: 1rem;">${room.placeName}</div>
+						<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+						or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+						or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+						<div class="display-flex">
+							<div class="room_detail_edit" roomId="${room.placeId}">
+								<img qx="order:update" id="room_detail_edit_to_${room.placeId}" src="${ctx }/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+								<img qx="order:update" id="room_detail_edit_cancel_${room.placeId}" src="${ctx }/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height:16px;display: none;cursor: pointer;">
+							</div>
+							&nbsp;
+							&nbsp;
+							<div class="room-del" roomId="${room.placeId}">
+								<img qx="order:update" src="${ctx }/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+							</div>
+						</div>
+						</c:if>
+					</div>
+					<div id="roomViewDetail${room.placeId}">
+					<c:forEach items="${room.bookingRecordModels}"  var="bookingRecordModel" >
+						<div >
+							<div style="margin:0.5rem 0;color: #999999;">
+								<div><span style="">${room.roomType  }&nbsp;&nbsp;${room.network}
+								&nbsp;&nbsp;${(empty bookingRecordModel.breakfast or bookingRecordModel.breakfast eq 0)?'无早':'有早' }
+								&nbsp;&nbsp;×${bookingRecordModel.quantity }</span> </div>
+							</div>
+							<div style="margin:0.5rem 0;">
+								入住时间：${bookingRecordModel.placeDate} 
+								 <span style="float: right;"><fmt:formatNumber type="currency" value="${bookingRecordModel.price }" /></span>
+							</div>
+						</div>
+					</c:forEach>
+					</div>
+					<div id="roomEditForm${room.placeId}" style="display: none;">
+					<c:forEach items="${room.bookingRecordModels}"  var="bookingRecordModel" >
+						<div>
+							<input type="hidden"  name="bookingRecordId" value="${bookingRecordModel.id}" >
+							<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+								<span style="">${room.roomType}</span>
+								<span style="">${room.network}</span>
+								<div style="float: left;margin-left: 10px;">
+								<select class="room-breakfast form-control" name="breakfast_${room.placeId}" roomId="${room.placeId}"  >
+									<option value="0" ${(empty bookingRecordModel.breakfast or bookingRecordModel.breakfast eq 0)?'selected="selected"':'' }>无早</option>
+									<option value="1" ${ bookingRecordModel.breakfast eq 1 ?'selected="selected"':'' }>有早</option>
+								</select>
+								</div>
+								<div>
+									<div style="float: left;">数量：</div>
+									<div class="num minus" roomId="{{id}}"  style="float: left;">-</div>
+									<div class="room-num" style="float: left;">
+										<input type="number" name="rom_num_${room.placeId}" id="rom_num_${room.placeId}" style="border: none;width: 50px;text-align: center;" value="${bookingRecordModel.quantity }" onkeyup="calculateRoomSchedulePrice();">
+									</div>
+									<div class="num plus" roomId="${room.placeId}" style="float: left;">+</div>
+									<div style="clear:both;"></div>
+								</div>
+							</div>
+							<div style="margin:0.5rem 0;">
+								 <div class="display-flex" style="width: 100%;">
+									 <div style="padding:0.3rem 0;">
+									 <input type="hidden" id="roomscheduleId_${room.placeId}" name="roomscheduleId_${room.placeId}" value="${bookingRecordModel.placeScheduleId}">
+								 	入住时间：
+									<input type="date" class="room-schedule date form-control" id="roomscheduleDate_${room.placeId}" name="roomscheduleDate_${room.placeId}" roomId="${room.placeId}"
+									  onchange="roomScheduleDate(this)" value="${bookingRecordModel.placeDate}" style="display: inline;">
+									 </div>
+									 <span id="roomschedulecurrency_${room.placeId}" style="">
+									 	￥<input type="number" class="price form-control"   value="${bookingRecordModel.price}" name="roomPrice_${room.placeId}" id="roomPrice${room.placeId}" onkeyup="calculateRoomSchedulePrice();">/间
+									 </span>
+									  <img class="room-schedule-del" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+								 </div>
+							</div>
+						</div>
+					</c:forEach>
+					<div style="">
+						 <div style="float: left;width: 20%;">&nbsp;</div>
+						 <div style="float: left;width: 80%;">
+							 <div style="width: 100%;padding:0.4rem 0;">
+								 <span qx="order:update" class="btn add room-add-schedule" style="" roomId="${room.placeId}">添加档期</span>
+							 </div>
+						 </div>
+						  <div style="clear:both;"></div>
+					</div>
+				</div>
+			</div>
+		</c:forEach>
+			<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+			or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+			or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+			<div style="padding: 0.2rem 0;">
+				 <div style="width: 100%;padding:0.2rem 0;">
+					 <span qx="order:update" class="btn add room-add" style="">添加住房</span>
+				 </div>
+			</div>
+			</c:if>
+			<div style="margin:0.5rem 0;padding-top: 0.5rem;font-weight:bold;text-align: right;">住房预定价格：<span id="sumRoomSchedulePrice"><fmt:formatNumber type="currency" value="${roomPrice}"/></span></div>
+			<div style="margin:0.5rem 0;font-weight:bold;padding-bottom: 0.5rem;text-align: right;">小计：<div id="allRoomSchedulePrice" style="display:inline;color:#cb2b29;"><fmt:formatNumber type="currency" value="${roomPrice}"/></div></div>
+			
+			<input type="hidden" id="roomIds" name="roomIds" value="${roomIds}">
+			
+			<div style="border-top:1px solid #cccccc;">
+				<div style="margin:0.8rem 0;">
+					<div style="font-weight:bold;font-size: 0.85rem;">
+						住房预定备注：
+						<img qx="order:update" onclick="houseRemarkShow('order_houseRemark')" title="修改住房预定备注" id="order_houseRemark" src="${ctx}/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+						<img qx="order:update" onclick="houseRemarkCancel('order_houseRemark_cancel')" title="取消修改住房预定备注" id="order_houseRemark_cancel" 
+							src="/hui/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height: 16px; cursor: pointer;display: none;">
+					</div>
+				</div>
+				<div id="houseRemarkEdit"  style="margin:0.8rem 0;display: none;">
+					<div id="houseRemark" name="houseRemark" class="edui-default" ></div>
+				</div>
+				<div id="houseRemarkDetail" style="margin:1rem 0;padding:0 1rem;">
+					${empty order.houseRemark?hotel.houseRemark:order.houseRemark}
+				</div>
+				<script type="text/javascript">
+					function houseRemarkShow(id){
+						$("#"+id).hide();
+						$("#order_houseRemark_cancel").show();
+						$("#houseRemarkEdit").show();
+						$("#houseRemarkDetail").hide();
+					}
+					function houseRemarkCancel(id){
+						$("#"+id).hide();
+						$("#order_houseRemark").show();
+						$("#houseRemarkDetail").show();
+						$("#houseRemarkEdit").hide();
+					}
+					var house_editor = new UE.ui.Editor({
+			            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+			            toolbars:[['bold', 'italic', 'underline', 'fontborder', 'strikethrough',  'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',  
+			                       'rowspacingtop', 'rowspacingbottom', 'lineheight']],
+			            //focus时自动清空初始化时的内容
+			            autoClearinitialContent:true,
+			            //关闭字数统计
+			            wordCount:false,
+			            //关闭elementPath
+			            elementPathEnabled:false,
+			            //默认的编辑区域高度
+			            initialFrameHeight:150
+			        });
+					house_editor.render("houseRemark");
+					house_editor.ready(function() {//编辑器初始化完成再赋值  
+						house_editor.setContent('${empty order.houseRemark?hotel.houseRemark:order.houseRemark}');  //赋值给UEditor  
+			        });
+			    </script>
+			</div>
+			
+			<input type="hidden" id="roomAmount" name="roomAmount" value="${roomPrice}">
+			<input type="hidden" id="roomAllAmount" name="roomAllAmount" value="${roomPrice}">
+			
+			
+		</div>
+		<div style="margin:0.5rem 0;border-bottom:1px solid #cccccc;padding: 0.5rem 0;">
+			<div class="btn btn-xs bg-none-00">用餐选择</div>
+		</div>
+		<c:set var="mealIds" value=""></c:set>
+		<div class="font-size-min meal" style="width:60%;">
+			<c:forEach items="${meals}" var="meal">
+				<div>
+					<input type="hidden"  name="orderDetailId" value="${meal.id}" >
+					<c:set var="mealIds" value="${mealIds}#${meal.placeId}"></c:set>
+					<c:set var="originalPrice" value="0"></c:set>
+					<div class="display-flex" style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+						<div style="font-size: 1rem;">${meal.placeName}</div>
+						<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+						or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+						or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+						<div class="display-flex">
+							<div class="meal_detail_edit" mealId="${meal.placeId}">
+								<img qx="order:update" id="meal_detail_edit_to_${meal.placeId}" src="${ctx }/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+								<img qx="order:update" id="meal_detail_edit_cancel_${meal.placeId}" src="${ctx }/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height:16px;display: none;cursor: pointer;">
+							</div>
+							&nbsp;
+							&nbsp;
+							<div class="meal-del" mealId="${meal.placeId}">
+								<img qx="order:update" src="${ctx }/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+							</div>
+						</div>
+						</c:if>
+					</div>
+					<div id="mealViewForm${meal.placeId}">
+						<c:forEach items="${meal.bookingRecordModels}"  var="bookingRecordModel" >
+							<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+								<span style="">${bookingRecordModel.mealType eq '01'?'围餐':'自助餐'}&nbsp;&nbsp;${bookingRecordModel.placeSchedule }&nbsp;&nbsp;×${bookingRecordModel.quantity }${meal.mealType eq '01'?'围':'个'}</span>
+							</div>
+							<div style="margin:0.5rem 0;">
+								用餐时间：${bookingRecordModel.placeDate} 
+								<span style="float: right;"><fmt:formatNumber type="currency" value="${bookingRecordModel.price }" /></span>
+							</div>
+						</c:forEach>
+					</div>
+					<div id="mealEditForm${meal.placeId}" style="display: none;">
+						<c:forEach items="${meal.bookingRecordModels}"  var="bookingRecordModel" >
+							
+							<c:set var="originalPrice" value="${bookingRecordModel.price }"></c:set>
+							<div>
+								<input type="hidden"  name="bookingRecordId" value="${bookingRecordModel.id}" >
+								<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+									<div>
+										<div style="float: left;">
+											<select id="mealType_${meal.placeId}" name="mealType_${meal.placeId}" idx="1" mealId="${meal.placeId}" class="meal-type form-control">
+												<option value="01" ${bookingRecordModel.mealType eq '01'?'selected="selected"':''}>围餐</option>
+												<option value="02" ${bookingRecordModel.mealType eq '02'?'selected="selected"':''}>自助餐</option>
+											</select>
+										</div>
+										<div style="float: left;margin-left: 10px;">
+											<select id="mealscheduleTime_${meal.placeId}" name="mealscheduleTime_${meal.placeId}"  mealId="${meal.placeId}" class="meal-cgt form-control">
+													<option value="早餐" ${bookingRecordModel.placeSchedule eq '早餐'?'selected="selected"':'' }>早餐</option>
+													<option value="午餐" ${bookingRecordModel.placeSchedule eq '午餐'?'selected="selected"':'' }>午餐</option>
+													<option value="晚餐" ${bookingRecordModel.placeSchedule eq '晚餐'?'selected="selected"':'' }>晚餐</option>
+											</select>
+										</div>
+									</div>
+									<div >
+										<div style="float: left;">数量：</div>
+										<div class="num meal-minus" style="float: left;">-</div>
+										<div class="meal-num" style="float: left;">
+											<input type="number" name="meal_num_${meal.placeId}" id="meal_num_${meal.placeId}" style="border: none;width: 50px;text-align: center;" value="${bookingRecordModel.quantity }" onkeyup="calculateMealSchedulePrice();">
+										</div>
+										<div class="num meal-plus" style="float: left;">+</div>
+										<div style="clear:both;"></div>
+									</div>
+								</div>
+								<div style="margin:0.5rem 0;">
+										 <div class="display-flex" style="width: 100%;">
+										 	<div style="padding:0.3rem 0;">用餐时间：
+											 	<input type="hidden" id="mealscheduleId_${meal.placeId}" name="mealscheduleId_${meal.placeId}" value="${bookingRecordModel.id }">
+												<input type="date" class="meal-schedule date form-control" id="mealscheduleDate_${meal.placeId}" style="display: inline;"
+												name="mealscheduleDate_${meal.placeId}" mealId="${meal.placeId}" onchange="mealScheduleDate(this)" value="${bookingRecordModel.placeDate }">
+											 </div>
+											 <span id="mealschedulecurrency_${meal.placeId}" style="">
+											 	￥<input type="number" class="price  form-control" value="${bookingRecordModel.price }" name="mealPrice_${meal.placeId}" id="mealPrice${meal.placeId}" onkeyup="calculateMealSchedulePrice();">/围
+											 </span>
+											  <img class="meal-schedule-del" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+										 </div>
+								</div>
+							</div>
+						</c:forEach>
+						<div  style="">
+							 <div style="float: left;width: 20%;">&nbsp;</div>
+							 <div style="float: left;width: 80%;">
+								 <div style="width: 100%;padding:0.4rem 0;">
+									 <span  qx="order:update" class="btn add meal-add-schedule" style="" mealId="${meal.placeId}">添加档期</span>
+								 </div>
+							 </div>
+							  <div style="clear:both;"></div>
+						</div>
+					</div>
+					
+					<input type="hidden" id="mealOriginalPrice_${meal.placeId}" name="mealOriginalPrice_${meal.placeId}" value="${originalPrice}">
+				</div>
+			</c:forEach>
+			<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+			or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+			or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+				<div style="padding: 0.2rem 0;">
+					 <div style="width: 100%;padding:0.2rem 0;">
+						 <span qx="order:update" class="btn add meal-add" style="">添加用餐</span>
+					 </div>
+				</div>
+			</c:if>
+			<div style="margin:0.5rem 0;padding-top: 0.5rem;font-weight:bold;text-align: right;" >用餐预定价格：<span id="sumMealschedulePrice"><fmt:formatNumber type="currency" value="${mealPrice}" /></span></div>
+			<div style="margin:0.5rem 0;font-weight:bold;padding-bottom: 0.5rem;text-align: right;">小计：<div id="allMealschedulePrice" style="display:inline;color:#cb2b29;"><fmt:formatNumber type="currency" value="${mealPrice}" /></div></div>
+			
+			<div style="border-top:1px solid #cccccc;">
+				<div style="margin:0.8rem 0;">
+					<div style="font-weight:bold;font-size: 0.85rem;">
+						用餐预定备注：
+						<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') 
+							or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))
+							or (groupMap.ishotelsalesdirector or groupMap.iscompanysalesdirector)}">
+						<img qx="order:update" onclick="dinnerRemarkShow('order_dinnerRemark')" title="修改用餐预定备注" id="order_dinnerRemark"
+							src="${ctx}/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+						<img qx="order:update" onclick="dinnerRemarkCancel('order_dinnerRemark_cancel')" title="取消修改用餐预定备注" id="order_dinnerRemark_cancel" 
+							src="/hui/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height: 16px; cursor: pointer;display: none;">
+						</c:if>
+					</div>
+				</div>
+				<div id="dinnerRemarkEdit"  style="margin:0.8rem 0;display: none;">
+					<div id="dinnerRemark" name="dinnerRemark" class="edui-default" ></div>
+				</div>
+				<div id="dinnerRemarkDetail" style="margin:1rem 0;padding:0 1rem;">
+					${empty order.dinnerRemark?hotel.dinnerRemark:order.dinnerRemark}
+				</div>
+				<script type="text/javascript">
+					function dinnerRemarkShow(id){
+						$("#"+id).hide();
+						$("#order_dinnerRemark_cancel").show();
+						$("#dinnerRemarkEdit").show();
+						$("#dinnerRemarkDetail").hide();
+					}
+					function dinnerRemarkCancel(id){
+						$("#"+id).hide();
+						$("#order_dinnerRemark").show();
+						$("#dinnerRemarkDetail").show();
+						$("#dinnerRemarkEdit").hide();
+					}
+					var dinner_editor = new UE.ui.Editor({
+			            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+			            toolbars:[['bold', 'italic', 'underline', 'fontborder', 'strikethrough',  'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',  
+			                       'rowspacingtop', 'rowspacingbottom', 'lineheight']],
+			            //focus时自动清空初始化时的内容
+			            autoClearinitialContent:true,
+			            //关闭字数统计
+			            wordCount:false,
+			            //关闭elementPath
+			            elementPathEnabled:false,
+			            //默认的编辑区域高度
+			            initialFrameHeight:150
+			        });
+					dinner_editor.render("dinnerRemark");
+					dinner_editor.ready(function() {//编辑器初始化完成再赋值  
+						dinner_editor.setContent('${empty order.dinnerRemark?hotel.dinnerRemark:order.dinnerRemark}');  //赋值给UEditor  
+			        });
+			    </script>
+			</div>
+			
+			<input type="hidden" id="mealIds" name="mealIds" value="${mealIds}">
+			<input type="hidden" id="mealAmount" name="mealAmount" value="${mealPrice}">
+			<input type="hidden" id="mealAllAmount" name="mealAllAmount" value="${mealPrice}">
+			
+			 <div style="margin:0.5rem 0;">
+				<div class="btn btn-xs bg-none-00">其他费用</div>
+			</div>
+		</div>
+		<div class="font-size-min other" style="border-top:1px solid #cccccc;">
+			
+			<div class="other-item">
+				<c:forEach items="${otherDetails }" varStatus="st" var="odtl">
+					<div style="width: 100%;padding:0.4rem;">
+							${odtl.placeName }
+							&nbsp;&nbsp;&nbsp;&nbsp;单价：<fmt:formatNumber type="currency" value="${odtl.amount/odtl.quantity }" />
+							&nbsp;&nbsp;&nbsp;&nbsp;数量：<fmt:formatNumber type="number" value="${odtl.quantity }" />
+							&nbsp;&nbsp;&nbsp;&nbsp;总价：<fmt:formatNumber type="currency" value="${odtl.quantity*odtl.amount }" />
+							<c:if test="${(aUs.getCurrentUserId() eq order.companySaleId && order.orderType eq 'OFFLINE') or (aUs.getCurrentUserId() eq order.hotelSaleId && (order.state eq 02 or order.state eq 04))}">
+								<img qx="order:update" class="other-edit" src="${ctx }/static/weixin/css/icon/common/icon-order-edit.png" style="height:16px;cursor: pointer;">
+							</c:if>
+					</div>
+					 <div style="width:100%;padding:0.4rem;display: none;">
+						其他小项 <input type="text" class="form-control" id="" name="otherdetail"  placeholder="消费明细" style="width: 200px;display: inline-block;" value="${odtl.placeName }">&nbsp;&nbsp;
+						单价 <input type="number" id="" name="oprice" class="form-control oprice" placeholder="价格" style="width: 100px;display: inline-block;" value="${odtl.amount/odtl.quantity }">元&nbsp;&nbsp;
+						数量 <input type="number" id="" name="oquantity" class="form-control oquantity" placeholder="价格" style="width: 100px;display: inline-block;" value="${odtl.quantity }">&nbsp;&nbsp;
+						总计 <input type="number" id="" name="otherprice" class="form-control otherprice" placeholder="价格" style="width: 100px;display: inline-block;" value="${odtl.quantity*odtl.amount }" readonly="readonly">元
+						<img  class="other-del" src="${ctx }/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;display: inline-block;cursor: pointer;" title="删除该项">
+						<img  class="other-cancel" src="${ctx }/static/weixin/css/icon/common/icon-order-edit-cancel.png" style="height:16px;display: inline-block;cursor: pointer;" title="取消编辑" alt="">
+				 	</div>
+				</c:forEach>
+			</div>
+			<div style="margin:0.5rem 0;padding-top: 0.5rem;font-weight:bold;text-align: center;" >其他费用：<span id="sumOtherPrice"><fmt:formatNumber type="currency" value="${order.otherAmount}" /></span></div>
+			<div style="margin:0.5rem 0;font-weight:bold;padding-bottom: 0.5rem;text-align: center;">小计：<div id="allOtherPrice" style="display:inline;color:#cb2b29;"><fmt:formatNumber type="currency" value="${order.otherAmount}" /></div></div>
+			<div style="padding: 0.2rem 0;">
+				 <div style="width: 100%;padding:0.2rem 0;">
+					 <span class="btn add other-add" style="">添加</span>
+				 </div>
+			</div>
+		</div>
+		<div style="border-top:1px solid #cccccc;">
+			<div style="margin:0.8rem 0;">
+				<div style="font-weight:bold;font-size: 0.85rem;">备注：</div>
+			</div>
+			<div style="margin:0.8rem 0;width: 60%;">
+				<div id="memo" name="memo" class="edui-default" ></div>
+			</div>
+			<script type="text/javascript">
+				var memo_editor = new UE.ui.Editor({
+		            //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+		            toolbars:[['bold', 'italic', 'underline', 'fontborder', 'strikethrough',  'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',  
+		                       'rowspacingtop', 'rowspacingbottom', 'lineheight' ]],
+		            //focus时自动清空初始化时的内容
+		            autoClearinitialContent:true,
+		            //关闭字数统计
+		            wordCount:false,
+		            //关闭elementPath
+		            elementPathEnabled:false,
+		            //默认的编辑区域高度
+		            initialFrameHeight:150
+		        });
+				memo_editor.render("memo");
+				memo_editor.ready(function() {//编辑器初始化完成再赋值  
+					memo_editor.setContent('${order.memo}');  //赋值给UEditor  
+		        });
+		    </script>
+		</div>
+	</div>
+	
+	
+	</form>
+	<div style="width:60%;background-color: #f5f5f5;padding: 1.0rem 0; ">
+		
+		<div class="amount-item" >总合计：
+			<span id="amount_dv">
+				<c:if test="${order.amount>=10000 }">
+					<fmt:formatNumber type="currency" value="${order.amount/10000 }" />万元
+				</c:if>
+				<c:if test="${order.amount<10000 }">
+					<fmt:formatNumber type="currency" value="${order.amount }" />
+				</c:if>
+			</span>
+		</div>
+		<div  class="amount-item" style="color:#cb2b29;font-weight: bold;">掌柜预算：
+			<span id="zgamount_dv">
+				<c:if test="${order.zgamount>=10000 }">
+					<fmt:formatNumber type="currency" value="${order.zgamount/10000 }" />万元
+				</c:if>
+				<c:if test="${order.zgamount<10000 }">
+					<fmt:formatNumber type="currency" value="${order.zgamount }" />
+				</c:if>
+			</span>
+		</div>
+		<div class="amount-item">已付定金：
+			<input type="hidden" id="prepaid" value="${order.prepaid}">
+			<span>
+				<fmt:formatNumber type="currency" value="${order.prepaid}" />
+			</span>
+		</div>
+		<div  class="amount-item">剩余尾款：
+			<span id="finalPayment">
+				<fmt:formatNumber type="currency" value="${order.finalPayment}" />
+			</span>
+		</div>
+		<c:if test="${order.settlementStatus >='04'}">
+			<div  class="amount-item">结算金额：
+				<span id="finalPayment">
+					<fmt:formatNumber type="currency" value="${order.settlementAmount}" />
+				</span>
+			</div>
+		</c:if>
+	</div>
+	</div>
+	<c:if test="${(groupMap.ishotelsales or groupMap.ishotelsalesdirector ) and order.state < '10'  and (order.state=='01' or order.state=='02' or order.state=='04')}">
+		<div id="order_save_div" class="display-flex" style="color: #ffffff;width:60%;text-align: center;padding: 3%;">
+			<div qx="order:add" id="btn_submit" class="btn btn-lg bg-type-01" style="width:40%;margin:0 auto;border-radius:3px;">确认提交</div>
+			<input type="hidden" id="hotelId" name="hotelId" value="${order.hotelId}">
+		</div>
+	</c:if>
+	<c:if test="${((groupMap.iscompanysales and guserId eq order.companySaleId) or groupMap.iscompanysalesdirector) and order.orderType == 'OFFLINE' and (order.state=='01' or order.state=='02' or order.state=='04')}">
+		<div id="order_save_div" class="display-flex" style="color: #ffffff;width:60%;text-align: center;padding: 3%;">
+			<div qx="order:add" id="btn_submit" class="btn btn-lg bg-type-01" style="width:40%;margin:0 auto;border-radius:3px;">确认提交</div>
+			<input type="hidden" id="hotelId" name="hotelId" value="${order.hotelId}">
+		</div>
+	</c:if>
+	</form>
+	
+	<div id="mask_full_screen" class="mask-full-screen" style=""></div>
+	<div id="order_state_chg_div" class="div-tips-dialog" style="top:40%;left:35%;padding:10px 2%;width:500px;text-align:left;display:none;">
+		<div  style="text-align:center;line-height: 1.5rem;position: relative;">
+			<input id="tostate" name="tostate" type="hidden" value="">
+ 		</div>
+		<div id="state_list" >
+			<!-- <div class="state-item" style="cursor: pointer;" data="1">处理中</div> -->
+			<div class="state-item" style="cursor: pointer;" data="2">已交订金</div>
+			<div class="state-item" style="cursor: pointer;" data="3">已签约</div>
+			<div class="state-item" style="cursor: pointer;" data="4">已完成</div>
+			<div class="state-item" style="cursor: pointer;" data="5">已结算</div>
+			<div class="state-item" style="cursor: pointer;" data="0">客户取消</div>
+		</div>
+		
+		<div id="canceldv" style="padding:0 2%;display: none;" >
+			<c:if test="${order.settlementStatus>='02' }">
+				<div style="width: 100%;">
+					<div   style="padding: 5px 0;display: inline-block;width:48%;">结算状态：<span>${dSv.trsltDict('07',order.settlementStatus)}</span></div>
+					<div   style="padding: 5px 0;display: inline-block;width:48%;">已付定金：<fmt:formatNumber type="currency" value="${order.prepaid}" /></div>
+				</div>
+				<div style="width: 100%;">
+					<div style="padding:5px 0" >退款金额：<input type="number" id="refundAmount" value="" max="${order.prepaid}" min="0" class="form-control" style="width: 50%;display: inline-block;" placeholder="请输入退款金额" ></div>
+				</div>
+			</c:if>
+			<div>
+				<textarea id="cancelReason" rows="5" cols="" style="width: 97%;border: none;background-color: #f5f5f5;" placeholder="请输入取消原因"></textarea>
+			</div>
+		</div>
+		<div id="payedv" style="padding:0 2%;display: none;" >
+			<div style="width: 100%;">
+				<div   style="padding: 5px 0;display: inline-block;width:48%;">结算状态：<span>${dSv.trsltDict('07',order.settlementStatus)}</span></div>
+				<div   style="padding: 5px 0;display: inline-block;width:48%;">剩余尾款：<fmt:formatNumber type="currency" value="${order.finalPayment}" /></div>
+			</div>
+			<div style="width: 100%;">
+				<div style="padding:5px 0" >结算金额：<input type="number" id="payAmount" value="" min="0" class="form-control" style="width: 50%;display: inline-block;" placeholder="请输入退款金额" ></div>
+			</div>
+		</div>
+		<div id="prepaydv" style="padding:5px 2%;display: none;" >
+			<input type="number" class="form-control" id="prepay" value="" min="0" style="width: 98%;" placeholder="请输入订金" >
+		</div>
+		<div class="display-flex" style="padding: 1rem 0;">
+			<div id="btn-order-state-cansel" class="btn btn-xs bg-type-02" style="padding:0.3rem 0.8rem;width: 40%;" > 取消</div>
+			<div  qx="order:update" id="btn-order-state-sure" class="btn btn-xs bg-type-01" style="padding:0.3rem 0.8rem;width: 40%;" > 确定</div>
+		</div>
+	</div>	
+	
+	
+	<c:if test="${order.orderType eq 'OFFLINE' and order.offlineState eq '0'}">
+		<div id="offline_check_div" class="display-flex" style="color: #ffffff;width:94%;text-align: center;padding: 3%;">
+			<div qx="order:update" id="btn_offline_check_nopass" class="btn btn-lg bg-none-01" style="width:48%;margin:0 auto;border-radius:3px;border: 1px solid;">审核不通过</div>
+			<div qx="order:update" id="btn_offline_check_pass" class="btn btn-lg bg-type-01" style="width:48%;margin:0 auto;border-radius:3px;">审核通过</div>
+		</div>
+		<div id="offline_check_no_div" class="div-tips-dialog" style="top:35%;left:35%;padding:10px 2%;width:500px;text-align:left;display:none;">
+			<div  style="text-align:center;line-height: 1.5rem;position: relative;padding: 0.5rem 0;">
+				<div style="color: #000000;">不通过原因</div>
+				<div id="offline_check_no_ic_close" class="icon-close" style="position: absolute;top: -0.5rem;right: 0;">&nbsp;</div>
+	 		</div>
+			<div style="padding:0 2%;">
+				<textarea id="reason" rows="15" cols="" style="width: 97%;border: none;background-color: #f5f5f5;" placeholder="请输入不通过原因"></textarea>
+			</div>
+			<div class="display-flex" style="padding: 1rem 0;">
+				<div id="btn_offline_check_no_cansel" class="btn btn-xs bg-type-02" style="padding:0.3rem 0.8rem;width: 40%;" >再考虑</div>
+				<div qx="order:update" id="btn_offline_check_no_sure" class="btn btn-xs bg-type-01" style="padding:0.3rem 0.8rem;width: 40%;" > 确定</div>
+			</div>
+		</div>	
+	</c:if>
+	
+	<div id="halls_div" class="div-tips-dialog" style="top:35%;left:35%;padding:10px 2%;width:500px;height:450px;text-align:left;display:none;">
+		<div  style="text-align:center;line-height: 1.5rem;position: relative;">
+ 			<div style="color: 5f5f5f;font-size: 1rem;text-align: center;font-weight:bold;font-size:1.0rem;height: 3rem;line-height:3rem;">选择场地</div>
+ 			 <div id="btn_halls_close" class="icon-close"  style="position: absolute;right: 0;top: -0.5rem;">&nbsp;</div> 
+ 		</div>
+		<div id="halls_list" style="padding: 0.2rem 0;border-top: 1px solid #999999;">
+			<div style="clear: both;"></div>
+		</div>
+	</div>	
+	
+	
+	<div id="rooms_div" class="div-tips-dialog" style="top:35%;left:35%;padding:10px 2%;width:500px;height:450px;text-align:left;display:none;">
+		<div  style="text-align:center;line-height: 1.5rem;position: relative;">
+ 			<div style="color: 5f5f5f;font-size: 1rem;text-align: center;font-weight:bold;font-size:1.0rem;height: 3rem;line-height:3rem;">选择住房</div>
+ 			<div id="btn_rooms_close" class="icon-close"  style="position: absolute;right: 0;top: -0.5rem;">&nbsp;</div> 
+ 		</div>
+		<div id="rooms_list" style="padding: 0.2rem 0;border-top: 1px solid #999999;">
+			<div style="clear: both;"></div>
+		</div>
+	</div>
+	
+	
+	<div id="meals_div" class="div-tips-dialog" style="top:35%;left:35%;padding:10px 2%;width:500px;height:450px;text-align:left;display:none;">
+		<div  style="text-align:center;line-height: 1.5rem;position: relative;">
+ 			<div style="color: 5f5f5f;font-size: 1rem;text-align: center;font-weight:bold;font-size:1.0rem;height: 3rem;line-height:3rem;">选择用餐</div>
+ 			<div id="btn_meals_close" class="icon-close"  style="position: absolute;right: 0;top: -0.5rem;">&nbsp;</div> 
+ 		</div>
+		<div id="meals_list" style="padding: 0.2rem 0;border-top: 1px solid #999999;">
+			<div style="clear: both;"></div>
+		</div>
+	</div>	
+
+<script src="${ctx}/static/weixin/myjs/common.permission.js"></script>
+
+<script>
+function operateOrderTrajectory(){
+	var operateOrder = window.sessionStorage.getItem("operateOrder${aUs.getCurrentUserId()}");
+	var orderNo = '${order.orderNo}';
+	
+	if(operateOrder){
+		if(operateOrder.indexOf(orderNo)<0){
+			operateOrder +=",${order.orderNo}";
+		}
+	}else{
+		operateOrder = "${order.orderNo}";
+	}
+	window.sessionStorage.setItem("operateOrder${aUs.getCurrentUserId()}",operateOrder);
+}
+$(function(){
+	operateOrderTrajectory();
+	dict.init();
+	common.pms.init();
+	<c:if test="${iscomission }">
+		$('#btn_commission').click(function(){
+			show();
+			var orderId = '${order.id}';
+			$.post('${ctx}/weixin/order/comission/create',{orderId:orderId},function(res){
+				if(res.statusCode==='200'){
+					swal(res.message,'success');
+					$('#commission_div').hide();
+				}else{
+					swal(res.message,'error');
+				}
+				hide();
+			},'json');
+		});
+	</c:if>
+	
+	 
+	$("#order_state_div").click(function(){
+		$("#order_state_chg_div").show();
+		show();
+		$("#prepay").val('');
+		$("#refundAmount").val(0);
+		$("#payAmount").val(0);
+		$("#cancelReason").val('');
+		$('.state-item').removeClass("state-item-check");
+	});
+	
+	$("#btn-order-state-cansel").click(function(){
+		$("#order_state_chg_div").hide();
+		hide();
+		$("#prepay").val('');
+		$("#refundAmount").val(0);
+		$("#payAmount").val(0);
+		$("#cancelReason").val('');
+		
+		$("#payedv").hide();
+		$("#canceldv").hide();
+		$("#prepaydv").hide();
+		$('.state-item').removeClass("state-item-check");
+	});
+	
+	$("#btn-order-state-sure").click(function(){
+		var tostate = $("#tostate").val();
+		var cancelReason = $("#cancelReason").val();
+		var stlstate = '${order.settlementStatus}';
+		if(tostate==='0'&&cancelReason===''){
+			swal('请输入取消原因！','error');
+			return;
+		}
+		var ramount =$("#refundAmount").val();
+		if(tostate==='0'&&stlstate>='02'&&(ramount===''||ramount*1<0)){
+			swal('请输入退款金额，退款金额不能小于0！','error');
+			return;
+		}
+		var pamount =$("#payAmount").val();
+		if(tostate==='5'&&(pamount===''||pamount*1<0)){
+			swal('请输入结算金额，结算金额不能小于0！','error');
+			return;
+		}
+		var prepay = $("#prepay").val();
+		if(tostate==='2'&&(prepay===''||prepay*1<=0)){
+			swal('请输入订金，且订金不能小于0！','error');
+			return;
+		}
+		if(tostate){
+			$.post('${ctx}/weixin/order/state/${order.id}',{tostate:tostate,cancelReason:cancelReason,prepay:prepay,ramount:ramount,pamount:pamount},function(res){
+				if(res.statusCode==='200'){
+					$("#order_state_chg_div").hide();
+					swal(res.message,'success');
+					setTimeout(function(){
+						loadContent(this,'${ctx}/weixin/order/detail/${order.id}','RD');
+					},1500);
+				}else{
+					swal(res.message,'error');
+				}
+			},'json');
+		}else{
+			swal('请先选择要变更的状态！','error');
+		}
+	});
+	
+	
+	$("#state_list").delegate('.state-item','click',function(){	
+		$this = $(this);
+		$("#tostate").val($this.attr('data'));
+		$('.state-item').removeClass("state-item-check");
+		$this.addClass('state-item-check');
+		if($this.attr('data')==='0'){
+			$("#canceldv").show();
+			$("#prepaydv").hide();
+			$("#payedv").hide();
+			
+			$("#prepay").val('');
+			$("#refundAmount").val(0);
+			$("#payAmount").val(0);
+			$("#cancelReason").val('');
+		}else if($this.attr('data')==='2'){
+			$("#canceldv").hide();
+			$("#payedv").hide();
+			$("#prepaydv").show();
+			
+			$("#prepay").val('');
+			$("#cancelReason").val('');
+			$("#refundAmount").val(0);
+			$("#payAmount").val(0);
+		}else if($this.attr('data')==='5'){
+			$("#canceldv").hide();
+			$("#prepaydv").hide();
+			$("#payedv").show();
+			
+			$("#prepay").val('');
+			$("#cancelReason").val('');
+			$("#refundAmount").val(0);
+			$("#payAmount").val(0);
+		}else{
+			$("#canceldv").hide();
+			$("#prepaydv").hide();
+			$("#payedv").hide();
+			
+			$("#refundAmount").val(0);
+			$("#payAmount").val(0);
+			$("#prepay").val('');
+			$("#cancelReason").val('');
+		}
+	});
+	
+	$("#btn_offline_check_nopass").click(function(){
+		$("#reason").val('');
+		$("#offline_check_no_div").show();
+		show();
+	});
+	
+	$("#btn_offline_check_pass").click(function(){
+		show();
+		$.post('${ctx}/weixin/order/offline/check/pass',{orderId:'${order.id}'},function(res){
+			if(res.statusCode==='200'){
+				swal(res.message,'success');
+				setTimeout(function(){
+					loadContent(this,'${ctx}/weixin/order/detail/${order.id}','RD');
+				},1500);
+			}else{
+				swal(res.message,'error');
+			}
+			hide();
+		},'json');
+	});
+	
+	$("#btn_offline_check_no_cansel").click(function(){
+		$("#offline_check_no_div").hide();
+		hide();
+		$("#reason").val('');
+		
+	});
+	
+	$("#offline_check_no_ic_close").click(function(){
+		$("#offline_check_no_div").hide();
+		hide();	
+		$("#reason").val('');
+		
+	}); 
+	
+	$("#btn_offline_check_no_sure").click(function(){
+		$("#offline_check_no_div").hide();
+		var reason = $("#reason").val();
+		
+		$.post('${ctx}/weixin/order/offline/check/nopass',{orderId:'${order.id}',reason:reason},function(res){
+			if(res.statusCode==='200'){
+				swal(res.message,'success');
+				setTimeout(function(){
+					loadContent(this,'${ctx}/weixin/order/detail/${order.id}','RD');
+				},1500);
+				hide();	
+			}else{
+				$("#offline_check_no_div").show();
+				swal(res.message,'error');
+			}
+		},'json');
+	});
+	
+	$(".hall_detail_edit").click(function(){
+		$this = $(this);
+		var placeId = $this.attr("hallId");
+		if($this.hasClass('edit')){
+			$this.removeClass('edit');
+			$("#hall_detail_edit_to_"+placeId).show();
+			$("#hall_detail_edit_cancel_"+placeId).hide();
+			$("#hallscheduleDetail"+placeId).show();
+			$("#hallscheduleUpForm"+placeId).hide();
+			
+			$("#commissionFeeRate_edit").hide();
+			$("#commissionFeeRate_dtl").show();
+			
+			$("#halltitle_show_"+placeId).show();
+			$("#halltitle_edit_"+placeId).hide();
+			
+			$("#hallAmount").val("${bookPriceCount}");
+			 $("#hallAllAmount").val("${bookPriceCount * (1 + bookServicePercent/100)}");
+			 
+			 $("#hallAmnout_dv").text("￥"+common.formatCurrency("${bookPriceCount}"*1));
+			 $("#hallAllAmnout_dv").text("￥"+common.formatCurrency("${bookPriceCount * (1 + bookServicePercent/100)}"*1));
+			sumALLprice();
+		}else{
+			$this.addClass('edit');
+			$("#hall_detail_edit_to_"+placeId).hide();
+			$("#hall_detail_edit_cancel_"+placeId).show();
+			$("#hallscheduleDetail"+placeId).hide();
+			$("#hallscheduleUpForm"+placeId).show();
+			
+			$("#commissionFeeRate_edit").show();
+			$("#commissionFeeRate_dtl").hide();
+			
+			$("#halltitle_show_"+placeId).hide();
+			$("#halltitle_edit_"+placeId).show();
+		}
+	});
+	
+	$('.hall-del').click(function(){
+		var hallIds = $("#hallIds").val();
+		var hallId = $(this).attr('hallid');
+		$("#hallIds").val(hallIds.replace("#"+hallId));
+		$(this).parent().parent().parent().remove();
+		calculateHallSchedulePrice()
+	});
+	
+	$('.order-del').click(function(){
+		$(this).parent().parent().remove();
+		calculateHallSchedulePrice();
+	});
+	
+/* 	$(".timesolt").click(function(){
+		var $this = $(this);
+		$this.next().show();
+	}); */
+	/* 	$(".timesolt").blur(function(){
+	var $this = $(this);
+	var tabindex = $this.attr('tabindex');
+	$this.attr('tabindex',1);
+	$this.find('.timesolt-item').hide();
+});  */
+
+	$(".timesolt").focus(function(){
+		var $this = $(this);
+		var tabindex = $this.attr('tabindex');
+		$this.attr('tabindex',-1);
+		var hallId = $this.attr("hallid");
+		var scheduleDate =$this.parent().prev().find('input[name="scheduleDate_'+hallId+'"]').val();
+		var hotelId = '${order.hotelId}';
+		$.get('${ctx}/weixin/order/hall/schedule/info',{hotelId:hotelId,placeId:hallId,scheduleDate:scheduleDate},function(res){
+			if(res.statusCode==='200'){
+				var k =0;
+				for(var i=0;i<res.object.length;i++){
+					var pschedule = res.object[i].placeSchedule;
+					$this.find('input[type="checkbox"]').each(function(){
+						var $self = $(this);
+						if($self.val()==pschedule){
+							$self.attr("price",res.object[i].onlinePrice);
+							if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+								$self.attr("disabled","disabled");
+								k++;
+							}
+						}
+					});
+					/* $this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("price",res.object[i].onlinePrice);
+					if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+						$this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("disabled","disabled");
+						k++;
+					} */	
+				}
+				if(k!=0){
+					$this.find('input[id="timesolt_all"]').attr("disabled","disabled");
+				}
+				
+				$this.find('.timesolt-item').show();
+			}else{
+				swal(res.message,'success');
+			} 
+		},"json");
+		
+	});
+
+	$(".timesolt-select").click(function(){
+		var $this = $(this);
+		$this.attr('tabindex',1);
+		$this.parent().parent().hide();
+		var sles = [];
+		var slestxt = [];
+		var hallId = $this.attr('hallId');
+		var n = 0;
+		var sumPrice = 0;
+		$this.parent().parent().find('input[type="checkbox"]:checked').each(function(){
+			var $self = $(this);
+			if($self.val()!='ALL'){
+				sles.push($self.val());
+				slestxt.push($self.attr('data'));
+				sumPrice=$self.attr('price')*1;
+				n++;
+			}
+		});
+		if(n>=3){
+			$this.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*3);
+		}else{
+			$this.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*n);
+		}
+		$this.parent().parent().prev().text(slestxt.join(','));
+		$this.parent().parent().parent().find('input[name="scheduleTimeTxt_'+hallId+'"]').val(slestxt.join(','));
+		$this.parent().parent().parent().find('input[name="scheduleTime_'+hallId+'"]').val(sles.join('#'));
+		calculateHallSchedulePrice();
+	});
+	
+	$(".timesolt-select-item").change(function(){
+		var $this = $(this);
+		if($this.val()=='ALL'&&$(this).attr("checked")){
+			$this.parent().parent().parent().find('input[type="checkbox"]').each(function(){
+				if($(this).attr("disabled")){
+					
+				}else{
+					$(this).attr("checked","checked");
+				}
+			}); 
+			//$this.parent().parent().parent().find('input[type="checkbox"]').attr("checked","checked"); 
+		}else if($this.val()=='ALL'&&!$(this).attr("checked")){
+			$this.parent().parent().parent().find('input[type="checkbox"]').removeAttr("checked"); 
+		}else if(!$(this).attr("checked")){
+			$this.parent().parent().parent().find('.timesolt_all').removeAttr("checked"); 
+		}
+		
+		/* else if($this.val()=='ALL'&&){
+			
+		} */
+	});
+	
+	$(".timesolt-cancel").click(function(){
+		var $this = $(this);
+		$this.parent().parent().hide();
+	});
+	
+	$(".detail_content").delegate('.hall-add-schedule','click',function(){	//
+		var $this = $(this);
+		var placeId = $this.attr("hallId");
+		var ramId = new Date().getTime();
+		var schdl_item = $('#hall_schedule_item').text().split('{{hallId}}').join(placeId);
+		schdl_item = schdl_item.split('{{ramId}}').join(placeId);
+		var $hall_schedule=$(schdl_item);
+		$hall_schedule.find('.order-del').click(function(){
+			$hall_schedule.remove();
+			calculateHallSchedulePrice();
+		});
+		$hall_schedule.find(".timesolt").focus(function(){
+			var $this = $(this);
+			var tabindex = $this.attr('tabindex');
+			$this.attr('tabindex',-1);
+			var hallId = $this.attr("hallid");
+			var scheduleDate =$this.parent().prev().find('input[name="scheduleDate_'+hallId+'"]').val();
+			var hotelId = '${order.hotelId}';
+			$.get('${ctx}/weixin/order/hall/schedule/info',{hotelId:hotelId,placeId:hallId,scheduleDate:scheduleDate},function(res){
+				if(res.statusCode==='200'){
+					var k =0;
+					for(var i=0;i<res.object.length;i++){
+						var id='#'+res.object[i].id;
+						var pschedule = res.object[i].placeSchedule;
+						$this.find('input[type="checkbox"]').each(function(){
+							var $self = $(this);
+							if($self.val()==pschedule){
+								$self.attr("price",res.object[i].onlinePrice);
+								if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+									$self.attr("disabled","disabled");
+									k++;
+								}
+							}
+						});
+						/* $this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("price",res.object[i].onlinePrice);
+						if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+							$this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("disabled","disabled");
+							k++;
+						} */
+						
+					}
+					
+					if(k!=0){
+						$this.find('input[id="timesolt_all"]').attr("disabled","disabled");
+					}
+					
+					$this.find('.timesolt-item').show();
+				}else{
+					swal(res.message,'success');
+				} 
+			},"json");
+		});
+
+		$hall_schedule.find(".timesolt-select").click(function(){
+			var $this = $(this);
+			$this.attr('tabindex',1);
+			$this.parent().parent().hide();
+			var sles = [];
+			var slestxt = [];
+			var hallId = $this.attr('hallId');
+			var n = 0;
+			var sumPrice = 0;
+			$this.parent().parent().find('input[type="checkbox"]:checked').each(function(){
+				var $self = $(this);
+				if($self.val()!='ALL'){
+					sles.push($self.val());
+					slestxt.push($self.attr('data'));
+					sumPrice=$self.attr('price')*1;
+					n++;
+				}
+			});
+			if(n>=3){
+				$this.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*3);
+			}else{
+				$this.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*n);
+			}
+			$this.parent().parent().prev().text(slestxt.join(','));
+			$this.parent().parent().parent().find('input[name="scheduleTimeTxt_'+hallId+'"]').val(slestxt.join(','));
+			$this.parent().parent().parent().find('input[name="scheduleTime_'+hallId+'"]').val(sles.join('#'));
+			calculateHallSchedulePrice();
+		});
+		
+		$hall_schedule.find(".timesolt-select-item").change(function(){
+			var $this = $(this);
+			if($this.val()=='ALL'&&$(this).attr("checked")){
+				$this.parent().parent().parent().find('input[type="checkbox"]').each(function(){
+					if($(this).attr("disabled")){
+					
+					}else{
+						$(this).attr("checked","checked");
+					}
+				}); 
+				//$this.parent().parent().parent().find('input[type="checkbox"]').attr("checked","checked");
+			}else if($this.val()=='ALL'&&!$(this).attr("checked")){
+				$this.parent().parent().parent().find('input[type="checkbox"]').removeAttr("checked"); 
+			}else if(!$(this).attr("checked")){
+				$this.parent().parent().parent().find('.timesolt_all').removeAttr("checked"); 
+			}
+			/* else if($this.val()=='ALL'&&){
+				
+			} */
+		});
+		$hall_schedule.find(".timesolt-cancel").click(function(){
+			var $this = $(this);
+			$hall_schedule.find(".timesolt-item").hide();
+		});
+		
+		
+		$this.parent().parent().parent().before($hall_schedule);
+		
+	});
+	
+	
+	$(".detail_content").delegate('.room-add-schedule','click',function(){	//
+		var $this = $(this);
+		var placeId = $this.attr("roomId");
+		var roomType = $this.parent().parent().parent().prev().find("span:first-child").text();
+		var network = $this.parent().parent().parent().prev().find("span:nth-child(2)").text();
+		var schdl_item = $('#room_schedule_item').text().split('{{id}}').join(placeId);
+		schdl_item = schdl_item.replace('{{roomType}}',roomType).replace('{{network}}',network.replace('￥/间',''));
+		var $room_schedule=$(schdl_item);
+		$room_schedule.find(".room-schedule-del").click(function(){
+			$room_schedule.remove();
+			calculateRoomSchedulePrice();
+		})
+		$this.parent().parent().parent().before($room_schedule);
+		
+	});
+	
+	$(".detail_content").delegate('.meal-add-schedule','click',function(){	//
+		var $this = $(this);
+		var placeId = $this.attr("mealId");
+		var price = $("#mealOriginalPrice_"+placeId).val();
+		var schdl_item = $('#meal_schedule_item').text().split('{{id}}').join(placeId);
+		schdl_item = schdl_item.replace("{{price}}",price);
+		var $meal_schedule=$(schdl_item);
+		$meal_schedule.find(".meal-schedule-del").click(function(){
+			$meal_schedule.remove();
+			calculateRoomSchedulePrice();
+		})
+		$this.parent().parent().parent().before($meal_schedule);
+		
+	});
+	
+	$(".detail_content").delegate('.hall-add','click',function(){
+		var hallIds = $("#hallIds").val();
+		$.get('${ctx}/weixin/hotelplace/list',{hotelId:'${order.hotelId}'},function(res){
+			if(res.statusCode==200){
+				var arr = [];
+				for(var i=0;i<res.object.length;i++){
+					var id='#'+res.object[i].id;
+					if(hallIds.indexOf(id)<0){
+						arr.push('<div class="btn btn-query btn-plain bg-none-query col-justify-2" style="" hallId="'+res.object[i].id+'" hallName="'+res.object[i].placeName+'">'+res.object[i].placeName+'</div>');
+					}
+				}
+				$("#halls_list").html(arr.join(''));
+				show();
+				$("#halls_div").show();
+			}else{
+				
+			}
+		},'json')
+	});
+	
+	
+	$("#halls_div").delegate('[hallid]','click',function(){	//酒店列表点击事件
+		var $this = $(this);
+		var hallId = $this.attr('hallid');
+		$.get('${ctx}/weixin/hotelplace/getone',{id:hallId,type:'HALL'},function(res){
+			if(res.statusCode==200){
+				res.object.ramId = new Date().getTime();
+				var shtml =	template('hall_item', res.object);
+				var $shl = 	$(shtml);
+				$shl.find('.hall-del').click(function(){
+					var hallIds = $("#hallIds").val();
+					var hallId = $this.attr('hallid');
+					$("#hallIds").val(hallIds.replace("#"+hallId,''));
+					$shl.remove();
+					calculateHallSchedulePrice()
+				});
+				$shl.find(".timesolt").focus(function(){
+					var $this = $(this);
+					var tabindex = $this.attr('tabindex');
+					$this.attr('tabindex',-1);
+					var hallId = $this.attr("hallid");
+					var scheduleDate =$this.parent().prev().find('input[name="scheduleDate_'+hallId+'"]').val();
+					var hotelId = '${order.hotelId}';
+					$.get('${ctx}/weixin/order/hall/schedule/info',{hotelId:hotelId,placeId:hallId,scheduleDate:scheduleDate},function(res){
+						if(res.statusCode==='200'){
+							var k =0;
+							for(var i=0;i<res.object.length;i++){
+								var pschedule = res.object[i].placeSchedule;
+								$this.find('input[type="checkbox"]').each(function(){
+									var $self = $(this);
+									if($self.val()==pschedule){
+										$self.attr("price",res.object[i].onlinePrice);
+										if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+											$self.attr("disabled","disabled");
+											k++;
+										}
+									}
+								});
+								/* $this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("price",res.object[i].onlinePrice);
+								if(res.object[i].state==='2'&&res.object[i].orderNo!='${order.orderNo}'){
+									$this.find('input[id="timesolt_'+res.object[i].placeSchedule+'"]').attr("disabled","disabled");
+									k++;
+								} */
+							}
+							
+							if(k!=0){
+								$this.find('input[id="timesolt_all"]').attr("disabled","disabled");
+							}
+							
+							$this.find('.timesolt-item').show();
+						}else{
+							swal(res.message,'success');
+						} 
+					},"json");
+				});
+
+				$shl.find(".timesolt-select").click(function(){
+					var $thisselect = $(this);
+					$thisselect.attr('tabindex',1);
+					$thisselect.parent().parent().hide();
+					var sles = [];
+					var slestxt = [];
+					var hallId = $thisselect.attr('hallId');
+					var n = 0;
+					var sumPrice = 0;
+					$thisselect.parent().parent().find('input[type="checkbox"]:checked').each(function(){
+						var $self = $(this);
+						if($self.val()!='ALL'){
+							sles.push($self.val());
+							slestxt.push($self.attr('data'));
+							sumPrice=$self.attr('price')*1;
+							n++;
+						}
+					});
+					if(n>=3){
+						$thisselect.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*3);
+					}else{
+						$thisselect.parent().parent().parent().parent().parent().parent().next().find("input[name='placePrice_"+hallId+"']").val(sumPrice*n);
+					}
+					$thisselect.parent().parent().prev().text(slestxt.join(','));
+					$thisselect.parent().parent().parent().find('input[name="scheduleTimeTxt_'+hallId+'"]').val(slestxt.join(','));
+					$thisselect.parent().parent().parent().find('input[name="scheduleTime_'+hallId+'"]').val(sles.join('#'));
+					calculateHallSchedulePrice();
+				});
+				
+				$shl.find(".timesolt-select-item").change(function(){
+					var $this = $(this);
+					if($this.val()=='ALL'&&$(this).attr("checked")){
+						$this.parent().parent().parent().find('input[type="checkbox"]').each(function(){
+							if($(this).attr("disabled")){
+								
+							}else{
+								$(this).attr("checked","checked");
+							}
+						}); 
+						//$this.parent().parent().parent().find('input[type="checkbox"]').attr("checked","checked"); 
+					}else if($this.val()=='ALL'&&!$(this).attr("checked")){
+						$this.parent().parent().parent().find('input[type="checkbox"]').removeAttr("checked"); 
+					}else if(!$(this).attr("checked")){
+						$this.parent().parent().parent().find('.timesolt_all').removeAttr("checked"); 
+					}
+					/* else if($this.val()=='ALL'&&){
+						
+					} */
+				});
+				$shl.find(".timesolt-cancel").click(function(){
+					var $this = $(this);
+					$this.parent().parent().hide();
+				});
+				$(".hall-add").parent().parent().before($shl);
+				var hallIds = $("#hallIds").val();
+				$("#hallIds").val(hallIds+"#"+hallId);
+				$("#halls_div").hide();
+				hide();
+				$("#commissionFeeRate_edit").show();
+				$("#commissionFeeRate_dtl").hide();
+			}
+		},'json')
+		
+	});
+	
+	
+	$(".detail_content").delegate('.room-add','click',function(){
+		var roomIds = $("#roomIds").val();
+		$.get('${ctx}/weixin/hotelplace/room/list',{hotelId:'${order.hotelId}'},function(res){
+			if(res.statusCode==200){
+				var arr = [];
+				for(var i=0;i<res.object.length;i++){
+					var id='#'+res.object[i].id;
+					if(roomIds.indexOf(id)<0){
+						arr.push('<div class="btn btn-query btn-plain bg-none-query col-justify-2" style="" roomId="'+res.object[i].id+'" roomName="'+res.object[i].placeName+'">'+res.object[i].placeName+'</div>');
+					}
+				}
+				$("#rooms_list").html(arr.join(''));
+				show();
+				$("#rooms_div").show();
+			}else{
+				
+			}
+		},'json')
+	});
+	
+	$("#rooms_div").delegate('[roomId]','click',function(){	//住房列表点击事件
+		var $this = $(this);
+		var roomId = $this.attr('roomId');
+		$.get('${ctx}/weixin/hotelplace/getone',{id:roomId,type:'ROOM'},function(res){
+			if(res.statusCode==200){
+				var shtml =	template('room_item', res.object);
+				var $shl = 	$(shtml);
+				$shl.find('.room-del').click(function(){
+					var roomIds = $("#roomIds").val();
+					var roomId = $this.attr('roomId');
+					$("#roomIds").val(roomIds.replace("#"+roomId,''));
+					$shl.remove();
+					calculateRoomSchedulePrice();
+				});
+				
+				$(".room-add").parent().parent().before($shl);
+				var roomIds = $("#roomIds").val();
+				$("#roomIds").val(roomIds+"#"+roomId);
+				$("#rooms_div").hide();
+				hide();
+			}
+		},'json')
+		
+	});
+	
+	$(".room_detail_edit").click(function(){
+		$this = $(this);
+		var placeId = $this.attr("roomId");
+		if($this.hasClass('edit')){
+			$this.removeClass('edit');
+			$("#room_detail_edit_to_"+placeId).show();
+			$("#room_detail_edit_cancel_"+placeId).hide();
+			$("#roomViewDetail"+placeId).show();
+			$("#roomEditForm"+placeId).hide();
+			
+		}else{
+			$this.addClass('edit');
+			$("#room_detail_edit_to_"+placeId).hide();
+			$("#room_detail_edit_cancel_"+placeId).show();
+			$("#roomViewDetail"+placeId).hide();
+			$("#roomEditForm"+placeId).show();
+		}
+	});
+	
+	$('.room-del').click(function(){
+		var roomIds = $("#roomIds").val();
+		var roomId = $(this).attr('roomId');
+		$("#roomIds").val(roomIds.replace("#"+roomId).replace(',,',','));
+		$(this).parent().parent().parent().remove();
+		calculateRoomSchedulePrice();
+	});
+	
+	$("#btn_halls_close").click(function(){
+		$("#halls_div").hide();
+		hide();
+	});
+	
+	$("#btn_rooms_close").click(function(){
+		$("#rooms_div").hide();
+		hide();
+	});
+	
+	$("#btn_meals_close").click(function(){
+		$("#meals_div").hide();
+		hide();
+	});
+	
+	$(".detail_content").delegate('.minus','click',function(){	
+		$this = $(this);
+		var num = $this.next().find('input').val()*1;
+		if(num*1>0){
+			var cnum = num-1;
+			$this.next().find('input').val(cnum);
+		}else{
+			
+		}
+		calculateRoomSchedulePrice();
+	});
+	
+	$(".detail_content").delegate('.plus','click',function(){	
+		$this = $(this);
+		var num = $this.prev().find('input').val()*1;
+		var cnum = num+1;
+		$this.prev().find('input').val(cnum);
+		calculateRoomSchedulePrice();
+		
+	});
+	
+	$(".detail_content").delegate('.meal-minus','click',function(){	
+		$this = $(this);
+		var num = $this.next().find('input').val()*1;
+		if(num*1>0){
+			var cnum = num-1;
+			$this.next().find('input').val(cnum);
+		}else{
+			
+		}
+		calculateMealSchedulePrice();
+	});
+	
+	$(".detail_content").delegate('.meal-plus','click',function(){	
+		$this = $(this);
+		var num = $this.prev().find('input').val()*1;
+		var cnum = num+1;
+		$this.prev().find('input').val(cnum);
+		calculateMealSchedulePrice();
+		
+	});
+	
+	$(".room-schedule-del").click(function(){
+		$(this).parent().parent().parent().parent().remove();
+		calculateRoomSchedulePrice();
+	});
+	
+	
+	$(".detail_content").delegate('.meal-add','click',function(){
+		var mealIds = $("#mealIds").val();
+		$.get('${ctx}/weixin/hotelplace/meal/list',{hotelId:'${order.hotelId}'},function(res){
+			if(res.statusCode==200){
+				var arr = [];
+				for(var i=0;i<res.object.length;i++){
+					var id='#'+res.object[i].id;
+					if(mealIds.indexOf(id)<0){
+						arr.push('<div class="btn btn-query btn-plain bg-none-query col-justify-2" style="" mealId="'+res.object[i].id+'" mealName="'+res.object[i].name+'">'+res.object[i].name+'</div>');
+					}
+				}
+				$("#meals_list").html(arr.join(''));
+				show();
+				$("#meals_div").show();
+			}else{
+				
+			}
+		},'json')
+	});
+	
+	$("#meals_div").delegate('[mealId]','click',function(){	//住房列表点击事件
+		var $this = $(this);
+		var mealId = $this.attr('mealId');
+		$.get('${ctx}/weixin/hotelplace/getone',{id:mealId,type:'MEAL'},function(res){
+			if(res.statusCode==200){
+				var shtml =	template('meal_item', res.object);
+				var $shl = 	$(shtml);
+				$shl.find('.meal-del').click(function(){
+					var mealIds = $("#mealIds").val();
+					var mlId = $this.attr('mealId');
+					$("#mealIds").val(mealIds.replace("#"+mlId,''));
+					$shl.remove();
+					calculateMealSchedulePrice();
+				});
+				
+				$shl.find(".meal-schedule-del").click(function(){
+					$(this).parent().parent().parent().parent().remove();
+					calculateMealSchedulePrice();
+				});
+				
+				$(".meal-add").parent().parent().before($shl);
+				var mealIds = $("#mealIds").val();
+				$("#mealIds").val(mealIds+"#"+mealId);
+				$("#meals_div").hide();
+				hide();
+			}
+		},'json')
+		
+	});
+	
+	$(".meal_detail_edit").click(function(){
+		$this = $(this);
+		var placeId = $this.attr("mealId");
+		if($this.hasClass('edit')){
+			$this.removeClass('edit');
+			$("#meal_detail_edit_to_"+placeId).show();
+			$("#meal_detail_edit_cancel_"+placeId).hide();
+			$("#mealViewForm"+placeId).show();
+			$("#mealEditForm"+placeId).hide();
+		}else{
+			$this.addClass('edit');
+			$("#meal_detail_edit_to_"+placeId).hide();
+			$("#meal_detail_edit_cancel_"+placeId).show();
+			$("#mealViewForm"+placeId).hide();
+			$("#mealEditForm"+placeId).show();
+		}
+	});
+	
+	$('.meal-del').click(function(){
+		var mealIds = $("#mealIds").val();
+		var mealId = $(this).attr('mealId');
+		$("#mealIds").val(mealIds.replace("#"+mealId).replace(',,',','));
+		$(this).parent().parent().parent().remove();
+		calculateMealSchedulePrice();
+	});
+	
+	$(".meal-schedule-del").click(function(){
+		$(this).parent().parent().parent().parent().remove();
+		calculateMealSchedulePrice();
+	});
+	
+	var $form = $("#orderForm");
+	$("#btn_submit").click(function(){
+	  /*   if($form.valid && !$form.valid()){
+			return;
+		} */
+		var data = $form.serialize();
+		console.log(data);
+		show();
+		$.post($form.attr('action'),data,function(res){
+		 	if(res.statusCode==='200'){
+				swal(res.message,'success');
+				setTimeout(function(){
+					loadContent(this,'${ctx}/base/order/detail/${order.id}?issend=1','RD');
+				},2000);
+		 	//	setTimeout('sendEmail()',3000);
+			}else{
+				swal(res.message,'error');
+			}
+			hide();
+		},'json');
+		
+	});
+	
+	
+	$("#btn_company_follow_pass").click(function(){
+		show();
+		$("#company_follow_feedback_div").show();
+		$("#companyFollowMemo").val('');
+	});
+	
+	$("#btn_company_follow_cansel").click(function(){
+		$("#company_follow_feedback_div").hide();
+		hide();
+		$("#companyFollowMemo").val('');
+		
+	});
+	
+	$("#company_follow_ic_close").click(function(){
+		$("#company_follow_feedback_div").hide();
+		hide();	
+		$("#companyFollowMemo").val('');
+		
+	}); 
+	
+	$("#btn_company_follow_sure").click(function(){
+		
+		var companyFollowMemo = $("#companyFollowMemo").val();
+		if(companyFollowMemo===''){
+			swal('请输入反馈信息！','success');
+			return;
+		}
+		$("#company_follow_feedback_div").hide();
+		$.post('${ctx}/weixin/order/company/follow',{orderId:'${order.id}',companyFollowMemo:companyFollowMemo},function(res){
+			toastFn(res.message);
+			if(res.statusCode==='200'){
+				hide();	
+				swal(res.message,'success');
+				setTimeout(function(){
+					loadContent(this,'${ctx}/weixin/order/detail/${order.id}','RD');
+				},1500);
+			}else{
+				swal(res.message,'error');
+				$("#company_follow_feedback_div").show();
+			}
+			
+		},'json');
+	});
+	
+	
+	$(".other-edit").click(function(){
+		$this = $(this);
+		$this.parent().hide();
+		$this.parent().next().show();
+		$this.addClass('edit');
+	});
+	
+	$(".other-cancel").click(function(){
+		$this = $(this);
+		$this.parent().hide();
+		$this.parent().prev().show();
+		$this.removeClass('edit');
+	});
+	
+	$(".other-del").click(function(){
+		$this = $(this);
+		$this.parent().remove();
+		calculateOtherPrice();
+		$this.removeClass('edit');
+	});
+	$('.oprice').keyup(function(){	
+		var $otherItem = $(this).parent();
+		var oprice = $(this).val()*1;
+		var oquantity = $otherItem.find('.oquantity').val()*1;
+		$otherItem.find('.otherprice').val(oprice*oquantity);
+		calculateOtherPrice();
+	});
+	$('.oquantity').keyup(function(){	
+		var $otherItem = $(this).parent();
+		var oquantity =$(this).val()*1;
+		var oprice = $otherItem.find('.oprice').val()*1;
+		$otherItem.find('.otherprice').val(oprice*oquantity);
+		calculateOtherPrice();
+	});
+	
+	$('.other-add').click(function(){
+		var oitem = '<div style="width: 80%;padding:0.4rem;">其他小项 <input type="text" class="form-control" id="" name="otherdetail"  placeholder="消费明细" style="width: 200px;display: inline-block;">&nbsp;&nbsp;'
+			 +' 单价 <input type="number" id="" name="oprice" value="0" class="form-control oprice" placeholder="单价" min="0" style="width: 100px;display: inline-block;" >元&nbsp;&nbsp;'
+			 +' 数量 <input type="number" id="" name="oquantity" value="1" class="form-control oquantity" placeholder="数量" min="0" style="width: 100px;display: inline-block;">&nbsp;&nbsp;'
+			 +' 总计 <input type="number" id="" name="otherprice" value="0" class="form-control otherprice" placeholder="总计" min="0" style="width: 100px;display: inline-block;"  readonly="readonly" onchange="calculateOtherPrice();">元'
+			 +'<img class="other-del" id="" src="${ctx }/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor:pointer;display: inline-block;"></div>';
+		var $otherItem = $(oitem);
+		$otherItem.delegate('.other-del','click',function(){	
+			$otherItem.remove();
+		});
+		$otherItem.delegate('.oprice','keyup',function(){	
+			var oprice = $(this).val()*1;
+			var oquantity = $otherItem.find('.oquantity').val()*1;
+			$otherItem.find('.otherprice').val(oprice*oquantity);
+			calculateOtherPrice();
+		});
+		$otherItem.delegate('.oquantity','keyup',function(){	
+			var oquantity =$(this).val()*1;
+			var oprice = $otherItem.find('.oprice').val()*1;
+			$otherItem.find('.otherprice').val(oprice*oquantity);
+			calculateOtherPrice();
+		});
+		$(".other-item").append($otherItem);
+	});
+	$(".backto").click(function(){
+		loadContent(this,'${ctx}/'+$(".item-active").find('a').attr('url'),'QUICK');
+	});
+	
+});
+
+function mealScheduleDate(self){
+	 var $this = $(self);
+	 calculateMealSchedulePrice();
+}
+
+
+function hallScheduleDate(self){
+	 var $this = $(self);
+	 var placeId=$this.attr("hallId");
+	 var scheduleDate = $this.val();
+	 var scheduleTime = $this.parent().next().find('select').val();
+	 getHallSchedule(placeId,scheduleDate,scheduleTime,$this);
+}
+function hallScheduleTime(self){
+	 var $this = $(self);
+	 var placeId=$this.attr("hallId");
+	 var scheduleDate =$this.parent().prev().find('input').val();
+	 var scheduleTime = $this.val();
+	 getHallSchedule(placeId,scheduleDate,scheduleTime,$this)
+}
+function getHallSchedule(placeId,scheduleDate,scheduleTime,$this){
+	var hotelId = "${order.hotelId}";
+	$.get('${ctx}/weixin/order/hall/schedule/info',{hotelId:hotelId,placeId:placeId,scheduleDate:scheduleDate,scheduleTime:scheduleTime},function(res){
+		if(res.statusCode==='200'){
+			$this.find("input[name='hallScheduleId_"+placeId+"']").val(res.object.id);
+			if(scheduleTime===4){
+				$this.parent().parent().parent().next().find("input[name='placePrice_"+placeId+"']").val(res.object.onlinePrice*3);
+			}else{
+				$this.parent().parent().parent().next().find("input[name='placePrice_"+placeId+"']").val(res.object.onlinePrice*scheduleTime);
+			}
+			
+			calculateHallSchedulePrice();
+		}else{
+			alert(res.message);
+		} 
+	},"json");
+}
+
+function calculateHallSchedulePrice(){
+	 var sumHallSchedulePrice =0.00;
+	 var serviceFeeRate = $("#commissionFeeRate").val()*1;
+	 
+	 var allHallSchedulePrice =0.00;
+	 $('.hall .price').each(function(){
+		 if($(this).val()){
+			 sumHallSchedulePrice+=$(this).val()*1;
+		 }
+	 });
+	 var allHallSchedulePrice = sumHallSchedulePrice*(1+serviceFeeRate/100);
+	 var serviceFee = sumHallSchedulePrice*serviceFeeRate/100
+	 $("#hallAmount").val(sumHallSchedulePrice);
+	 $("#hallAllAmount").val(allHallSchedulePrice);
+	 
+	 $("#serviceFee").text("￥"+common.formatCurrency(serviceFee));
+	 $("#hallAmnout_dv").text("￥"+common.formatCurrency(sumHallSchedulePrice));
+	 $("#hallAllAmnout_dv").text("￥"+common.formatCurrency(allHallSchedulePrice));
+	 
+	sumALLprice();
+}
+
+function calculateRoomSchedulePrice(){
+	 var sumRoomSchedulePrice =0.00;
+	 var allRoomSchedulePrice =0.00;
+	 $('.room .price').each(function(){
+		 if($(this).val()){
+			 var arr = $(this).attr('id').split('_');
+			 var placeId = arr[1];
+			 var idx = arr[2];
+			 var num = $(this).parent().parent().parent().prev().find('input[type="number"]').val()*1;
+			 sumRoomSchedulePrice+=$(this).val()*1*num;
+		 }
+	 });
+	 allRoomSchedulePrice = sumRoomSchedulePrice;
+	 $("#roomAmount").val(sumRoomSchedulePrice);
+	 $("#roomAllAmount").val(allRoomSchedulePrice);
+	 $("#sumRoomSchedulePrice").text("￥"+common.formatCurrency(sumRoomSchedulePrice));
+	 $("#allRoomSchedulePrice").text("￥"+common.formatCurrency(allRoomSchedulePrice));
+	 
+	 sumALLprice();
+}
+
+function calculateMealSchedulePrice(){
+	 var sumMealSchedulePrice =0.00;
+	 var allMealSchedulePrice =0.00;
+	 $('.meal .price').each(function(){
+		 if($(this).val()){
+			 var arr = $(this).attr('id').split('_');
+			 var placeId = arr[1];
+			 var idx = arr[2];
+			 var num = $(this).parent().parent().parent().prev().find('input[type="number"]').val()*1;
+			 sumMealSchedulePrice+=$(this).val()*1*num;
+		 }
+	 });
+	 allMealSchedulePrice = sumMealSchedulePrice;
+	 $("#mealAmount").val(sumMealSchedulePrice);
+	 $("#mealAllAmount").val(allMealSchedulePrice);
+	 $("#sumMealschedulePrice").text("￥"+common.formatCurrency(sumMealSchedulePrice));
+	 $("#allMealschedulePrice").text("￥"+common.formatCurrency(allMealSchedulePrice));
+	 
+	 sumALLprice();
+}
+function sumALLprice(){
+	  
+	var sumRoomSchedulePrice = $("#roomAmount").val()*1;
+	var allRoomSchedulePrice = $("#roomAllAmount").val()*1;
+	
+	var sumHallSchedulePrice = $("#hallAmount").val()*1;
+	var allHallSchedulePrice = $("#hallAllAmount").val()*1;
+	 
+	var allMealSchedulePrice = $("#mealAllAmount").val()*1;
+	
+	 var sumOtherPrice =0.00;
+	 $('.otherprice').each(function(){
+		 if($(this).val()){
+			 sumOtherPrice+=$(this).val()*1;
+		 }
+	 });
+	
+	var amount = allHallSchedulePrice + allRoomSchedulePrice +allMealSchedulePrice+sumOtherPrice;
+	var zgamount = amount;
+	var prepaid = $("#prepaid").val()*1;
+	var finalPayment = zgamount-prepaid;
+	$("#amount_dv").text("￥"+common.formatCurrency(amount));
+	$("#zgamount_dv").text("￥"+common.formatCurrency(zgamount));
+	$("#finalPayment").text("￥"+common.formatCurrency(zgamount));
+	
+}
+
+function calculateOtherPrice(){
+	 var allOtherPrice =0.00;
+	 var sumOtherPrice =0.00;
+	 $('.otherprice').each(function(){
+		 if($(this).val()){
+			 sumOtherPrice+=$(this).val()*1;
+		 }
+	 });
+	 allOtherPrice = sumOtherPrice;
+	 $("#sumOtherPrice").text("￥"+common.formatCurrency(sumOtherPrice));
+	 $("#allOtherPrice").text("￥"+common.formatCurrency(allOtherPrice));
+	 
+	 sumALLprice();
+}
+
+function roomScheduleDate(self){
+	 var $this = $(self);
+	 var roomId=$this.attr("roomId");
+	 var scheduleDate = $this.val();
+	 
+	 getRoomSchedule(roomId,scheduleDate, $this)
+}
+function getRoomSchedule(placeId,scheduleDate, $this){
+	var hotelId = $("#hotelId").val();
+	$.get('${ctx}/weixin/order/room/schedule/info',{hotelId:hotelId,placeId:placeId,scheduleDate:scheduleDate},function(res){
+		if(res.statusCode==='200'){
+			$this.prev().val(res.object.id);
+			$this.next().find('input').val(res.object.onlinePrice*1);
+			calculateRoomSchedulePrice();
+		}else{
+			swal(res.message,'error');
+		}
+	},"json");
+}
+
+</script>
+
+
+<script id="hall_schedule_item" type="text/html">
+<div class="display-flex" id="schedule_item_{{hallId}}" style="">
+	<input type="hidden"  name="bookingRecordId" value="" >
+	 <div style="padding:0.7rem 0;">预定档期：</div>
+	 <div style="padding:0.4rem 0;">
+		 <div class="hschedule display-flex">
+		 	<input type="hidden" id="" name="hallScheduleId_{{hallId}}" value="">
+		 	<div>
+				<input type="date" class="hall-schedule date form-control" name="scheduleDate_{{hallId}}" hallid="{{hallId}}" value="${order.activityDate}" style="float: left;" onchange="hallScheduleDate(this);">
+			</div>
+			<div style="margin-left: 10px;">
+				<div class="timesolt" style="width: 180px;position: relative;" tabindex="1" hallid="{{hallId}}">
+					<input type="hidden" id="" name="scheduleTime_{{hallId}}" value="">   
+					<input type="hidden" id="" name="scheduleTimeTxt_{{hallId}}" value="">   
+					<div style="width: 100%;height:35px; border: 1px solid #ccc; border-radius: 4px;line-height: 35px;" class="arr-down"  >
+						<span  class="timesolt-text" style="height:35px;line-height: 35px;padding: 0 5px;">  请选择</span>
+						<!-- <i class="" style="    font-size: 3em;"></i> -->
+					</div>
+					<div  class="timesolt-item" style="position: absolute;left: 0;top: 35px;background-color: #ffffff;width:100%;display: none;z-index: 20000;">
+						<c:forEach items="${ctimes}" var="ctme">
+							<div style="width: 100%;height:30px; border: 1px solid #999999;">
+								<label for="timesolt_${ctme.id}_{{ramId}}" style="width:100%;line-height:30px;vertical-align:middle;">
+									<input class="timesolt-select-item" id="timesolt_${ctme.id}_{{ramId}}" type="checkbox" name="timesolt" value="${ctme.id}"  style="margin:9px;" data="${ctme.name}" ${ctme.name eq bookingRecordModel.placeSchedule?'checked="checked"':''}>
+									${ctme.name}
+								</label>
+							</div>
+						</c:forEach>
+						<div style="width:100%;height:30px;border:1px solid #999999;">
+							<label for="timesolt_all_{{ramId}}" style="width:100%;line-height:30px;vertical-align:middle;">
+								<input class="timesolt-select-item timesolt_all" id="timesolt_all_{{ramId}}" type="checkbox" name="timesolt" value="ALL" style="margin:9px;" data="全天" >
+								全天
+							</label>
+						</div>
+						<div style="width:100%;height:40px;border:1px solid #999999;text-align: center;padding: 5px;">
+							<button type="button"  class="btn btn-primary btn-sm timesolt-select"  style="width: 40%;"  hallId="{{hallId}}" >确定</button>
+							<button type="button"  class="btn btn-default btn-sm timesolt-cancel"  style="width: 40%;"  hallId="{{hallId}}" >取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		 </div>
+	 </div>
+	 <div style="padding:0.4rem 0;">
+		 ￥<input type="number" class="price form-control"  value="" name="placePrice_{{hallId}}" id="" onkeyup="calculateHallSchedulePrice()">
+		 <img class="order-del" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+	 </div>
+</div>
+</script>
+<!--
+		<select class="hall-time form-control" onchange="hallScheduleTime(this)" name="scheduleTime_{{hallId}}" hallid="{{hallId}}">
+			<c:forEach items="${ctimes}" var="ctme">
+				<option value="${ctme.id}">${ctme.name}</option>
+			</c:forEach>
+			<option value="ALL">全天</option>
+		</select>
+
+<select  class="hall-time form-control" onchange="hallScheduleTime(this)" name="scheduleTime_{{id}}" hallId="{{id}}" >
+							<c:forEach items="${ctimes}" var="ctme">
+								<option value="${ctme.id}">${ctme.name}</option>
+							</c:forEach>
+							<option value="ALL">全天</option>
+						</select>
+
+
+  -->			
+
+<script id="hall_item" type="text/html">
+<div class="hall-item">
+	<input type="hidden"  name="orderDetailId" value="" >
+	<div class="display-flex"   style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+		<div id="halltitle_edit_{{id}}" class="display-flex">
+			分会厅:{{placeName}}
+		</div>
+		<div  class="hall-del"  hallId="{{id}}">
+			<img src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+		</div>
+	</div>
+	<div class="display-flex" style="margin:0.5rem 0;color: #999999;">
+		<span>面积{{hallArea}}m²</span>
+		<span>容纳人数{{peopleNum}}人</span>
+		<span>层高{{height}}m</span>
+		<span>楼层{{floor}}F</span>
+		<span>立柱{{pillar}}</span>
+	</div>
+	
+	<div id="hallscheduleUpForm{{id}}">
+		<div class="display-flex" id="schedule_item_{{id}}" style="">
+			<input type="hidden"  name="bookingRecordId" value="" >
+			 <div style="padding:0.7rem 0;">预定档期：</div>
+			 <div style="padding:0.4rem 0;"  >
+				 <div class="hschedule display-flex" >
+				 	<input type="hidden" id="" name="hallScheduleId_{{id}}" value="" >
+				 	<div>
+						<input type="date" class="hall-schedule date form-control"  name="scheduleDate_{{id}}" hallId="{{id}}"
+						value="${order.activityDate}"  style="float: left;" onchange="hallScheduleDate(this);">
+					</div>
+					<div style="margin-left: 10px;">
+					<div class="timesolt" style="width: 180px;position: relative;" tabindex="1" hallid="{{id}}">
+					<input type="hidden" name="scheduleTime_{{id}}" value="">   
+					<input type="hidden" name="scheduleTimeTxt_{{id}}" value="">   
+					<div style="width: 100%;height:35px; border: 1px solid #ccc; border-radius: 4px;line-height: 35px;" class="arr-down"  >
+						<span  class="timesolt-text" style="height:35px;line-height: 35px;padding: 0 5px;">  请选择</span>
+						<!-- <i class="" style="    font-size: 3em;"></i> -->
+					</div>
+					<div  class="timesolt-item" style="position: absolute;left: 0;top: 35px;background-color: #ffffff;width:100%;display: none;z-index: 20000;">
+						<c:forEach items="${ctimes}" var="ctme">
+							<div style="width: 100%;height:30px; border: 1px solid #999999;">
+								<label for="timesolt_${ctme.id}_{{ramId}}" style="width:100%;line-height:30px;vertical-align:middle;">
+									<input class="timesolt-select-item" id="timesolt_${ctme.id}_{{ramId}}" type="checkbox" name="timesolt" value="${ctme.id}"  style="margin:9px;" data="${ctme.name}" ${ctme.name eq bookingRecordModel.placeSchedule?'checked="checked"':''}>
+									${ctme.name}
+								</label>
+							</div>
+						</c:forEach>
+						<div style="width:100%;height:30px;border:1px solid #999999;">
+							<label for="timesolt_all_{{ramId}}" style="width:100%;line-height:30px;vertical-align:middle;">
+								<input class="timesolt-select-item timesolt_all" id="timesolt_all_{{ramId}}" type="checkbox" name="timesolt" value="ALL" style="margin:9px;" data="全天" >
+								全天
+							</label>
+						</div>
+						<div style="width:100%;height:40px;border:1px solid #999999;text-align: center;padding: 5px;">
+							<button type="button"  class="btn btn-primary btn-sm timesolt-select"  style="width: 40%;"  hallId="{{id}}" >确定</button>
+							<button type="button"  class="btn btn-default btn-sm timesolt-cancel"  style="width: 40%;"  hallId="{{id}}" >取消</button>
+						</div>
+					</div>
+				</div>
+						
+					</div>
+				 </div>
+			 </div>
+			 <div style="padding:0.4rem 0;">
+					 ￥<input type="number" class="price form-control" value="" name="placePrice_{{id}}" id="" onkeyup="calculateHallSchedulePrice()">
+					 <img class="order-del" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+			  </div>
+		</div>
+		<div style="">
+			 <div style="float: left;width: 20%;">&nbsp;</div>
+			 <div style="float: left;width: 80%;">
+				 <div style="width: 100%;padding:0.4rem 0;">
+					 <span class="btn add hall-add-schedule" style="" hallId="{{id}}">添加档期</span>
+				 </div>
+			 </div>
+			  <div style="clear:both;"></div>
+		</div>
+	</div>
+</div>
+</script>
+<script id="room_item" type="text/html">
+	<div class="hall-item">
+		<input type="hidden"  name="orderDetailId" value="" >
+		<div class="display-flex" style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+			<div style="font-size: 1rem;">{{placeName}}</div>
+			<div class="display-flex">
+				<div class="room-del" roomId="$id}">
+					<img src="${ctx }/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+				</div>
+			</div>
+		</div>
+		<div id="roomEditForm${id}">
+			<div>
+				<input type="hidden"  name="bookingRecordId" value="" >
+				<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+					<span style="">{{roomType}}</span>
+					<span style="">{{network}}</span>
+					<div style="float: left;margin-left: 10px;">
+					<select class="room-breakfast form-control" name="breakfast_{{id}}" roomId="{{id}}"  >
+						<option value="0">无早</option>
+						<option value="1">有早</option>
+					</select>
+					</div>
+					<div>
+						<div style="float: left;">数量：</div>
+						<div class="num minus" roomId="{{id}}"  style="float: left;">-</div>
+						<div class="room-num" style="float: left;">
+							<input type="number" name="rom_num_{{id}}" id="rom_num_{{id}}" style="border: none;width: 50px;text-align: center;" value="0" onkeyup="calculateRoomSchedulePrice()">
+						</div>
+						<div class="num plus" roomId="{{id}}" style="float: left;">+</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div>
+				<div style="margin:0.5rem 0;">
+						 <div class="display-flex" style="width: 100%;">
+							<div style="padding:0.2rem 0;">入住时间：
+						 	<input type="hidden" id="roomscheduleId_{{id}}" name="roomscheduleId_{{id}}" value="">
+						 	
+							<input type="date" value="${order.activityDate}" class="room-schedule date form-control" id="roomscheduleDate_{{id}}" name="roomscheduleDate_{{id}}" roomId="{{id}}"
+							  onchange="roomScheduleDate(this)" style="display: inline;">
+							 </div>
+							 <span id="roomschedulecurrency_{{id}}" style="">
+							 	￥<input type="number" class="price form-control"   value="" name="roomPrice_{{id}}" id="roomPrice{{id}}" onkeyup="calculateRoomSchedulePrice()">/间
+							 </span>
+
+							 <img class="room-schedule-del" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+						 </div>
+				</div>
+			</div>
+			<div style="">
+				<div style="float: left;width: 20%;">&nbsp;</div>
+				<div style="float: left;width: 80%;">
+					<div style="width: 100%;padding:0.4rem 0;">
+						<span class="btn add room-add-schedule" style="" roomId="{{id}}">添加档期</span>
+					</div>
+				</div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="room_schedule_item" type="text/html">
+	<div>
+		<input type="hidden"  name="bookingRecordId" value="" >
+		<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+			<span style="">{{roomType}}</span>
+			<span style="">{{network}}</span>
+			<div style="float: left;margin-left: 10px;">
+			<select class="room-breakfast  form-control" name="breakfast_{{id}}" roomId="{{id}}"  >
+				<option value="0">无早</option>
+				<option value="1">有早</option>
+			</select>
+			</div>
+			<div>
+				<div style="float: left;">数量：</div>
+				<div class="num minus" roomId="{{id}}"  style="float: left;">-</div>
+				<div class="room-num" style="float: left;">
+					<input type="number" name="rom_num_{{id}}" id="rom_num_{{id}}" style="border: none;width: 50px;text-align: center;" value="0" onkeyup="calculateRoomSchedulePrice()">
+				</div>
+				<div class="num plus" roomId="{{id}}" style="float: left;">+</div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		<div style="margin:0.5rem 0;">
+			
+				 <div class="display-flex" style="width: 100%;">
+ 					<div style="padding:0.2rem 0;">入住时间：
+				 	<input type="hidden" id="roomscheduleId_{{id}}" name="roomscheduleId_{{id}}" value="">
+				 	
+					<input type="date" value="${order.activityDate}" class="room-schedule date form-control" id="roomscheduleDate_{{id}}" name="roomscheduleDate_{{id}}" roomId="{{id}}"
+					  onchange="roomScheduleDate(this)" style="display: inline;">
+					 </div>
+					 <span id="roomschedulecurrency_{{id}}" style="">
+					 	￥<input type="number" class="price form-control"   value="" name="roomPrice_{{id}}" id="roomPrice{{id}}" onkeyup="calculateRoomSchedulePrice()">/间
+					 </span>
+
+					 <img class="room-schedule-del" src="${ctx}/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+				 </div>
+		</div>
+	</div>
+</script>
+<script id="meal_item" type="text/html">	
+	<div>
+		<input type="hidden"  name="orderDetailId" value="" >
+		<input type="hidden" id="mealOriginalPrice_{{id}}" name="mealOriginalPrice_{{id}}" value="{{price}}">
+		<div class="display-flex" style="color:#019FEA;margin:0.5rem 0;font-size: 0.85rem;">
+			<div style="font-size: 1rem;">{{name}}</div>
+			<div class="display-flex">
+				<div> </div>
+				&nbsp;
+				&nbsp;
+				<div class="meal-del" mealid="{{id}}">
+					<img src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;cursor: pointer;">
+				</div>
+			</div>
+		</div>
+		<div id="mealEditForm{{id}}">
+			<div>
+				<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+					<div>
+						<input type="hidden"  name="bookingRecordId" value="" >
+						<div style="float: left;">
+							<select id="mealType_{{id}}" name="mealType_{{id}}" mealid="{{id}}" class="meal-type form-control">
+								<option value="01" selected="selected">围餐</option>
+								<option value="02">自助餐</option>
+							</select>
+						</div>
+						<div style="float: left;margin-left: 10px;">
+							<select id="mealscheduleTime_{{id}}" name="mealscheduleTime_{{id}}" mealid="{{id}}" class="meal-cgt form-control">
+									<option value="早餐" selected="selected">早餐</option>
+									<option value="午餐">午餐</option>
+									<option value="晚餐">晚餐</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<div style="float: left;">数量：</div>
+						<div class="num meal-minus" style="float: left;">-</div>
+						<div class="meal-num" style="float: left;">
+							<input type="number" name="meal_num_{{id}}" id="meal_num_{{id}}" style="border: none;width: 50px;text-align: center;" value="1" onkeyup="calculateMealSchedulePrice();">
+						</div>
+						<div class="num meal-plus" style="float: left;">+</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div>
+				<div style="margin:0.5rem 0;">
+						 <div class="display-flex" style="width: 100%;">
+							<div style="padding:0.3rem 0;">用餐时间：
+						 	<input type="hidden" id="mealscheduleId_{{id}}" name="mealscheduleId_{{id}}" value="">
+						 	
+							<input type="date" class="meal-schedule date form-control" style="display: inline;" id="mealscheduleDate_{{id}}" name="mealscheduleDate_{{id}}" mealid="{{id}}" onchange="mealScheduleDate(this)" value="${order.activityDate}">
+							 </div>
+							 <span id="mealschedulecurrency_{{id}}" style="">
+							 	￥<input type="number" class="price form-control" value="{{price}}" name="mealPrice_{{id}}" id="mealPrice{{id}}" onkeyup="calculateMealSchedulePrice();">/围
+							 </span>
+							  <img class="meal-schedule-del" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+						 </div>
+				</div>
+			</div>
+			<div style="">
+							 <div style="float: left;width: 20%;">&nbsp;</div>
+							 <div style="float: left;width: 80%;">
+								 <div style="width: 100%;padding:0.4rem 0;">
+									 <span class="btn add meal-add-schedule" style="" mealId="{{id}}">添加档期</span>
+								 </div>
+							 </div>
+							  <div style="clear:both;"></div>
+						</div>
+		</div>
+	</div>
+	
+</script>
+<script id="meal_schedule_item" type="text/html">	
+	<div>
+		<input type="hidden"  name="bookingRecordId" value="" >
+		<div class="display-flex" style="margin:0.5rem 0;color: #999999;line-height: 26px;">
+			<div>
+				<div style="float: left;">
+					<select id="mealType_{{id}}" name="mealType_{{id}}" mealid="{{id}}" class="meal-type form-control">
+						<option value="01" selected="selected">围餐</option>
+						<option value="02">自助餐</option>
+					</select>
+				</div>
+				<div style="float: left;margin-left: 10px;">
+					<select id="mealscheduleTime_{{id}}" name="mealscheduleTime_{{id}}" mealid="{{id}}" class="meal-cgt form-control">
+							<option value="早餐" selected="selected">早餐</option>
+							<option value="午餐">午餐</option>
+							<option value="晚餐">晚餐</option>
+					</select>
+				</div>
+			</div>
+			<div>
+				<div style="float: left;">数量：</div>
+				<div class="num meal-minus" style="float: left;">-</div>
+				<div class="meal-num" style="float: left;">
+					<input type="number" name="meal_num_{{id}}" id="meal_num_{{id}}" style="border: none;width: 50px;text-align: center;" value="1" onkeyup="calculateMealSchedulePrice();">
+				</div>
+				<div class="num meal-plus" style="float: left;">+</div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		<div style="margin:0.5rem 0;">
+			 
+				 <div class="display-flex" style="width: 100%;">
+					<div style="padding:0.3rem 0;">用餐时间：
+				 	<input type="hidden" id="mealscheduleId_{{id}}" name="mealscheduleId_{{id}}" value="">
+				 	
+					<input type="date" class="meal-schedule date form-control" style="display: inline;" id="mealscheduleDate_{{id}}" name="mealscheduleDate_{{id}}" mealid="{{id}}" onchange="mealScheduleDate(this)" value="${order.activityDate}">
+					 </div>
+					 <span id="mealschedulecurrency_{{id}}" style="">
+					 	￥<input type="number" class="price form-control" value="{{price}}" name="mealPrice_{{id}}" id="mealPrice{{id}}" onkeyup="calculateMealSchedulePrice();">/围
+					 </span>
+					  <img class="meal-schedule-del" src="/hui/static/weixin/css/icon/common/icon-order-del.png" style="height:16px;margin:0.4rem 0;cursor: pointer;">
+				 </div>
+		</div>
+	</div>
+</script>
+
+</div></div></div>

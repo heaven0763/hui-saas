@@ -1,0 +1,18 @@
+1、
+service 中的saveXXX方法不应该再加其它逻辑，如要添加逻辑，可以另外写一个方法
+
+2、
+使用String 的 equals方法时请将 "11"写在前面 
+
+例如：
+p.getName().equals("11")
+应改为
+"11".equals(p.getName())
+这样即使name为空也不会有空指针异常
+
+如果是p.getName().equals(c.getName()) ，这种
+
+可以使用StringUtils.equals(p.getName(),c.getName());
+
+3、js的方法名定义规范：最好都用面向对象的思想进行方法的定义
+
