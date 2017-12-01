@@ -37,7 +37,7 @@ $().ready(function() {
 			<label for="nickname" class="col-sm-3 control-label">原销售</label>
 			<div class="col-sm-9">
 				<input type="text" class="form-control" id="username"
-					name="username" placeholder="用户账号" value="${osale.rname}"
+					name="username" placeholder="用户账号" value="${osale.rname}-${osale.mobile}"
 					aria-required="true" aria-invalid="false" class="valid"
 					readonly="readonly">
 			</div>

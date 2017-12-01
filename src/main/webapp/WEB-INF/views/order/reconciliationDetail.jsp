@@ -42,7 +42,7 @@
 				<h3>订单返佣信息</h3>
 				<div style="position: absolute;right: 10px;margin-top: 5px;top: 7px;text-align: right;">
 					<a href="javascript:loadContent(this,'${ctx}/base/order/reconciliation/index?type=1','')" class="btn btn-warning" ><span class="glyphicon glyphicon-arrow-left"> </span> 返回</a>
-					<c:if test="${((groupMap.ishotelsales and guserId eq order.hotelSaleId) or groupMap.ishotelsalesdirector) and order.commissionStatus <= '01' }">
+					<c:if test="${((groupMap.ishotel and guserId eq order.hotelSaleId) or groupMap.ishoteladministrator or groupMap.ishotelsalesdirector) and order.commissionStatus <= '01' }">
 						<a qx="comission:invalid" href="javascript:;" id="btn_order_close" class="btn btn-primary" ><span class="glyphicon glyphicon-off"> </span> 无效订单</a>
 					</c:if>
 				</div>
@@ -134,7 +134,7 @@
 									<div class="col-sm-1" style="padding-right: 6px;padding-left: 0;"><div class="pad-ud-5" style="color: #ffffff;width: 100%;background-color:#048dd3;text-align: center;border-right : 1px solid #d2d2d2;">返佣类型</div></div>
 									<div class="col-sm-11 pad-5" style="position: relative;">
 										${comissionRecord.type eq '1'?'全单返佣':'分项返佣'}
-										<c:if test="${((groupMap.ishotelsales and guserId eq order.hotelSaleId) or groupMap.ishotelsalesdirector) and order.commissionStatus eq '01' }">
+										<c:if test="${((groupMap.ishotel and guserId eq order.hotelSaleId) or groupMap.ishotelsalesdirector or groupMap.ishoteladministrator) and order.commissionStatus eq '01' }">
 											<c:if test="${empty order.iscommissionupdate or  order.iscommissionupdate eq '0'}">
 												<img qx="comission:updatecmsn" id="btn_update_cmsn" src="${ctx }/static/weixin/css/icon/common/icon-order-edit.png"  class="btn-icon" title="修改返佣信息" style="position: absolute;top: 0;right: 0;">
 												<img qx="comission:updatecmsn" id="btn_cmsn_cancel" src="${ctx }/static/weixin/css/icon/common/icon-order-edit-cancel.png" class="btn-icon" title="取消修改" style="position: absolute;top: 0;right: 0;display: none;">
@@ -265,7 +265,7 @@
 					
 											<!-- <div id="btn_update_cmsn" class="btn btn-primary" > 修改佣金 </div> -->
 											<!-- <div id="btn_cmsn_cancel" class="btn btn-default" style="display: none;" > 取消 </div> -->
-									<c:if test="${((groupMap.ishotelsales and guserId eq order.hotelSaleId) or groupMap.ishotelsalesdirector) and order.commissionStatus eq '01' }">
+									<c:if test="${((groupMap.ishotel and guserId eq order.hotelSaleId) or groupMap.ishotelsalesdirector or groupMap.ishoteladministrator) and order.commissionStatus eq '01' }">
 										<c:if test="${empty order.iscommissionupdate or  order.iscommissionupdate eq '0'}">
 											<div qx="comission:cfmcmsn" id="btn_cfm_cmsn" class="btn btn-primary" > 确认佣金 </div>
 											<div qx="comission:updatecmsn" id="btn_cmsn_save" class="btn btn-primary" style="display: none;" > 提交佣金 </div>
@@ -277,7 +277,7 @@
 											佣金已确认，等待财务确认金额!
 										</c:if>
 									</c:if>
-									<c:if test="${groupMap.iscompanysales and order.iscommissionupdate eq '1' and order.commissionStatus eq '01'}">
+									<c:if test="${((groupMap.iscompany and guserId eq order.companySaleId) or groupMap.iscompanyadministrator or groupMap.isadministrator) and order.iscommissionupdate eq '1' and order.commissionStatus eq '01'}">
 										<div qx="comission:cfmcmsn" id="btn_cfm_cmsn_update" class="btn btn-primary" > 确认修改通过 </div>
 										<div qx="comission:cfmcmsn" id="btn_cfm_cmsn_unupdate" class="btn btn-warning" > 确认修改不通过 </div>
 										<script>
@@ -352,7 +352,7 @@
 									</div>
 								</div>
 							</c:if>
-							<c:if test="${order.isinvoice ne '1' && groupMap.iscompanyfinance}">
+							<c:if test="${order.isinvoice ne '1' && groupMap.iscompany}">
 								<form id="invoicefrom" action="${ctx}/weixin/order/comission/invoice/save" method="post">
 									<input type="hidden" value="${order.id }" id="id" name="orderId">
 									<div class="row pad-ud-no">
@@ -404,7 +404,7 @@
 							${comissionRecord.transferRemark }
 						</div>
 						<div class="col-sm-2 pad-no" style="text-align: right;">
-							<c:if test="${order.commissionStatus eq '06' and groupMap.iscompanyfinance}">
+							<c:if test="${order.commissionStatus eq '06' and groupMap.iscompany}">
 								<button type="button" qx="comission:receivables" id="btn_company_transfer" class="btn btn-primary" >确认到账</button>
 							</c:if>
 						</div>

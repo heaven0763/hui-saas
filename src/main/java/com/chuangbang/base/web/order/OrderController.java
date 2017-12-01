@@ -658,12 +658,16 @@ public class OrderController extends BaseController {
 		}else if("originalHotelSale".equals(key)){
 			map.put("title", "原销售人员");
 			
-			map.put("nvalue",nvalue!=null&&StringUtils.isNotBlank(nvalue.toString())?this.userService.getEntity(nvalue.toString()).getRname():"");
-			map.put("ovalue",ovalue!=null&&StringUtils.isNotBlank(ovalue.toString())?this.userService.getEntity(ovalue.toString()).getRname():"");
+			User nu= nvalue!=null&&StringUtils.isNotBlank(nvalue.toString())?this.userService.getEntity(nvalue.toString()):null;
+			map.put("nvalue",nu==null?"":nu.getRname()+" - "+nu.getMobile());
+			User ou= ovalue!=null&&StringUtils.isNotBlank(ovalue.toString())?this.userService.getEntity(ovalue.toString()):null;
+			map.put("ovalue",ou==null?"":ou.getRname()+" - "+ou.getMobile());
 		}else if("hotelSaleId".equals(key)){
 			map.put("title", "现销售人员");
-			map.put("nvalue",nvalue!=null&&StringUtils.isNotBlank(nvalue.toString())?this.userService.getEntity(nvalue.toString()).getRname():"");
-			map.put("ovalue",ovalue!=null&&StringUtils.isNotBlank(ovalue.toString())?this.userService.getEntity(ovalue.toString()).getRname():"");
+			User nu= nvalue!=null&&StringUtils.isNotBlank(nvalue.toString())?this.userService.getEntity(nvalue.toString()):null;
+			map.put("nvalue",nu==null?"":nu.getRname()+" - "+nu.getMobile());
+			User ou= ovalue!=null&&StringUtils.isNotBlank(ovalue.toString())?this.userService.getEntity(ovalue.toString()):null;
+			map.put("ovalue",ou==null?"":ou.getRname()+" - "+ou.getMobile());
 		}else{
 			return null;
 		}

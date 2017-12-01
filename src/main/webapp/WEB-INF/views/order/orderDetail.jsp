@@ -66,7 +66,7 @@ del {
 				<a qx="order:update" href="javascript:loadContent(this,'${ctx}/weixin/order/detail/${order.id }','')" class="btn btn-primary" 
 				style=""><span class="glyphicon glyphicon-pencil"> 修改</span></a>
 			</c:if>
-			<c:if test="${groupMap.ishotelsales and order.state gt '02' and order.state < '10'  and order.state !='03' and !(order.state eq '06' and order.settlementStatus eq '04')}">
+			<c:if test="${((groupMap.ishotel and order.hotelSaleId eq guserId) or groupMap.ishotelsalesdirector or groupMap.ishoteladministrator) and order.state gt '02' and order.state < '10'  and order.state !='03' and !(order.state eq '06' and order.settlementStatus eq '04')}">
 				<button type="button"  qx="order:update" id="btn_order_state" class="btn btn-primary" >订单状态更改</button>
 			</c:if>
 			<c:if test="${groupMap.iscompanysales and guserId eq order.companySaleId and order.orderType eq 'OFFLINE' and (order.state=='021' or order.state=='04')}">

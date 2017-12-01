@@ -792,8 +792,8 @@ public class BaseUserController extends BaseController{
 	
 	@RequestMapping("/author/hotel/save")
 	@ResponseBody
-	public JsonVo authorUserHotelSave(HttpServletRequest request,String hotelIds,String userId){
+	public JsonVo authorUserHotelSave(HttpServletRequest request,String hotelIds,String userId,String unhotelIds){
 		User user = this.userService.getEntity(userId);
-		return hotelService.authorUserHotelSave(user, hotelIds);
+		return hotelService.authorUserHotelSave(user, hotelIds,unhotelIds);
 	}
 }

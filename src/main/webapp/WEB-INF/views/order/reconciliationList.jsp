@@ -70,7 +70,7 @@
 					<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel "  showPleaseSelect="fasle" addBefore=",全部"/>
 				</select> 
 			</c:if>
-	   		<c:if test="${aUs.getCurrentUserType() eq 'HOTEL' and (groupMap.isgroupadministrator or groupMap.isgroupfinance) }">
+	   		<c:if test="${groupMap.isgroup}">
 				<br>
 	   			<br>
 				<label for="hotelId">所属场地</label>
@@ -92,7 +92,15 @@
 	   		
 		    <button type="button" class="btn btn-primary" onclick="reconciliation_search()"><span class="glyphicon glyphicon-search"> </span> 查询</button>
 	  </div>
-		<input id="search_saleId" type="hidden" name="saleId" value="${groupMap.iscompanysales or groupMap.ishotelsales?guserId:'' }" />  
+	  
+	   	 <c:if test="${groupMap.ishotel and !groupMap.ishotelsalesdirector and !groupMap.ishoteladministrator}">
+			 <input id="search_saleId" type="hidden" name="saleId" value="${guserId}">
+		  </c:if>
+		  <c:if test="${groupMap.iscompany and !groupMap.iscompanysalesdirector and !groupMap.iscompanyadministrator and !groupMap.isadministrator}">
+			 <input id="search_saleId" type="hidden" name="saleId" value="${guserId}">
+		  </c:if>
+		  
+		  
 		<input id="" type="hidden" name="search_OR_EQ;o.state" value="021,04,06,07" /> 
 		<input id="" type="hidden" name="search_NE_o.source_app_id" value="0" /> 
 		<input id="" type="hidden" name="order" value="asc,asc" />
@@ -255,11 +263,11 @@ function fm_reconciliation_operate(value,row, index){
 	var btnhtml = "";
 	btnhtml+='<a href="javascript:loadContent(this,\'${ctx}/base/order/reconciliation/detail/'+row.id+'\',\'\');" class="btn btn-primary btn-sm" title="详情"><span class="glyphicon glyphicon-eye-open"> </span> 详情</a>';
 	if(row.commissionStatus==='00'&&row.activityDate<='${_currDayOfMonth}'){
-		<c:if test="${groupMap.iscompanyfinance ||  groupMap.iscompanyadministrator || groupMap.iscompanysales}">
+		<c:if test="${groupMap.iscompany}">
 			btnhtml+='&nbsp;&nbsp;<button qx="comission:add" type="button" onclick="order_commission_fun(\''+row.id+'\')" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok"></span> 发起返佣</button>';
 		</c:if>
 	}
-	//
+	//groupMap.iscompanyfinance ||  groupMap.iscompanyadministrator || groupMap.iscompanysales
 	return btnhtml;
 }
 function fm_oreconciliation_operate(value,row, index){

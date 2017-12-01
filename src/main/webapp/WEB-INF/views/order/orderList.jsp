@@ -93,7 +93,7 @@
 			</c:if>
 			<br>
 			<br>
-			<label for="placeDate">活动日期${groupMap.ishotel  }</label>
+			<label for="placeDate">活动日期</label>
 	   		<input type="text" class="form-control layer-date laydate-icon" id="screate_date" name="search_GTE_o.activity_date" placeholder="请输入活动日期">
 	   		~
 	   		<input type="text" class="form-control layer-date laydate-icon" id="ecreate_date" name="search_LTE_o.activity_date" placeholder="请输入活动日期">
@@ -108,7 +108,7 @@
 		  <c:if test="${groupMap.ishotel and !groupMap.ishotelsalesdirector and !groupMap.ishoteladministrator}">
 			 <input type="hidden" name="saleId" value="${guserId}">
 		  </c:if>
-		  <c:if test="${groupMap.iscompany }">
+		  <c:if test="${groupMap.iscompany and !groupMap.iscompanysalesdirector and !groupMap.iscompanyadministrator and !groupMap.isadministrator}">
 			 <input type="hidden" name="saleId" value="${guserId}">
 		  </c:if>
 		  <c:if test="${groupMap.ishotelsales}">
@@ -242,16 +242,15 @@ function fm_order_operate(value,row, index){
 	if(row.state=='01' && "${groupMap.ishotel}"=="true" && '${guserId}' == row.hotelSaleId){
 		btnhtml+='&nbsp;&nbsp;<button qx="order:deal" type="button" onclick="order_accept_fun(\''+row.id+'\')" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok"></span> 受理</button>';
 	}else if(('${groupMap.ishotel}'=='true' && '${guserId}' == row.hotelSaleId) && row.state=='02'){   //(row.state=='02'||row.state=='04')  ||row.state=='04'
-		btnhtml+='&nbsp;&nbsp;<a qx="order:update" href="javascript:loadContent(this,\'${ctx}/weixin/order/detail/'+row.id+'\',\'\');" href="" class="btn btn-primary btn-sm" title="修改"><span class="glyphicon glyphicon-pencil"> </span> 修改1</a>';
+		btnhtml+='&nbsp;&nbsp;<a qx="order:update" href="javascript:loadContent(this,\'${ctx}/weixin/order/detail/'+row.id+'\',\'\');" href="" class="btn btn-primary btn-sm" title="修改"><span class="glyphicon glyphicon-pencil"> </span> 修改</a>';
 	}else if(('${groupMap.iscompany}'=='true' && '${guserId}' == row.companySaleId) && (row.state=='01'||row.state=='02') && row.orderType == 'OFFLINE'){
 		btnhtml+='&nbsp;&nbsp;<a qx="order:update" href="javascript:loadContent(this,\'${ctx}/weixin/order/detail/'+row.id+'\',\'\');" href="" class="btn btn-primary btn-sm" title="修改"><span class="glyphicon glyphicon-pencil"> </span> 修改</a>';
 	}else if(('${groupMap.ishotelsalesdirector}'=='true' || '${groupMap.ishoteladministrator}'=='true')&& row.state=='02'){
-		btnhtml+='&nbsp;&nbsp;<a qx="order:update" href="javascript:loadContent(this,\'${ctx}/weixin/order/detail/'+row.id+'\',\'\');" href="" class="btn btn-primary btn-sm" title="修改"><span class="glyphicon glyphicon-pencil"> </span> 修改2</a>';
+		btnhtml+='&nbsp;&nbsp;<a qx="order:update" href="javascript:loadContent(this,\'${ctx}/weixin/order/detail/'+row.id+'\',\'\');" href="" class="btn btn-primary btn-sm" title="修改"><span class="glyphicon glyphicon-pencil"> </span> 修改</a>';
 	}else if(row.state=='11' && "${groupMap.ishotel}"=="true"){
 		btnhtml+='&nbsp;&nbsp;<button qx="order:update" type="button" onclick="agree(\''+row.id+'\')" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-ok"></span> 同意</button>';
 		btnhtml+='&nbsp;&nbsp;<button qx="order:update" type="button" onclick="rejectOpenForm(\''+row.id+'\')" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-share-alt"></span> 拒绝</button>';
 	}
-	
 
 	/* 
 	else if('${groupMap.ishotelsalesdirector}'=='true'&&(row.state=='09')){

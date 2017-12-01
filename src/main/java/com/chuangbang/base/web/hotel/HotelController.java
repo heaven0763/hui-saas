@@ -285,4 +285,46 @@ public class HotelController extends BaseController {
 		return JsonUtils.success("ok", hotels);
 	}
 	
+	
+	@RequestMapping(value ="auth/select/list")
+	@ResponseBody
+	public JsonVo authSelectList(HttpServletRequest request,String hotelName,Integer province,Integer city,Integer district,String hotelpower,String userId,PageBean<HotelSelModel> pageBean) throws Exception {
+		Map<String, Object> filterParams = this.getSearchParams(request);
+		
+		if("HOTEL".equals(AccountUtils.getCurrentUserType())){
+		}else if("HUI".equals(AccountUtils.getCurrentUserType())){
+		}else if("PARTNER".equals(AccountUtils.getCurrentUserType().toUpperCase())){
+			filterParams.put("EQ_h.company_id",AccountUtils.getCurrentUser().getCompanyId());
+		}else{
+		}
+		if(province==null&&city==null&&district==null){
+			//filterParams.put("EQ_h.city", this.getCity(request));
+		}else{
+			if(province!=null){
+				filterParams.put("EQ_h.province", province);
+			}
+			if(city!=null){
+				filterParams.put("EQ_h.city", city);
+			}
+			if(district!=null){
+				filterParams.put("EQ_h.district", district);
+			}
+		}
+		
+		if(StringUtils.isNotBlank(hotelpower)){
+			if("1".equals(hotelpower)){
+				filterParams.put("EQ_h.reclaim_user_id", userId);
+			}else{
+				filterParams.put("ISN_h.reclaim_user_id", userId);
+			}
+		}else{
+			filterParams.put("EQ_h.reclaim_user_id", userId);
+		}
+		pageBean.set_filterParams(filterParams);
+		System.out.println(pageBean.getRows());
+		List<HotelSelModel> hotels = this.hotelService.getSelHotelPageList(pageBean);
+		
+		return JsonUtils.success("ok", this.getDataGrid(pageBean, hotels));
+	}
+	
 }

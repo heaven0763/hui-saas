@@ -178,7 +178,13 @@ public class HotelService extends BaseService<Hotel,HotelDao> {
 	} 
 	
 	public List<HotelSelModel> getSelHotelPageList(PageBean<HotelSelModel> pageBean,Double longitude,Double latitude) {
-		String columstr = " h.id as id, h.pid as pid, h.pname as pName, h.hotel_name as hotelName, h.reclaim_user_id as reclaimUserName, h.reclaim_user_name as reclaimUserName";
+		String columstr = " h.id as id, h.pid as pid, h.pname as pName, h.hotel_name as hotelName, h.reclaim_user_id as reclaimUserId, h.reclaim_user_name as reclaimUserName";
+		String fromWhere = " from hui_hotel h where 1=1 and h.state = 1";
+		return customPageService.page(pageBean, columstr, fromWhere, HotelSelModel.class,null);
+	} 
+	
+	public List<HotelSelModel> getSelHotelPageList(PageBean<HotelSelModel> pageBean) {
+		String columstr = " h.id as id, h.pid as pid, h.pname as pName, h.hotel_name as hotelName, h.reclaim_user_id as reclaimUserId, h.reclaim_user_name as reclaimUserName";
 		String fromWhere = " from hui_hotel h where 1=1 and h.state = 1";
 		return customPageService.page(pageBean, columstr, fromWhere, HotelSelModel.class,null);
 	} 
@@ -414,8 +420,35 @@ public class HotelService extends BaseService<Hotel,HotelDao> {
 	}
 
 	@Transactional(readOnly=false)
-	public JsonVo authorUserHotelSave(User user, String hotelIds) {
+	public JsonVo authorUserHotelSave(User user, String hotelIds,String unhotelIds) {
 		try{
+			if(StringUtils.isNotBlank(hotelIds)){
+				String [] mhotelIds =hotelIds.split(",");
+				for (String hid : mhotelIds) {
+					Hotel hotel = this.getEntity(Long.valueOf(hid));
+					System.out.println(">>>>>>>>>>>>yes>>>>>>>>>>>"+hotel.getHotelName());
+					hotel.setReclaimUserId(user.getId());
+					hotel.setReclaimUserName(user.getRname());
+					this.hotelDao.save(hotel);
+				}
+			}
+			
+			if(StringUtils.isNotBlank(unhotelIds)){
+				String [] mhotelIds =unhotelIds.split(",");
+				for (String hid : mhotelIds) {
+					Hotel hotel = this.getEntity(Long.valueOf(hid));
+					System.out.println(">>>>>>>>>>>>yes>>>>>>>>>>>"+hotel.getHotelName());
+					if(StringUtils.isNotBlank(hotel.getReclaimUserId())&&!user.getId().equals(hotel.getReclaimUserId())){
+						
+					}else{
+						hotel.setReclaimUserId(null);
+						hotel.setReclaimUserName(null);
+						this.hotelDao.save(hotel);
+					}
+				}
+			}
+		
+		/*
 			if(StringUtils.isBlank(hotelIds)){
 				List<Hotel> hotels = this.hotelDao.findByReclaimUserId(user.getId());
 				if(hotels!=null&&hotels.size()>0){
@@ -446,7 +479,7 @@ public class HotelService extends BaseService<Hotel,HotelDao> {
 					hotel.setReclaimUserName(user.getRname());
 					this.hotelDao.save(hotel);
 				}
-			}
+			}*/
 			return JsonUtils.success("分配成功！");
 		}catch(Exception e){
 			return JsonUtils.error("系统错误！");

@@ -23,36 +23,26 @@
 				<h3 style="margin-top: 10px;">职员信息详情</h3>
 			</div>
 			<div class="col-sm-8" style="text-align: right;padding: 10px 15px 5px ;">
+			<!--  groupMap.isadministrator || groupMap.iscompanyhr || groupMap.iscompanyadministrator-->
 				<c:choose>
-					<c:when test="${ (groupMap.isadministrator || groupMap.ishuihr || groupMap.iscompanyadministrator) && user.state eq '1' && user.userType ne 'CLIENT'}">
+					<c:when test="${ (groupMap.iscompany) && user.state eq '1' && user.userType ne 'CLIENT'}">
 						<div qx="user:tmpauthor" class="btn btn-primary" onclick="loadContent(this,'${ctx}/base/user/staff/pms/update/${user.id}?TYPE=${TYPE }','RD');"><span class="glyphicon glyphicon-move"> </span> 调整权限</div>
 					</c:when>
-					<c:when test="${ (groupMap.isadministrator || groupMap.ishuihr || groupMap.iscompanyadministrator) && user.state eq '1' && user.userType eq 'HUI'}">
+					<c:when test="${ (groupMap.iscompany) && user.state eq '1' && user.userType eq 'HUI'}">
 						<a qx="user:transfer" href="${ctx}/base/user/author/transfer/index?fromuserId=${user.id}&gid=${user.groupId}" target="dialog" class="btn btn-primary" title="权限转移" data-permission="user:create"><span class="glyphicon glyphicon-transfer"> </span> 权限转移</a>
 						<button qx="user:update" id="quit_edit" type="button" class="btn btn-primary"  > <span class="glyphicon glyphicon-log-out"></span> 离职编辑</button>
 					</c:when>
-					<c:when test="${(groupMap.isadministrator || groupMap.ishuihr || groupMap.iscompanyadministrator)  && user.state eq '0'}">
+					<%-- <c:when test="${(groupMap.iscompany)  && user.state eq '0'}">
 							<a  qx="user:update" class="btn btn-primary" onclick="recovery('0','${user.id}');"><span class="glyphicon glyphicon-retweet"></span> 恢复职位</a>
 					</c:when>
-					<%-- <c:when test="${(groupMap.isadministrator ) && user.state eq '1'}">
-							<a qx="user:tmpauthor" class="btn btn-primary" onclick="loadContent(this,'${ctx}/base/user/staff/pms/update/${user.id}?TYPE=${TYPE }','RD');"><span class="glyphicon glyphicon-move"> </span> 调整权限</a>
-							<a qx="user:transfer" href="${ctx}/base/user/author/transfer/index?fromuserId=${user.id}&gid=${user.groupId}" target="dialog" class="btn btn-primary" title="权限转移" data-permission="user:create"><span class="glyphicon glyphicon-transfer"> </span> 权限转移</a>
-					</c:when> --%>
-					<c:when test="${user.state eq '1' && user.groupId eq '17' && (groupMap.iscompanyadministrator || groupMap.isadministrator)}">
+					<c:when test="${user.state eq '1' && user.groupId eq '17' && (groupMap.iscompany)}">
 						<button qx="user:update" id="quit_to_hr" type="button" class="btn btn-primary"  ><span class="glyphicon glyphicon-log-out"></span> 撤销权限</button>
-					</c:when>
+					</c:when> --%>
 					<c:otherwise></c:otherwise>
 				</c:choose>
 				<c:if test="${user.userType ne 'CLIENT' }">
-					<a  qx="user:update" class="btn btn-primary" onclick="relieve('0','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
+					<a  qx="user:transfer" class="btn btn-primary" onclick="relieve('0','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
 				</c:if>
-				<%-- <c:if test="${user.state eq '1' && (groupMap.ishuihr || groupMap.iscompanyadministrator || groupMap.isadministrator) }">
-					
-				</c:if>
-				<c:if >
-					
-				</c:if> --%>
-				
 				
 				<!-- style="position: absolute;right: 20px;margin-top: 5px;top: 7px;" style="position: absolute;right: 20px;margin-top: 5px;top: 7px;"-->
 				<c:if test="${TYPE eq 'HR' }">
@@ -102,8 +92,8 @@
 					<input type="hidden" name="companyId" id="companyId" value="${company.id}"/>
 					<div>签约期限：${dUs.toDay(company.seffectiveDate)}至${dUs.toDay(company.eeffectiveDate)}</div>
 					<!--  -->
-					<c:if test="${groupMap.ishuihr || groupMap.iscompanyadministrator || groupMap.isadministrator}">
-					<button id="effective_edit" class="btn btn-primary" data-toggle="modal" data-target="#effectivedate_edit"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+					<c:if test="${groupMap.iscompany}">
+					<button qx="user:update" id="effective_edit" class="btn btn-primary" data-toggle="modal" data-target="#effectivedate_edit"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 					</c:if>
 				</div>
 			</c:if>

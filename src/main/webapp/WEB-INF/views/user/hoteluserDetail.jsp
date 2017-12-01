@@ -34,23 +34,23 @@
 			 <a href="javascript:${from}(this,'${ctx}/${turl}','')" class="btn btn-warning"><span class="glyphicon glyphicon-arrow-left"> </span> 返回</a>
 			</c:if>
 			<c:choose>
-				<c:when test="${(groupMap.ishotelhr or groupMap.isgrouphr) and user.state eq '1'}">
+				<c:when test="${(groupMap.ishotel or groupMap.isgroup) and user.state eq '1'}">
 					<a  qx="user:tmpauthor" class="btn btn-primary" onclick="loadContent(this,'${ctx}/weixin/user/pms/update?hotelId=${hotel.id}&userId=${user.id}&TYPE=${TYPE}','RD');"><span class="glyphicon glyphicon-move"> </span> 调整权限</a>
 					<a  qx="user:transfer" class="btn btn-primary" href="${ctx}/base/user/author/transfer/index?fromuserId=${user.id}&gid=${user.groupId}" target="dialog" title="权限转移" data-permission="user:create"><span class="glyphicon glyphicon-transfer"> </span> 权限转移</a>
 				</c:when>
-				<c:when test="${(groupMap.ishotelhr or groupMap.isgrouphr) and user.state eq '0'}">
+				<%-- <c:when test="${(groupMap.ishotel or groupMap.isgroup) and user.state eq '0'}">
 						<a qx="user:update" class="btn btn-primary" onclick="recovery('${hotel.id}','${user.id}');"><span class="glyphicon glyphicon-retweet"></span> 恢复职位</a>
-				</c:when>
+				</c:when> --%>
 				<c:when test="${(groupMap.ishoteladministrator or groupMap.isgroupadministrator) and user.state eq '1'}"><!--and user.groupId eq '16'  -->
 					<a qx="user:tmpauthor" class="btn btn-primary" onclick="loadContent(this,'${ctx}/weixin/user/pms/update?hotelId=${hotel.id}&userId=${user.id}&TYPE=${TYPE}','RD');"><span class="glyphicon glyphicon-move"> </span> 调整权限</a>
 					<a qx="user:transfer" class="btn btn-primary" href="${ctx}/base/user/author/transfer/index?fromuserId=${user.id}&gid=${user.groupId}&type=${user.groupId}" target="dialog" title="权限转移" data-permission="user:create"><span class="glyphicon glyphicon-transfer"> </span> 权限转移</a>
 				</c:when>
-				<c:when test="${(groupMap.isadministrator or groupMap.iscompanyadministrator) and user.state eq '1'}"><!--and user.groupId eq '16'  -->
+				<c:when test="${(groupMap.isadministrator or groupMap.iscompany) and user.state eq '1'}"><!--and user.groupId eq '16'  -->
 					<a qx="user:tmpauthor" class="btn btn-primary" onclick="loadContent(this,'${ctx}/weixin/user/pms/update?hotelId=${hotel.id}&userId=${user.id}&TYPE=${TYPE}','RD');"><span class="glyphicon glyphicon-move"> </span> 调整权限</a>
 				</c:when>
 				<c:otherwise></c:otherwise>
 			</c:choose>
-			<a qx="user:update" class="btn btn-primary" onclick="relieve('${utype eq 'HOTEL'?hotel.id:hotelGroup.id}','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
+			<a qx="user:transfer" class="btn btn-primary" onclick="relieve('${utype eq 'HOTEL'?hotel.id:hotelGroup.id}','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
 		</div>
 	</div>
     

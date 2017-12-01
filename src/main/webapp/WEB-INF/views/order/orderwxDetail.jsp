@@ -2183,19 +2183,18 @@
 			</div>
 			
 			
-			<c:if test="${(groupMap.ishotelsales or groupMap.ishotelsalesdirector ) and order.state < '10'  and (order.state=='01' or order.state=='02' or order.state=='04')}">
+			<%-- <c:if test="${(groupMap.ishotelsales or groupMap.ishotelsalesdirector ) and order.state < '10'  and (order.state=='01' or order.state=='02' or order.state=='04')}">
 				<div id="order_save_div" class="display-flex" style="color: #ffffff;width:100%;text-align: center;padding: 3%;">
 					<div qx="order:update" id="btn_submit" class="btn btn-lg bg-type-01" style="width:40%;margin:0 auto;border-radius:3px;">确认提交</div>
 					<input type="hidden" id="hotelId" name="hotelId" value="${order.hotelId}">
 				</div>
 			</c:if>
 			<c:if test="${((groupMap.iscompanysales and guserId eq order.companySaleId) or groupMap.iscompanysalesdirector) and order.orderType == 'OFFLINE' and (order.state=='01' or order.state=='02' or order.state=='04')}">
-				<div id="order_save_div" class="display-flex" style="color: #ffffff;width:100%;text-align: center;padding: 3%;">
-					<div qx="order:update" id="btn_submit" class="btn btn-lg bg-type-01" style="width:40%;margin:0 auto;border-radius:3px;">确认提交</div>
-					<input type="hidden" id="hotelId" name="hotelId" value="${order.hotelId}">
-				</div>
-			</c:if>
-	
+			</c:if> --%>
+			<div id="order_save_div" class="display-flex" style="color: #ffffff;width:100%;text-align: center;padding: 3%;">
+				<div qx="order:update" id="btn_submit" class="btn btn-lg bg-type-01" style="width:40%;margin:0 auto;border-radius:3px;">确认提交</div>
+				<input type="hidden" id="hotelId" name="hotelId" value="${order.hotelId}">
+			</div>
 	
 	<!-- 遮罩层 -->
 	<div id="mask_full_screen" class="mask-full-screen" style=""></div>

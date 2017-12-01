@@ -713,6 +713,10 @@ $().ready(function() {
    laydate(decorationTime);
    var certifiTime={elem:"#certifiTime",format:"YYYY-MM-DD",max:"2099-06-16",istime:false,istoday:false};
    laydate(certifiTime);
+   
+   common.ctx = '${ctx}';
+	dict.init();
+	common.pms.init();
 });
 
 function displayPilerNum(val,id){

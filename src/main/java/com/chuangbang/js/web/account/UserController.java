@@ -134,7 +134,6 @@ public class UserController extends BaseController{
 			model.addAttribute("mhotel",hotel);
 		}
 		return new ModelAndView("account/userForm");
-		
 	}
 	
 	

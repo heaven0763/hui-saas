@@ -155,7 +155,10 @@ function siteImg_search(){
 	$("#siteImg_table").bootstrapTable("refresh");
 }
 $(function(){
-	$("#siteImg_table").bootstrapTable();
+	$("#siteImg_table").bootstrapTable({onLoadSuccess: function(data){  //加载成功时执行  
+    	common.pms.init();
+    }});	
+	
 	$('.selectpicker').selectpicker();
 });
 
