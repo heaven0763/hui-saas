@@ -95,6 +95,11 @@ public class WxStaffInvitationController extends BaseController{
 			filterParams.put("LLIKE_groupId", "group");
 			model.addAttribute("hgId",  AccountUtils.getCurrentUserhotelPId());
 			model.addAttribute("type", "GROUP");
+		}else if("PARTNER".equalsIgnoreCase(AccountUtils.getHotelUserType())){
+			filterParams.put("EQ_pid", "14");
+			filterParams.put("NE_id", "2");
+			model.addAttribute("hgId",  AccountUtils.getCurrentUserCompanyId());
+			model.addAttribute("type", "PARTNER");
 		}
 		List<Group> page = groupService.getEntities(filterParams);
 		model.addAttribute("groups", page);
@@ -150,6 +155,10 @@ public class WxStaffInvitationController extends BaseController{
 				filterParams.put("EQ_hotelId", AccountUtils.getCurrentUserhotelPId());
 				filterParams.put("EQ_itemType", "GROUP");
 			}
+		}else if("PARTNER".equalsIgnoreCase(AccountUtils.getCurrentUserType())){
+			filterParams.put("EQ_itemType", "PARTNER");
+			filterParams.put("EQ_formUserID", AccountUtils.getCurrentUserId());
+			filterParams.put("EQ_hotelId", AccountUtils.getCurrentUserCompanyId());
 		}
 		pageBean.set_filterParams(filterParams);
 		pageBean.setOrder("desc");

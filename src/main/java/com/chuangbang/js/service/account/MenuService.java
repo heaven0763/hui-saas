@@ -207,30 +207,12 @@ public class MenuService extends BaseService<Menu, MenuDao>{
 		}
 		Group group =  groupDao.findOne(AccountUtils.getCurrentUser().getGroupId());
 		List<Menu> menus = group.getMenuList();
-		
-		for (Long mid : menuIds) {
-			Menu menu = this.getEntity(mid);
-			if((id==7 &&"1".equals(menu.getIsweixin())) || (id==6 &&"0".equals(menu.getIsweixin()))){
-				if(menu.getParentId()!=null){
-					Menu pmenu = this.getEntity(menu.getParentId());
-					if(pmenu.getParentId()!=null){
-						Menu gpmenu = this.getEntity(pmenu.getParentId());
-						if(gpmenu!=null&&!menus.contains(gpmenu)){
-							menus.add(gpmenu);
-						}
-					}
-					if(pmenu!=null&&!menus.contains(pmenu)){
-						menus.add(pmenu);
-					}
-				}
-				if(menu!=null&&!menus.contains(menu)){
-					menus.add(menu);
-				}
-			}else if(id==7 &&"0".equals(menu.getIsweixin())){
-				if(menu.getParallelismmenuId()!=null){
-					Menu jmenu = this.getEntity(menu.getParallelismmenuId());
-					if(jmenu.getParentId()!=null){
-						Menu pmenu = this.getEntity(jmenu.getParentId());
+		if(menuIds!=null){
+			for (Long mid : menuIds) {
+				Menu menu = this.getEntity(mid);
+				if((id==7 &&"1".equals(menu.getIsweixin())) || (id==6 &&"0".equals(menu.getIsweixin()))){
+					if(menu.getParentId()!=null){
+						Menu pmenu = this.getEntity(menu.getParentId());
 						if(pmenu.getParentId()!=null){
 							Menu gpmenu = this.getEntity(pmenu.getParentId());
 							if(gpmenu!=null&&!menus.contains(gpmenu)){
@@ -241,30 +223,49 @@ public class MenuService extends BaseService<Menu, MenuDao>{
 							menus.add(pmenu);
 						}
 					}
-					if(menu!=null&&!menus.contains(jmenu)){
-						menus.add(jmenu);
+					if(menu!=null&&!menus.contains(menu)){
+						menus.add(menu);
 					}
-				}
-			}else if(id==6 && "1".equals(menu.getIsweixin())){
-				if(menu.getParallelismmenuId()!=null){
-					Menu jmenu = this.getEntity(menu.getParallelismmenuId());
-					if(jmenu.getParentId()!=null){
-						Menu pmenu = this.getEntity(jmenu.getParentId());
-						if(pmenu.getParentId()!=null){
-							Menu gpmenu = this.getEntity(pmenu.getParentId());
-							if(gpmenu!=null&&!menus.contains(gpmenu)){
-								menus.add(gpmenu);
+				}else if(id==7 &&"0".equals(menu.getIsweixin())){
+					if(menu.getParallelismmenuId()!=null){
+						Menu jmenu = this.getEntity(menu.getParallelismmenuId());
+						if(jmenu.getParentId()!=null){
+							Menu pmenu = this.getEntity(jmenu.getParentId());
+							if(pmenu.getParentId()!=null){
+								Menu gpmenu = this.getEntity(pmenu.getParentId());
+								if(gpmenu!=null&&!menus.contains(gpmenu)){
+									menus.add(gpmenu);
+								}
+							}
+							if(pmenu!=null&&!menus.contains(pmenu)){
+								menus.add(pmenu);
 							}
 						}
-						if(pmenu!=null&&!menus.contains(pmenu)){
-							menus.add(pmenu);
+						if(menu!=null&&!menus.contains(jmenu)){
+							menus.add(jmenu);
 						}
 					}
-					if(menu!=null&&!menus.contains(jmenu)){
-						menus.add(jmenu);
+				}else if(id==6 && "1".equals(menu.getIsweixin())){
+					if(menu.getParallelismmenuId()!=null){
+						Menu jmenu = this.getEntity(menu.getParallelismmenuId());
+						if(jmenu.getParentId()!=null){
+							Menu pmenu = this.getEntity(jmenu.getParentId());
+							if(pmenu.getParentId()!=null){
+								Menu gpmenu = this.getEntity(pmenu.getParentId());
+								if(gpmenu!=null&&!menus.contains(gpmenu)){
+									menus.add(gpmenu);
+								}
+							}
+							if(pmenu!=null&&!menus.contains(pmenu)){
+								menus.add(pmenu);
+							}
+						}
+						if(menu!=null&&!menus.contains(jmenu)){
+							menus.add(jmenu);
+						}
 					}
+				}else{
 				}
-			}else{
 			}
 		}
 		for(Menu menu:menus){

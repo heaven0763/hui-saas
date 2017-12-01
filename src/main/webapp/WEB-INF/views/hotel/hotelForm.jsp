@@ -104,7 +104,7 @@ $(document).ready(function(e) {
 													<tags:dict sql="SELECT id,CONCAT(mobile,'-',rname) as name FROM hui_user where user_type ='HUI' and state=1 and group_id=3 " selectedValue="${hotel.reclaimUserId}" showPleaseSelect="true"/>
 												</select>
 											</c:if>
-											<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' or aUs.getCurrentUserType() eq 'partner'}">
+											<c:if test="${aUs.getCurrentUserType() eq 'PARTNER'}">
 												<select class="form-control selectpicker" data-live-search="true" data-width="300px" data-size="10"  id="reclaimUserId" name="reclaimUserId" textTarget="reclaimUserName_txt">
 													<tags:dict sql="SELECT id,CONCAT(mobile,'-',rname) as name FROM hui_user where company_id=${aUs.getCurrentUserCompanyId()} and state=1 and group_id=3  " selectedValue="${hotel.reclaimUserId}" showPleaseSelect="true"/>
 												</select>
@@ -145,7 +145,7 @@ $(document).ready(function(e) {
 													<tags:dict sql="SELECT id,name as name FROM hui_hotel_group where company_id =1 " selectedValue="${hotel.pid}" showPleaseSelect="true"/>
 												</select> 
 									     	</c:if>
-									     	<c:if test="${aUs.getCurrentUserType() eq 'partner' }">
+									     	<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
 								     			<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10"   id="pid" name="pid"  textTarget="pname_txt" >
 													<tags:dict sql="SELECT id,name as name FROM hui_hotel_group where company_id = ${aUs.getCurrentUserCompanyId()}" selectedValue="${hotel.pid}" showPleaseSelect="true"/>
 												</select> 

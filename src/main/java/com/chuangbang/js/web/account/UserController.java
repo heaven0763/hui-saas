@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,8 +75,8 @@ public class UserController extends BaseController{
 	}
 	@RequestMapping("/index")
 	public ModelAndView index(HttpServletRequest request,Model model,String memberType){
-		
-		/*Map<String, Object> filterParams = this.getSearchParams(request);
+		/*
+		Map<String, Object> filterParams = this.getSearchParams(request);
 		filterParams.put("ISNN_groupId", null);
 		List<User> users = this.userService.getEntities(filterParams);
 		for (User user : users) {

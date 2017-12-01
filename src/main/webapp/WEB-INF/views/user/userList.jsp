@@ -11,7 +11,7 @@
 	</div> 
 	<form class="form-inline" id="user_searchForm">
 	    <div class="form-group">
-	    	<c:if test="${!aUs.getCurrentUserType() eq 'partner'}">
+	    	<c:if test="${!aUs.getCurrentUserType() eq 'PARTNER'}">
 	    	<label for="userType">用户类型</label>
 		    <select class="form-control"  id="userType" name="search_EQ_userType">
 		    	<option value="HUI">会掌柜及第三方平台</option>
@@ -23,7 +23,7 @@
 	   		<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10" name="search_EQ_city" style="width: 200px;">
 				<tags:dict sql="SELECT id,region_name name FROM hzg_saas.hui_region where region_type = 2 order by zimu asc "  showPleaseSelect="fasle" addBefore=",全部"/>
 			</select> 
-			<c:if test="${!aUs.getCurrentUserType() eq 'partner' }">
+			<c:if test="${!aUs.getCurrentUserType() eq 'PARTNER' }">
 			<label for="dept">部门</label>
 	   		<select class="form-control" name="search_EQ_deptId" style="width: 200px;">
 				<tags:dict sql=" SELECT id,unitname name FROM hzg_saas.hui_department where id != 1"  showPleaseSelect="fasle" addBefore=",全部"/>

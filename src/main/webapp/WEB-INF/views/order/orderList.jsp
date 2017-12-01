@@ -44,7 +44,7 @@
 					<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel "  showPleaseSelect="fasle" addBefore=",全部"/>
 				</select> 
 			</c:if>
-			<c:if test="${aUs.getHotelUserType() eq 'partner' }">
+			<c:if test="${aUs.getHotelUserType() eq 'PARTNER' }">
 				<label for="hotelId">所属场地</label>
 		   		<select class="form-control selectpicker" data-live-search="true" data-size="10" data-width="auto" id="hotelid"   name="search_EQ_o.hotel_id" >
 					<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel where company_id = ${aUs.getCurrentUserCompanyId()}"  showPleaseSelect="fasle" addBefore=",全部"/>

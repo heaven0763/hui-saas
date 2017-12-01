@@ -41,7 +41,7 @@
 					<c:otherwise></c:otherwise>
 				</c:choose>
 				<c:if test="${user.userType ne 'CLIENT' }">
-					<a  qx="user:transfer" class="btn btn-primary" onclick="relieve('0','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
+					<a  qx="user:relieve" class="btn btn-primary" onclick="relieve('0','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
 				</c:if>
 				
 				<!-- style="position: absolute;right: 20px;margin-top: 5px;top: 7px;" style="position: absolute;right: 20px;margin-top: 5px;top: 7px;"-->

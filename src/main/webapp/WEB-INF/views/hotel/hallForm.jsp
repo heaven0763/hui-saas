@@ -32,7 +32,7 @@
 												<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel " selectedValue="${hall.hotelId}" showPleaseSelect="true"/>
 											</select> 
 								     	</c:if>
-								     	<c:if test="${aUs.getCurrentUserType() eq 'partner' }">
+								     	<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
 							     			<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10"   id="hotelId" name="hotelId" >
 												<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel where company_id = ${aUs.getCurrentUserCompanyId()}" selectedValue="${hall.hotelId}" showPleaseSelect="true"/>
 											</select> 

@@ -23,6 +23,7 @@ import com.chuangbang.base.entity.user.Company;
 import com.chuangbang.base.entity.user.UserPermission;
 import com.chuangbang.base.service.hotel.HotelGroupService;
 import com.chuangbang.base.service.hotel.HotelService;
+import com.chuangbang.base.service.user.CompanyService;
 import com.chuangbang.base.service.user.UserPermissionService;
 import com.chuangbang.framework.service.BaseService;
 import com.chuangbang.framework.service.CusQueryService;
@@ -79,7 +80,8 @@ public class UserService extends BaseService<User,UserDao>{
 	private UserPermissionService userPermissionService;
 	@Autowired
 	private CusQueryService cusQueryService;
-	
+	@Autowired
+	private CompanyService companyService;
 	//-- User Manager --//
 	public User getUser(String id) {
 		return userDao.findOne(id);
@@ -377,6 +379,16 @@ public class UserService extends BaseService<User,UserDao>{
 				user.setCompanyId(hotelGroup.getCompanyId());
 				user.setPhtlid(hotelGroup.getId());
 				user.setDeptId(group.getDeptId());
+			}else if("PARTNER".equals(type)){
+				Company company = this.companyService.getEntity(Long.valueOf(hotelId));
+				user.setUserType("PARTNER");
+				user.setGroupId(Long.valueOf(gid));
+				user.setPosition(group.getName());
+				user.setState("1");
+				user.setCity(company.getCity());
+				user.setCompanyId(company.getId());
+				user.setPhtlid(null);
+				user.setDeptId(group.getDeptId());
 			}else{
 				
 			}
@@ -448,7 +460,7 @@ public class UserService extends BaseService<User,UserDao>{
 		company.setCreateDate(new Date());
 		company = this.companyDao.save(company);
 		Group group = this.getGroup(2L);
-		User user = new User(username, rname, mobile, email, 2L, cfpassword, "", "", "0", "0", new Date(), null, "partner", "", Pinyin4jUtil.getFirstLetter(rname));
+		User user = new User(username, rname, mobile, email, 2L, cfpassword, "", "", "0", "0", new Date(), null, "PARTNER", "", Pinyin4jUtil.getFirstLetter(rname));
 		user.setCompanyId(company.getId());
 		user.setCity(city);
 		user.setPassword(CipherUtil.generatePassword(password));

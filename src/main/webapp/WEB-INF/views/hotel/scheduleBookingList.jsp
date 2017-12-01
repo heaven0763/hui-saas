@@ -27,7 +27,7 @@
 			</select> 
 			<button type="button" class="btn btn-primary" onclick="scheduleBooking_search()"><span class="glyphicon glyphicon-search"> </span> 查询</button>
 		</c:if>
-		<c:if test="${aUs.getCurrentUserType() eq 'partner' }">
+		<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
   			<label for="city">所属城市</label>
 	   		<select class="form-control"  id="province" name="search_EQ_hotel.province" refval="value" reftext="text" 
 				refurl="${ctx}/framework/dictionary/trslCombox?sql=select  id ,region_name name  from hui_region where parent_id={value}" refdata="parent_id=:{value}" ref="#city" onchange="areaclear();">

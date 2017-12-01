@@ -17,6 +17,7 @@ import com.chuangbang.base.entity.user.ChatRecord;
 import com.chuangbang.base.service.hotel.HotelGroupService;
 import com.chuangbang.base.service.hotel.HotelService;
 import com.chuangbang.base.service.user.ChatRecordService;
+import com.chuangbang.base.service.user.CompanyService;
 import com.chuangbang.framework.util.CipherUtil;
 import com.chuangbang.framework.util.easyui.Json;
 import com.chuangbang.framework.web.BaseController;
@@ -40,7 +41,8 @@ public class WxVerificationController  extends BaseController {
 	private ChatRecordService chatRecordService;
 	@Autowired
 	private HotelGroupService hotelGroupService;
-	
+	@Autowired
+	private CompanyService companyService;
 	
 	@RequestMapping(value = "/confirm/verification/email/{time}", method = RequestMethod.GET)
 	public String verificationEmail(Model model,HttpServletRequest request,@PathVariable("time")Long time,String p1,String p2,String p3,String p4,String p5,String p6) {
@@ -76,6 +78,12 @@ public class WxVerificationController  extends BaseController {
 					chatRecord.setState("1");
 					chatRecordService.saveChatRecord(chatRecord);
 					return "/verification/confirm";
+				}else if(user.getUserType().equalsIgnoreCase("PARTNER")&&user.getCompanyId().equals(hotelId)&&user.getGroupId().equals(gid)){
+					model.addAttribute("error",true);
+					model.addAttribute("msg","已确认");
+					chatRecord.setState("1");
+					chatRecordService.saveChatRecord(chatRecord);
+					return "/verification/confirm";
 				}
 			}else{
 				if(user.getUserType().equals("HUI")&&user.getGroupId().equals(gid)){
@@ -102,9 +110,9 @@ public class WxVerificationController  extends BaseController {
 			model.addAttribute("hotelId",p4);
 			if(type.equals("GROUP")){
 				model.addAttribute("hgroup",hotelGroupService.getEntity(Long.valueOf(CipherUtil.decrypt(p4))));
-
+			}else if(type.equals("PARTNER")){
+				model.addAttribute("hgroup",companyService.getEntity(Long.valueOf(CipherUtil.decrypt(p4))));
 			}else{
-				
 				model.addAttribute("hotel",hotelService.getEntity(Long.valueOf(CipherUtil.decrypt(p4))));
 			}
 		}
@@ -145,8 +153,10 @@ public class WxVerificationController  extends BaseController {
 				String hotelName = "";
 				if(StringUtil.isNotBlank(hotelId)&&"HOTEL".equals(type)){
 					hotelName=this.hotelService.getEntity(Long.valueOf(hotelId)).getHotelName();
-				}else if(StringUtil.isNotBlank(hotelId)&&"HOTEL".equals(type)){
+				}else if(StringUtil.isNotBlank(hotelId)&&"GROUP".equals(type)){
 					hotelName=this.hotelGroupService.getEntity(Long.valueOf(hotelId)).getName();
+				}else if(StringUtil.isNotBlank(hotelId)&&"PARTNER".equalsIgnoreCase(type)){
+					hotelName=this.companyService.getEntity(Long.valueOf(hotelId)).getCompanyName();
 				}else{
 					hotelId = "0";
 					hotelName="会掌柜";
@@ -157,7 +167,6 @@ public class WxVerificationController  extends BaseController {
 				chatRecord.setState("1");
 				chatRecordService.saveChatRecord(chatRecord);
 				chatRecordService.log("GROUPVERIFICATION", "确认角色邀请操作", user.getRname()+"接受角色"+group.getName()+"操作！", Long.valueOf(hotelId), hotelName, "", "", "");
-			
 			}
 		}catch(Exception e){
 		}

@@ -493,6 +493,7 @@ public abstract class BaseController {
 		case city_partner:
 			groupMap.put("is"+groupId.replaceAll("_", ""), true);
 			groupMap.put("iscompany", true);
+			groupMap.put("ispartner", true);
 			break;
 		case administrator:
 			groupMap.put("is"+groupId.replaceAll("_", ""), true);
@@ -513,6 +514,11 @@ public abstract class BaseController {
 		case group_sales:
 			groupMap.put("is"+groupId.replaceAll("_", ""), true);
 			groupMap.put("isgroup", true);
+			break;
+		case city_sales:
+			groupMap.put("is"+groupId.replaceAll("_", ""), true);
+			groupMap.put("iscompany", true);
+			groupMap.put("ispartner", true);
 			break;
 		}
 	}

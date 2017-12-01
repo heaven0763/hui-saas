@@ -5,7 +5,7 @@
 	type = (type == null || type.length() == 0)?AccountUtils.getCurrentUserType().equals("HOTEL")?"2":"1":type;
 %>
 <div class="wrapper wrapper-content">
-	<h3>职员管理</h3>
+	<h3>职员管理${aUs.getCurrentUserType()}</h3>
 	<hr>
 	<c:if test="${aUs.getCurrentUserType() eq 'HUI' }">
 	<div class="form-group" style="text-align: center;">
@@ -43,19 +43,22 @@
 			</select> 
 			
 			<label for="userType">所属职务</label>
-			<select class="form-control"  id="huiposition" name="position">
+			<select class="form-control"  id="groupId" name="search_EQ_u.group_id">
+				<tags:dict sql="select id , name ,'' from hui_group where pid=11 or pid=14 order by group_id"  addBefore=",全部" showPleaseSelect="false" />
+			</select>
+			<!-- <select class="form-control"  id="huiposition" name="position">
 		    	<option value="">全部</option>
-		    	<!-- <option value="CLIENT">普通用户</option> -->
+		    	<option value="CLIENT">普通用户</option>
 		    	<option value="PARTNER">城市合伙人</option>
-		    	<!-- <option value="PARTNERSALE">合伙人销售</option> -->
+		    	<option value="PARTNERSALE">合伙人销售</option>
 		    	<option value="HUISALE">会掌柜销售</option>
-		    	<!-- <option value="HUIQUIT">会掌柜离职人员</option> -->
+		    	<option value="HUIQUIT">会掌柜离职人员</option>
 		    	<option value="HUIOPERATE">会掌柜运营</option>
 		    	<option value="HUIDIRECTOR">会掌柜场地总监</option>
 		    	<option value="HUIFINANACE">会掌柜财务</option>
 		    	<option value="HUIADMIN">会掌柜管理员</option>
 		    	<option value="ADMINISTRATOR">平台超级管理员</option>
-			</select>
+			</select> -->
 		</div>
 		<div  id="sitefilterdv" class="form-group"  style="padding: 5px 0;display: none;">
 	    	<label for="city">所属城市</label>
@@ -69,10 +72,10 @@
 				</select> 
 			</c:if>
 			<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
-				<label for="hotelId">所属场地</label>
+				<%-- <label for="hotelId">所属场地</label>
 		   		<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10"  id="hotelid" name="search_EQ_u.hotel_id" >
 					<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel WHERE company_id = ${aUs.getCurrentUserCompanyId() }"  showPleaseSelect="fasle" addBefore=",全部"/>
-				</select> 
+				</select>  --%>
 			</c:if>
 			<c:if test="${aUs.getHotelUserType() eq 'GROUP' }">
 				<label for="hotelId">所属场地</label>
@@ -82,42 +85,51 @@
 			</c:if>
 			<c:if test="${aUs.getHotelUserType() eq 'HOTEL' }">
 				<label for="userType">所属职务</label>
-				<select class="form-control"  id="siteposition" name="position">
-			    	<option value="">全部</option>
-			    	<!-- <option value="CLIENT">普通用户</option> -->
-			    	<option value="SITESALE">场地销售</option>
-			    	<option value="SITEFINANACE">场地财务</option>
-			    	<!-- <option value="SITEQUIT">场地离职人员</option> -->
-			    	<option value="SITESALEMANAGER">场地销售主管</option>
-			    	<option value="SITEHR">场地HR</option>
-			    	<option value="SITEADMIN">场地系统管理员</option>
+				<select class="form-control"  id="groupId" name="search_EQ_u.group_id">
+					<tags:dict sql="select id , name ,'' from hui_group where pid=12 and group_id like 'hotel%' order by group_id"  addBefore=",全部" showPleaseSelect="false" />
 				</select>
-			</c:if>
-			<c:if test="${aUs.getHotelUserType() eq 'GROUP' }">
-				<label for="userType">所属职务</label>
-				<select class="form-control"  id="siteposition" name="position">
+				<!-- <select class="form-control"  id="siteposition" name="position">
 			    	<option value="">全部</option>
-			    	<!-- <option value="CLIENT">普通用户</option> -->
-			    	<option value="SITEGROUPFINANACE">集团财务</option>
-			    	 <option value="SITEGROUPSALE">集团销售</option> 
-			    	<option value="SITEGROUPHR">集团HR</option>
-			    	<option value="SITEGROUPADMIN">集团系统管理员</option>
-			    	<!-- <option value="SITESALE">场地销售</option>
+			    	<option value="CLIENT">普通用户</option>
+			    	<option value="SITESALE">场地销售</option>
 			    	<option value="SITEFINANACE">场地财务</option>
 			    	<option value="SITEQUIT">场地离职人员</option>
 			    	<option value="SITESALEMANAGER">场地销售主管</option>
 			    	<option value="SITEHR">场地HR</option>
-			    	<option value="SITEADMIN">场地系统管理员</option> -->
-				</select>
+			    	<option value="SITEADMIN">场地系统管理员</option>
+				</select> -->
 			</c:if>
-			<c:if test="${aUs.getCurrentUserType() ne 'HOTEL' }">
+			<c:if test="${aUs.getHotelUserType() eq 'GROUP' }">
 				<label for="userType">所属职务</label>
-				<select class="form-control"  id="siteposition" name="position">
+				<select class="form-control"  id="groupId" name="search_EQ_u.group_id">
+					<tags:dict sql="select id , name ,'' from hui_group where pid=12 and group_id like 'group%' order by group_id"  addBefore=",全部" showPleaseSelect="false" />
+				</select>
+				<!-- <select class="form-control"  id="siteposition" name="position">
 			    	<option value="">全部</option>
-			    	<!-- <option value="CLIENT">普通用户</option> -->
+			    	<option value="CLIENT">普通用户</option>
+			    	<option value="SITEGROUPFINANACE">集团财务</option>
+			    	 <option value="SITEGROUPSALE">集团销售</option> 
+			    	<option value="SITEGROUPHR">集团HR</option>
+			    	<option value="SITEGROUPADMIN">集团系统管理员</option>
 			    	<option value="SITESALE">场地销售</option>
 			    	<option value="SITEFINANACE">场地财务</option>
-			    	<!-- <option value="SITEQUIT">场地离职人员</option> -->
+			    	<option value="SITEQUIT">场地离职人员</option>
+			    	<option value="SITESALEMANAGER">场地销售主管</option>
+			    	<option value="SITEHR">场地HR</option>
+			    	<option value="SITEADMIN">场地系统管理员</option>
+				</select> -->
+			</c:if>
+			<c:if test="${aUs.getCurrentUserType() eq 'HUI' }">
+				<label for="userType">所属职务</label>
+				 <select class="form-control"  id="groupId" name="search_EQ_u.group_id">
+					<tags:dict sql="select id , name ,'' from hui_group where pid=12 order by group_id"  addBefore=",全部" showPleaseSelect="false" />
+				</select>
+				<!-- <select class="form-control"  id="siteposition" name="position">
+			    	<option value="">全部</option>
+			    	<option value="CLIENT">普通用户</option>
+			    	<option value="SITESALE">场地销售</option>
+			    	<option value="SITEFINANACE">场地财务</option>
+			    	<option value="SITEQUIT">场地离职人员</option>
 			    	<option value="SITESALEMANAGER">场地销售主管</option>
 			    	<option value="SITEHR">场地HR</option>
 			    	<option value="SITEADMIN">场地系统管理员</option>
@@ -125,6 +137,13 @@
 			    	<option value="SITEGROUPSALE">集团销售</option>
 			    	<option value="SITEGROUPHR">集团HR</option>
 			    	<option value="SITEGROUPADMIN">集团系统管理员</option>
+				</select> -->
+			</c:if>
+			
+			<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
+				<label for="userType">所属职务</label>
+				 <select class="form-control"  id="groupId" name="search_EQ_u.group_id">
+					<tags:dict sql="select id , name ,'' from hui_group where pid=14 order by group_id"  addBefore=",全部" showPleaseSelect="false" />
 				</select>
 			</c:if>
 			</div>

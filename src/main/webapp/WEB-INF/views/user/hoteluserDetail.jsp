@@ -50,7 +50,7 @@
 				</c:when>
 				<c:otherwise></c:otherwise>
 			</c:choose>
-			<a qx="user:transfer" class="btn btn-primary" onclick="relieve('${utype eq 'HOTEL'?hotel.id:hotelGroup.id}','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
+			<a qx="user:relieve" class="btn btn-primary" onclick="relieve('${utype eq 'HOTEL'?hotel.id:hotelGroup.id}','${user.id}');"><span class="glyphicon glyphicon-log-out"></span> 解除权限</a>
 		</div>
 	</div>
     

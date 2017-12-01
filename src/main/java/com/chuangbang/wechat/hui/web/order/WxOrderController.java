@@ -269,7 +269,8 @@ public class WxOrderController extends BaseController {
 		}else if("HUI".equals(AccountUtils.getHotelUserType())){
 			searchparas.put("EQ_o.company_sale_id", saleId);
 		}else if("PARTNER".equals(AccountUtils.getHotelUserType().toUpperCase())){
-			searchparas.put("EQ_h.company_id",AccountUtils.getCurrentUser().getCompanyId());
+			//searchparas.put("EQ_h.company_id",AccountUtils.getCurrentUser().getCompanyId());
+			searchparas.put("EQ_o.company_sale_id", saleId);
 		}else{
 			
 		}

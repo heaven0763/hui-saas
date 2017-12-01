@@ -24,11 +24,13 @@ import com.chuangbang.base.entity.hotel.Hotel;
 import com.chuangbang.base.entity.hotel.HotelGroup;
 import com.chuangbang.base.entity.order.Order;
 import com.chuangbang.base.entity.user.ChatRecord;
+import com.chuangbang.base.entity.user.Company;
 import com.chuangbang.base.entity.user.UserPermission;
 import com.chuangbang.base.service.hotel.HotelGroupService;
 import com.chuangbang.base.service.hotel.HotelService;
 import com.chuangbang.base.service.order.OrderService;
 import com.chuangbang.base.service.user.ChatRecordService;
+import com.chuangbang.base.service.user.CompanyService;
 import com.chuangbang.base.service.user.UserPermissionService;
 import com.chuangbang.framework.util.CipherUtil;
 import com.chuangbang.framework.util.HttpUtils;
@@ -80,6 +82,10 @@ public class WxUserService{
 	private OrderDao orderDao;
 	@Autowired
 	private HotelDao hotelDao;
+	@Autowired
+	private CompanyService companyService;
+	
+	
 	public String buildQuerySql(){
 		String colSql = DynamicSqlHelper.getMappingColumnStr("e.", User.class);
 		StringBuilder sbd = new StringBuilder();
@@ -161,6 +167,13 @@ public class WxUserService{
 			p4 = CipherUtil.encrypt(hotelGroup.getId()+"");
 			srcId = hotelGroup.getId();
 			p6 = "GROUP";
+		}else if("PARTNER".equalsIgnoreCase(AccountUtils.getHotelUserType())){
+			Company company = this.companyService.getEntity(hgId);
+			p1 = company.getCompanyName();
+			title = p1+title;
+			p4 = CipherUtil.encrypt(company.getId()+"");
+			srcId = company.getId();
+			p6 = "PARTNER";
 		}else{
 			if(null!=hotelId){
 				Hotel hotel = this.hotelService.getEntity(hotelId);
@@ -170,12 +183,22 @@ public class WxUserService{
 				srcId = hotel.getId();
 				p6 = "HOTEL";
 			}else if(null!= hgId){
-				HotelGroup hotelGroup = this.hotelGroupService.getEntity(hgId);
-				p1 = hotelGroup.getName();
-				title = p1+title;
-				p4 = CipherUtil.encrypt(hotelGroup.getId()+"");
-				srcId = hotelGroup.getId();
-				p6 = "GROUP";
+				if("PARTNER".equals(type)){
+					Company company = this.companyService.getEntity(hgId);
+					p1 = company.getCompanyName();
+					title = p1+title;
+					p4 = CipherUtil.encrypt(company.getId()+"");
+					srcId = company.getId();
+					p6 = "PARTNER";
+				}else{
+					HotelGroup hotelGroup = this.hotelGroupService.getEntity(hgId);
+					p1 = hotelGroup.getName();
+					title = p1+title;
+					p4 = CipherUtil.encrypt(hotelGroup.getId()+"");
+					srcId = hotelGroup.getId();
+					p6 = "GROUP";
+				}
+				
 			}else{
 				p1 = "会掌柜";
 				title = p1+title;

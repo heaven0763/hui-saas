@@ -46,7 +46,7 @@
 													<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel " selectedValue="${hotelSchedule.hotelId}" showPleaseSelect="true"/>
 												</select>
 									     	</c:if>
-									     	<c:if test="${aUs.getCurrentUserType() eq 'partner' }">
+									     	<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
 								     			<select class="form-control selectpicker" data-live-search="true" data-width="400px" data-size="10"   id="hotelId" name="hotelId"  style="width: 180px;" refval="value" reftext="text" textTarget="hotelName" 
 													refurl="${ctx}/framework/dictionary/trslCombox?sql=select id ,place_name name  from hui_hotel_place where place_type='HALL' and hotel_id={value}" refdata="hotel_id=:{value}" ref="#hallId" >
 													<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel where company_id = ${aUs.getCurrentUserCompanyId()}" selectedValue="${hotelSchedule.hotelId}" showPleaseSelect="true"/>

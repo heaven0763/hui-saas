@@ -3,14 +3,14 @@
 <div class="wrapper wrapper-content">
 	<h3>合作信息管理</h3>
 	<hr>
- 	<c:if test="${aUs.getCurrentUserType() eq 'HUI' or aUs.getCurrentUserType() eq 'partner' }">
+ 	<c:if test="${aUs.getCurrentUserType() eq 'HUI' or aUs.getCurrentUserType() eq 'PARTNER' }">
 	<div class="form-group"><!--target="dialog"  -->
 		<a qx="cooperationinfo:add" href="javascript:loadContent(this,'${ctx}/base/hotel/cooperationinfo/create','');"  class="btn btn-primary" title="添加"><span class="glyphicon glyphicon-plus"> </span> 添加</a>
 	</div>
 	</c:if>
 	<form class="form-inline" id="hotelCooperationInfo_searchForm">
 	  <div class="form-group">
-	 	 <c:if test="${aUs.getCurrentUserType() eq 'HUI' or aUs.getCurrentUserType() eq 'partner' }">
+	 	 <c:if test="${aUs.getCurrentUserType() eq 'HUI' or aUs.getCurrentUserType() eq 'PARTNER' }">
 			<label for="city">地区</label>
 			<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10"   id="city" name="search_EQ_h.city"  >
 	     		<tags:dict sql="SELECT id,region_name name FROM hzg_saas.hui_region where region_type = 2 order by zimu asc "  showPleaseSelect="fasle" addBefore=",全部"/>
@@ -21,7 +21,7 @@
 				<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel "  showPleaseSelect="fasle" addBefore=",全部"/>
 			</select> 
 			</c:if>
-			<c:if test="${aUs.getCurrentUserType() eq 'partner' }">
+			<c:if test="${aUs.getCurrentUserType() eq 'PARTNER' }">
 				<label for="hotelId">所属场地</label>
 		   		<select class="form-control selectpicker" data-live-search="true" data-width="auto" data-size="10"  name="search_EQ_c.hotel_id" >
 					<tags:dict sql="SELECT id,hotel_name as name FROM hui_hotel where company_id = ${aUs.getCurrentUserCompanyId()}"  showPleaseSelect="fasle" addBefore=",全部"/>

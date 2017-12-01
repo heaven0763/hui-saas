@@ -259,15 +259,16 @@ public class HotelController extends BaseController {
 	@ResponseBody
 	public JsonVo selectList(HttpServletRequest request,String hotelName,Integer province,Integer city,Integer district) throws Exception {
 		Map<String, Object> filterParams = this.getSearchParams(request);
-		
+		System.out.println(filterParams.toString());
 		if("HOTEL".equals(AccountUtils.getCurrentUserType())){
 		}else if("HUI".equals(AccountUtils.getCurrentUserType())){
 		}else if("PARTNER".equals(AccountUtils.getCurrentUserType().toUpperCase())){
-			filterParams.put("EQ_h.company_id",AccountUtils.getCurrentUser().getCompanyId());
+			filterParams.remove("EQ_h.company_id");
+			//filterParams.put("EQ_h.company_id",AccountUtils.getCurrentUser().getCompanyId());
 		}else{
 		}
 		if(province==null&&city==null&&district==null){
-			filterParams.put("EQ_h.city", this.getCity(request));
+			//filterParams.put("EQ_h.city", this.getCity(request));
 		}else{
 			if(province!=null){
 				filterParams.put("EQ_h.province", province);
